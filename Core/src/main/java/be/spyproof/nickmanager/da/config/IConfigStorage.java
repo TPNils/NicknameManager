@@ -51,7 +51,7 @@ public interface IConfigStorage
     /**
      * @return The maximum amount of character a player is allowed to have in their nickname without colour codes
      */
-    int maxNickLengthWithoutColuor();
+    int maxNickLengthWithoutColour();
 
     /**
      * @return The player storage as specified in the config

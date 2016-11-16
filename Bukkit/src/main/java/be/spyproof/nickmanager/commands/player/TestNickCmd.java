@@ -105,8 +105,8 @@ public class TestNickCmd extends AbstractPlayerCmd implements TabCompleter
         if (!BukkitUtils.INSTANCE.lengthCheck(nick))
         {
             String msg = this.messageController.getFormattedMessage(Reference.ErrorMessages.NICKNAME_TO_LONG);
-            msg = msg.replace("{length-with-colour}", BukkitUtils.INSTANCE.getConfigController().maxNickLengthWithColor() + "");
-            msg = msg.replace("{length-without-colour}", BukkitUtils.INSTANCE.getConfigController().maxNickLengthWithoutColor() + "");
+            msg = msg.replace("{length-with-colour}", BukkitUtils.INSTANCE.getConfigController().maxNickLengthWithColour() + "");
+            msg = msg.replace("{length-without-colour}", BukkitUtils.INSTANCE.getConfigController().maxNickLengthWithoutColour() + "");
             src.sendMessage(msg.split("\\n"));
             return;
         }

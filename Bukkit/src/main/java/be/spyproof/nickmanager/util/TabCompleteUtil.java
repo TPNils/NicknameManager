@@ -34,7 +34,7 @@ public class TabCompleteUtil
         nick = ChatColor.translateAlternateColorCodes('&', nick.toLowerCase());
 
         for (String oldNick : playerData.getPastNicknames())
-            if (oldNick.replaceAll(Reference.COLOR_AND_STYLE_PATTERN, "").startsWith(nick) && !names.contains(oldNick))
+            if (oldNick.replaceAll(Reference.COLOUR_AND_STYLE_PATTERN, "").startsWith(nick) && !names.contains(oldNick))
                 names.add(oldNick);
 
         return names;

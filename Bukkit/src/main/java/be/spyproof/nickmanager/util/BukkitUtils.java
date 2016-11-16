@@ -125,10 +125,10 @@ public class BukkitUtils
         if (nickname.length() > 255)
             return false;
 
-        if (nickname.length() > this.configController.maxNickLengthWithColor())
+        if (nickname.length() > this.configController.maxNickLengthWithColour())
             return false;
 
-        if (nickname.replaceAll(Reference.COLOR_AND_STYLE_PATTERN, "").length() > this.configController.maxNickLengthWithoutColor())
+        if (nickname.replaceAll(Reference.COLOUR_AND_STYLE_PATTERN, "").length() > this.configController.maxNickLengthWithoutColour())
             return false;
 
         return true;
