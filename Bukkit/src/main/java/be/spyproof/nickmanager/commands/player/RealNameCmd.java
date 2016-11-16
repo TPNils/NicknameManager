@@ -1,0 +1,79 @@
+package be.spyproof.nickmanager.commands.player;
+
+import be.spyproof.nickmanager.commands.AbstractCmd;
+import be.spyproof.nickmanager.controller.IBukkitPlayerController;
+import be.spyproof.nickmanager.controller.MessageController;
+import be.spyproof.nickmanager.model.PlayerData;
+import be.spyproof.nickmanager.util.Reference;
+import be.spyproof.nickmanager.util.TabCompleteUtil;
+import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Created by Spyproof on 14/11/2016.
+ */
+public class RealNameCmd extends AbstractCmd implements TabCompleter
+{
+    private static final String ARG = "nickname";
+
+    public RealNameCmd(MessageController messageController, IBukkitPlayerController playerController, String... keys)
+    {
+        super(messageController, playerController, keys);
+    }
+
+    @Override
+    public void sendHelpMsg(CommandSender src)
+    {
+        src.sendMessage(this.messageController.getFormattedMessage(Reference.HelpMessages.NICK_REAL_NAME));
+    }
+
+    @Override
+    public void execute(CommandSender src, String cmd, String[] args)
+    {
+        if (!src.hasPermission(Reference.Permissions.GENERIC_PLAYER_COMMANDS))
+        {
+            src.sendMessage(this.messageController.getFormattedMessage(Reference.ErrorMessages.NO_PERMISSION).replace("{permission}", Reference.Permissions.GENERIC_PLAYER_COMMANDS).split("\\n"));
+            return;
+        }
+
+        if (args.length == 0 || args[0] == null)
+        {
+            src.sendMessage(this.messageController.getFormattedMessage(Reference.ErrorMessages.MISSING_ARGUMENT).replace("{argument}", ARG).split("\\n"));
+            return;
+        }
+
+        String nickname = ChatColor.translateAlternateColorCodes('&', args[0]);
+        List<PlayerData> matches = this.playerController.getPlayerByNickname(ChatColor.stripColor(nickname));
+
+        StringBuilder players = new StringBuilder();
+        if (matches.size() > 0)
+        {
+            for (int i = 0; i < matches.size(); i++)
+            {
+                players.append(matches.get(i).getName());
+                if (i + 1 < matches.size())
+                    players.append("\n");
+
+            }
+        } else
+        {
+            players.append("None");
+        }
+
+        src.sendMessage(this.messageController.getFormattedMessage(Reference.SuccessMessages.NICK_REAL_NAME).replace("{players}", players.toString()).replace("{nickname}", nickname).split("\\n"));
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings)
+    {
+        if (strings.length == 1 && strings[0] != null)
+            return TabCompleteUtil.getPlayers(strings[0]);
+        else
+            return new ArrayList<>();
+    }
+}

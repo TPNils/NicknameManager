@@ -1,0 +1,53 @@
+# The absolute max length is 255 characters, including colour characters!
+# Specifying any larger number in this category will be ignored.
+maxlength:
+  # The max length of a nickname including the colour characters
+  # Example: &1&lNotch = 9
+  withColour: 48
+  # The max length of a nickname excluding the colour characters
+  # Example: &1&lNotch = 5
+  withoutColour: 24
+
+# Maximum colors per nickname, there are 16 colors
+maxcolors: 4
+
+# Maximum effects per nickname, there are 5 effects (bold, strikethrough, underline, italic, magic)
+maxeffects: 2
+
+# Decide if players need to accept the rules first
+mustAcceptRules: true
+
+# Banned nicknames with regex syntax (not case sensitive)
+blacklist:
+- '[o0]wn[e3]r' # owner
+- 'f[o0]und[e3]r' # founder
+- 'adm[i1]n' # admin
+- 'm[o0]d([e3]r[a4]t[o0]r)?' # mod
+- 'h[e3]lp[e3]r' # helper
+- 'n[i1]g+[e3]r' # nigger
+- 'n[i1]g+[a4]r*' # nigga
+- 'f[a4]g+[o0]t' # faggot
+- 'r[a4]p[i1]st' # rapist
+- 'n[a4]z[i1]' # nazi
+- 'sh[i1]t' # shit
+- 'y[o0]utub[e3]r?' # youtuber
+- 'str[e3][a4]m([e3]r)?' # streamer
+- 'n[o0]tch' # notch
+
+# Cooldowns for changing your nickname
+# Format: years(y), months(mo), weeks(w), days(d), hours(h), minutes(m), seconds(s)
+cooldown:
+  default: 1mo # Default cooldown
+  VIP: 1w # If player has the permission 'nicknames.cooldown.VIP1'
+  Donator: 1d # If player has the permission 'nicknames.cooldown.VIP2'
+
+# Choose to save player data in YML files (local) or in MySQL (database)
+storage: YML
+
+# Database to store the synced nicknames, if the storage is MySQL
+mysql:
+  host: 127.0.0.1
+  port: 3306
+  database: Nicknames
+  user: Derp
+  password: MyUberPassWord
