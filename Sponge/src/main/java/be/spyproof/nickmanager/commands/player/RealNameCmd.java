@@ -66,7 +66,7 @@ public class RealNameCmd extends AbstractCmd
         Map<String, Text> params = new HashMap<>();
         params.putAll(TemplateUtils.getParameters("nickname", TextSerializers.FORMATTING_CODE.deserialize(nickname.get())));
         params.putAll(TemplateUtils.getParameters("players", players.build()));
-        src.sendMessage(this.messageController.getMessage(Reference.CommandKeys.PLAYER_REAL_NAME).apply(params).build());
+        src.sendMessage(this.messageController.getMessage(Reference.SuccessMessages.NICK_REAL_NAME).apply(params).build());
 
         return CommandResult.success();
     }

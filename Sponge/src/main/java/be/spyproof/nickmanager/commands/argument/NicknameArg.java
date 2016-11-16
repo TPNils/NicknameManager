@@ -49,7 +49,7 @@ public class NicknameArg extends CommandElement
         {
             PlayerData playerData = this.playerController.wrapPlayer((Player) src);
             for (String oldNick : playerData.getPastNicknames())
-                if (oldNick.replaceAll(Reference.COLOR_AND_STYLE_PATTERN, "").startsWith(arg.get()) && !options.contains(oldNick))
+                if (oldNick.replaceAll(Reference.COLOUR_AND_STYLE_PATTERN, "").startsWith(arg.get()) && !options.contains(oldNick))
                     options.add(oldNick);
         }
 

@@ -126,10 +126,10 @@ public class SpongeUtils
         if (nickname.length() > 255)
             return false;
 
-        if (nickname.length() > this.configController.maxNickLengthWithColor())
+        if (nickname.length() > this.configController.maxNickLengthWithColour())
             return false;
 
-        if (TextSerializers.FORMATTING_CODE.stripCodes(nickname).length() > this.configController.maxNickLengthWithoutColor())
+        if (TextSerializers.FORMATTING_CODE.stripCodes(nickname).length() > this.configController.maxNickLengthWithoutColuor())
             return false;
 
         return true;

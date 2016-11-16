@@ -52,7 +52,7 @@ public class GsonPlayerStorage implements IPlayerStorage
             {
                 set = new ArrayList<>();
                 set.add(playerData.getUuid());
-                this.cachedNicknames.put(playerData.getNickname().get().replaceAll(Reference.COLOR_AND_STYLE_PATTERN, ""), set);
+                this.cachedNicknames.put(playerData.getNickname().get().replaceAll(Reference.COLOUR_AND_STYLE_PATTERN, ""), set);
             }else if (!set.contains(playerData.getUuid()))
                 set.add(playerData.getUuid());
         }

@@ -295,7 +295,7 @@ public class MySqlPlayerStorage implements IPlayerStorage
         {
             ImmutablePlayerData playerData = iterator.next();
             Optional<String> nickname = playerData.getNickname();
-            if (nickname.isPresent() && nickname.get().replaceAll(Reference.COLOR_AND_STYLE_PATTERN, "").equalsIgnoreCase(unformattedNickname))
+            if (nickname.isPresent() && nickname.get().replaceAll(Reference.COLOUR_AND_STYLE_PATTERN, "").equalsIgnoreCase(unformattedNickname))
                 immutablePlayers.add(playerData);
         }
 

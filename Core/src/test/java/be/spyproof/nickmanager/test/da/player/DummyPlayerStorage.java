@@ -71,7 +71,7 @@ public class DummyPlayerStorage implements IPlayerStorage
         List<PlayerData> players = new ArrayList<>();
 
         for (PlayerData player : this.players)
-            if (player.getNickname().isPresent() && player.getNickname().get().replaceAll(Reference.COLOR_AND_STYLE_PATTERN, "").contains(nickname))
+            if (player.getNickname().isPresent() && player.getNickname().get().replaceAll(Reference.COLOUR_AND_STYLE_PATTERN, "").contains(nickname))
                 players.add(player);
 
         return players;

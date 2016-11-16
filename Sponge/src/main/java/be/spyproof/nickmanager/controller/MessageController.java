@@ -81,9 +81,9 @@ public class MessageController
                         ErrorMessages.MUST_READ_RULES);
         setDefaultValue(n, TextTemplate.of(Text.of(TextColors.RED, "Your nickname can only be "),
                                            getArg("length-with-colour").color(TextColors.RED).style(TextStyles.ITALIC).build(),
-                                           Text.of(TextColors.RED, " characters long with color codes and "),
+                                           Text.of(TextColors.RED, " characters long with colour codes and "),
                                            getArg("length-without-colour").color(TextColors.RED).style(TextStyles.ITALIC).build(),
-                                           Text.of(TextColors.RED, " characters long without color codes")),
+                                           Text.of(TextColors.RED, " characters long without colour codes")),
                         ErrorMessages.NICKNAME_TO_LONG);
         setDefaultValue(n, TextTemplate.of(Text.of(TextColors.RED, "You need to wait "),
                                            getArg("time").color(TextColors.RED).style(TextStyles.ITALIC).build(),
@@ -95,7 +95,7 @@ public class MessageController
                         ErrorMessages.PLAYER_ONLY);
         setDefaultValue(n, TextTemplate.of(Text.of(TextColors.RED, "Your nickname can only have "),
                                            getArg("amount").color(TextColors.RED).style(TextStyles.ITALIC).build(),
-                                           Text.of(TextColors.RED, " color(s)")),
+                                           Text.of(TextColors.RED, " colour(s)")),
                         ErrorMessages.TO_MANY_COLOURS);
         setDefaultValue(n, TextTemplate.of(Text.of(TextColors.RED, "Your nickname can only have "),
                                            getArg("amount").color(TextColors.RED).style(TextStyles.ITALIC).build(),
@@ -220,7 +220,7 @@ public class MessageController
         setDefaultValue(n, TextTemplate.of(Text.of(TextColors.AQUA, "/nick ", TextColors.GREEN, Reference.CommandKeys.PLAYER_FORMAT[0])
                                                .toBuilder()
                                                .onClick(TextActions.suggestCommand("/nick " + Reference.CommandKeys.PLAYER_FORMAT[0]))
-                                               .onHover(TextActions.showText(Text.of(TextColors.YELLOW, "Check how to apply colors and styles to your nickname")))
+                                               .onHover(TextActions.showText(Text.of(TextColors.YELLOW, "Check how to apply colours and styles to your nickname")))
                                                .build()),
                         HelpMessages.NICK_FORMAT);
 

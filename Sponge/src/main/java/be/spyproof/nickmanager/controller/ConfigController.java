@@ -148,13 +148,13 @@ public class ConfigController implements IConfigStorage
     }
 
     @Override
-    public int maxNickLengthWithColor()
+    public int maxNickLengthWithColour()
     {
         return this.root.getNode("Nickname length", "With colour").getInt(48);
     }
 
     @Override
-    public int maxNickLengthWithoutColor()
+    public int maxNickLengthWithoutColuor()
     {
         return this.root.getNode("Nickname length", "Without colour").getInt(24);
     }

@@ -9,7 +9,7 @@ package be.spyproof.nickmanager.util;
  */
 public class Reference
 {
-    public static final String COLOR_AND_STYLE_PATTERN = "[§&][0-9a-fA-Fk-oK-OrR]";
+    public static final String COLOUR_AND_STYLE_PATTERN = "[§&][0-9a-fA-Fk-oK-OrR]";
 
     /**
      * Contains all permissions
@@ -23,9 +23,9 @@ public class Reference
 
         public static final String COOLDOWN_PREFIX = "nickmanager.cooldown.";
 
-        public static final String COLOURS_PREFIX = "nickmanager.colors.";
+        public static final String COLOURS_PREFIX = "nickmanager.colours.";
         public static final String STYLE_PREFIX = "nickmanager.style.";
-        public static final String BYPASS_COLOUR_LIMIT = "nickmanager.bypass.colorlimit";
+        public static final String BYPASS_COLOUR_LIMIT = "nickmanager.bypass.colourlimit";
         public static final String BYPASS_STYLE_LIMIT = "nickmanager.bypass.stylelimit";
 
         public static final String ADMIN_SET = "nickmanager.admin.set";

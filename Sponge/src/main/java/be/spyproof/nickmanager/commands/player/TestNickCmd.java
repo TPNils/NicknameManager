@@ -91,8 +91,8 @@ public class TestNickCmd extends AbstractPlayerCmd
         if (!SpongeUtils.INSTANCE.lengthCheck(nick.get()))
         {
             Map<String, Integer> placeholders = new HashMap<>();
-            placeholders.putAll(TemplateUtils.getParameters("length-with-colour", SpongeUtils.INSTANCE.getConfigController().maxNickLengthWithColor()));
-            placeholders.putAll(TemplateUtils.getParameters("length-without-colour", SpongeUtils.INSTANCE.getConfigController().maxNickLengthWithoutColor()));
+            placeholders.putAll(TemplateUtils.getParameters("length-with-colour", SpongeUtils.INSTANCE.getConfigController().maxNickLengthWithColour()));
+            placeholders.putAll(TemplateUtils.getParameters("length-without-colour", SpongeUtils.INSTANCE.getConfigController().maxNickLengthWithoutColuor()));
             src.sendMessage(this.messageController.getMessage(Reference.ErrorMessages.NICKNAME_TO_LONG).apply(placeholders).build());
             return CommandResult.success();
         }
