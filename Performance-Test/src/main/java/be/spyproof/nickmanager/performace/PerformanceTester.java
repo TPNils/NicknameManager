@@ -30,6 +30,11 @@ public class PerformanceTester implements Closeable
         playerStorage.savePlayer(reference);
     }
 
+    public void setPlayerStorage(IPlayerStorage playerStorage)
+    {
+        this.playerStorage = playerStorage;
+    }
+
     public void createPlayers(int amount) throws Exception
     {
         startTimer();

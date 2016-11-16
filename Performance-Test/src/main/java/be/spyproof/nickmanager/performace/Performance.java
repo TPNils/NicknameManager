@@ -49,7 +49,8 @@ public class Performance
 
         tester.createPlayers(100);
         tester.createAndUpdatePlayers(10);
-
+        tester.close();
+        tester.setPlayerStorage(TestReference.getLocalSqlPlayerStorage());
         tester.getByUuid(1);
         tester.getByName(1);
         tester.getByNickname(1);
@@ -80,8 +81,8 @@ public class Performance
         PerformanceTester tester = new PerformanceTester(TestReference.getGsonPlayerStorage());
         System.out.println(DateUtil.timeformat(System.currentTimeMillis() - timestamp));
 
-        tester.createPlayers(9000);
-        tester.createAndUpdatePlayers(1000);
+        tester.createPlayers(100);
+        tester.createAndUpdatePlayers(10);
         tester.getByUuid(1);
         tester.getByName(1);
         tester.getByNickname(1);
