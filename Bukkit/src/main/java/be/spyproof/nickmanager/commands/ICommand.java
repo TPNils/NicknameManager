@@ -1,6 +1,7 @@
 package be.spyproof.nickmanager.commands;
 
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
@@ -18,9 +19,13 @@ public interface ICommand extends CommandExecutor
 
     default boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings)
     {
-        execute(commandSender, s, strings);
+        try{
+            execute(commandSender, s, strings);
+        }catch (CommandException e) {
+            commandSender.sendMessage(e.getMessage().split("\\n"));
+        }
         return true;
     }
 
-    void execute(CommandSender src, String cmd, String[] args);
+    void execute(CommandSender src, String cmd, String[] args) throws CommandException;
 }

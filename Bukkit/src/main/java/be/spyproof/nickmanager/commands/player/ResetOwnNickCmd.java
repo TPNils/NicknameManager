@@ -1,5 +1,6 @@
 package be.spyproof.nickmanager.commands.player;
 
+import be.spyproof.nickmanager.commands.checks.IPermissionCheck;
 import be.spyproof.nickmanager.controller.IBukkitPlayerController;
 import be.spyproof.nickmanager.controller.MessageController;
 import be.spyproof.nickmanager.model.PlayerData;
@@ -10,7 +11,7 @@ import org.bukkit.entity.Player;
 /**
  * Created by Spyproof on 14/11/2016.
  */
-public class ResetOwnNickCmd extends AbstractPlayerCmd
+public class ResetOwnNickCmd extends AbstractPlayerCmd implements IPermissionCheck
 {
     public ResetOwnNickCmd(MessageController messageController, IBukkitPlayerController playerController, String... keys)
     {
@@ -26,11 +27,7 @@ public class ResetOwnNickCmd extends AbstractPlayerCmd
     @Override
     public void execute(Player src, String cmd, String[] args)
     {
-        if (!src.hasPermission(Reference.Permissions.GENERIC_PLAYER_COMMANDS))
-        {
-            src.sendMessage(this.messageController.getFormattedMessage(Reference.ErrorMessages.NO_PERMISSION).replace("{permission}", Reference.Permissions.GENERIC_PLAYER_COMMANDS).split("\\n"));
-            return;
-        }
+        checkPermission(src, Reference.Permissions.GENERIC_PLAYER_COMMANDS);
 
         PlayerData playerData = this.playerController.wrapPlayer(src);
         playerData.setNickname(null);

@@ -1,6 +1,7 @@
 package be.spyproof.nickmanager.commands.moderator;
 
 import be.spyproof.nickmanager.commands.AbstractCmd;
+import be.spyproof.nickmanager.commands.checks.IPermissionCheck;
 import be.spyproof.nickmanager.controller.IBukkitPlayerController;
 import be.spyproof.nickmanager.controller.MessageController;
 import be.spyproof.nickmanager.model.PlayerData;
@@ -8,6 +9,7 @@ import be.spyproof.nickmanager.util.Reference;
 import be.spyproof.nickmanager.util.TabCompleteUtil;
 import be.spyproof.nickmanager.util.TemplateUtils;
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 
@@ -18,7 +20,7 @@ import java.util.Optional;
 /**
  * Created by Spyproof on 15/11/2016.
  */
-public class CheckOtherCmd extends AbstractCmd implements TabCompleter
+public class CheckOtherCmd extends AbstractCmd implements TabCompleter, IPermissionCheck
 {
     private static final String ARG = "player";
 
@@ -36,25 +38,15 @@ public class CheckOtherCmd extends AbstractCmd implements TabCompleter
     @Override
     public void execute(CommandSender src, String cmd, String[] args)
     {
-        if (!src.hasPermission(Reference.Permissions.ADMIN_CHECK))
-        {
-            src.sendMessage(this.messageController.getFormattedMessage(Reference.ErrorMessages.NO_PERMISSION).replace("{permission}", Reference.Permissions.ADMIN_CHECK).split("\\n"));
-            return;
-        }
+        checkPermission(src, Reference.Permissions.ADMIN_CHECK);
 
         if (args.length == 0 || args[0] == null)
-        {
-            src.sendMessage(this.messageController.getFormattedMessage(Reference.ErrorMessages.MISSING_ARGUMENT).replace("{argument}", ARG).split("\\n"));
-            return;
-        }
+            throw new CommandException(this.messageController.getFormattedMessage(Reference.ErrorMessages.MISSING_ARGUMENT).replace("{argument}", ARG));
 
         Optional<? extends PlayerData> player = this.playerController.getPlayer(args[0]);
 
         if (!player.isPresent())
-        {
-            src.sendMessage(this.messageController.getFormattedMessage(Reference.ErrorMessages.WRONG_ARGUMENT).replace("{argument}", args[0]).split("\\n"));
-            return;
-        }
+            throw new CommandException(this.messageController.getFormattedMessage(Reference.ErrorMessages.WRONG_ARGUMENT).replace("{argument}", args[0]));
 
         src.sendMessage(TemplateUtils.apply(this.messageController.getFormattedMessage(Reference.SuccessMessages.ADMIN_NICK_CHECK), player.get()).split("\\n"));
     }

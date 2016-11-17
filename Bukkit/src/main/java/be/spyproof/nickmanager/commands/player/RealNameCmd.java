@@ -1,6 +1,7 @@
 package be.spyproof.nickmanager.commands.player;
 
 import be.spyproof.nickmanager.commands.AbstractCmd;
+import be.spyproof.nickmanager.commands.checks.IPermissionCheck;
 import be.spyproof.nickmanager.controller.IBukkitPlayerController;
 import be.spyproof.nickmanager.controller.MessageController;
 import be.spyproof.nickmanager.model.PlayerData;
@@ -17,7 +18,7 @@ import java.util.List;
 /**
  * Created by Spyproof on 14/11/2016.
  */
-public class RealNameCmd extends AbstractCmd implements TabCompleter
+public class RealNameCmd extends AbstractCmd implements TabCompleter, IPermissionCheck
 {
     private static final String ARG = "nickname";
 
@@ -35,17 +36,10 @@ public class RealNameCmd extends AbstractCmd implements TabCompleter
     @Override
     public void execute(CommandSender src, String cmd, String[] args)
     {
-        if (!src.hasPermission(Reference.Permissions.GENERIC_PLAYER_COMMANDS))
-        {
-            src.sendMessage(this.messageController.getFormattedMessage(Reference.ErrorMessages.NO_PERMISSION).replace("{permission}", Reference.Permissions.GENERIC_PLAYER_COMMANDS).split("\\n"));
-            return;
-        }
+        checkPermission(src, Reference.Permissions.GENERIC_PLAYER_COMMANDS);
 
         if (args.length == 0 || args[0] == null)
-        {
-            src.sendMessage(this.messageController.getFormattedMessage(Reference.ErrorMessages.MISSING_ARGUMENT).replace("{argument}", ARG).split("\\n"));
-            return;
-        }
+            throw new ClassCastException(this.messageController.getFormattedMessage(Reference.ErrorMessages.MISSING_ARGUMENT).replace("{argument}", ARG));
 
         String nickname = ChatColor.translateAlternateColorCodes('&', args[0]);
         List<PlayerData> matches = this.playerController.getPlayerByNickname(ChatColor.stripColor(nickname));

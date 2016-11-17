@@ -1,6 +1,7 @@
 package be.spyproof.nickmanager.commands;
 
 import be.spyproof.nickmanager.controller.IBukkitPlayerController;
+import be.spyproof.nickmanager.controller.IPlayerController;
 import be.spyproof.nickmanager.controller.MessageController;
 
 import java.util.Optional;
@@ -8,7 +9,7 @@ import java.util.Optional;
 /**
  * Created by Spyproof on 14/11/2016.
  */
-public abstract class AbstractCmd implements ICommand
+public abstract class AbstractCmd implements ICommand, IMessageControllerHolder, IPlayerControllerHolder
 {
     protected MessageController messageController;
     protected IBukkitPlayerController playerController;
@@ -36,5 +37,17 @@ public abstract class AbstractCmd implements ICommand
     public void setParent(ICommand parent)
     {
         this.parent = parent;
+    }
+
+    @Override
+    public IBukkitPlayerController getPlayerController()
+    {
+        return this.playerController;
+    }
+
+    @Override
+    public MessageController getMessageController()
+    {
+        return this.messageController;
     }
 }
