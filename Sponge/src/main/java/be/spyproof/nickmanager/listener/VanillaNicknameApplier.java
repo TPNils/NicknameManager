@@ -5,6 +5,7 @@ import be.spyproof.nickmanager.model.PlayerData;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
+import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.message.MessageChannelEvent;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.ClickAction;
@@ -32,14 +33,9 @@ public class VanillaNicknameApplier
     }
 
     @Listener(order = Order.LATE)
-    public void onMessageEvent(MessageChannelEvent.Chat event)
+    public void onMessageEvent(MessageChannelEvent.Chat event, @First Player player)
     {
-        Optional<Player> player = event.getCause().first(Player.class);
-
-        if (!player.isPresent())
-            return;
-
-        PlayerData playerData = this.playerController.wrapPlayer(player.get());
+        PlayerData playerData = this.playerController.wrapPlayer(player);
 
         if (!event.getFormatter().getHeader().isEmpty() && playerData.getNickname().isPresent())
         {
@@ -47,8 +43,8 @@ public class VanillaNicknameApplier
 
             Text header = event.getFormatter().getHeader().format();
             String rawHeader = TextSerializers.FORMATTING_CODE.serialize(header);
-            if (rawHeader.contains(player.get().getName()))
-                rawHeader = rawHeader.replace(player.get().getName(), playerData.getNickname().get() + "&r");
+            if (rawHeader.contains(player.getName()))
+                rawHeader = rawHeader.replace(player.getName(), playerData.getNickname().get() + "&r");
 
             builder.append(Text.of(TextSerializers.FORMATTING_CODE.deserialize(rawHeader)));
 
@@ -56,13 +52,13 @@ public class VanillaNicknameApplier
             if (clickAction.isPresent())
                 builder.onClick(clickAction.get());
             else
-                builder.onClick(TextActions.suggestCommand("/msg " + player.get().getName() + " "));
+                builder.onClick(TextActions.suggestCommand("/msg " + player.getName() + " "));
 
             Optional<HoverAction<?>> hoverAction = header.getHoverAction();
             if (clickAction.isPresent())
                 builder.onHover(hoverAction.get());
             else
-                builder.onHover(TextActions.showEntity(player.get().getUniqueId(), player.get().getName()));
+                builder.onHover(TextActions.showEntity(player.getUniqueId(), player.getName()));
 
             event.getFormatter().setHeader(builder.build());
         }
