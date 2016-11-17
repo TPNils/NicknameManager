@@ -3,6 +3,7 @@ package be.spyproof.nickmanager.commands.moderator;
 
 import be.spyproof.nickmanager.commands.AbstractCmd;
 import be.spyproof.nickmanager.commands.argument.PlayerDataArg;
+import be.spyproof.nickmanager.commands.checks.IArgumentChecker;
 import be.spyproof.nickmanager.controller.ISpongePlayerController;
 import be.spyproof.nickmanager.controller.MessageController;
 import be.spyproof.nickmanager.model.PlayerData;
@@ -24,7 +25,7 @@ import java.util.Optional;
 /**
  * Created by Spyproof.
  */
-public class GiveNickChangesCmd extends AbstractCmd
+public class GiveNickChangesCmd extends AbstractCmd implements IArgumentChecker
 {
     private static final String[] ARGS = new String[]{"player", "amount"};
 
@@ -36,34 +37,22 @@ public class GiveNickChangesCmd extends AbstractCmd
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException
     {
-        Optional<PlayerData> playerData = args.getOne(ARGS[0]);
-        Optional<Integer> amount = args.getOne(ARGS[1]);
+        PlayerData playerData = getArgument(args, ARGS[0]);
+        Integer amount = getArgument(args, ARGS[1]);
 
-        if (!playerData.isPresent())
-        {
-            src.sendMessage(this.messageController.getMessage(Reference.ErrorMessages.MISSING_ARGUMENT).apply(TemplateUtils.getParameters("argument", ARGS[0])).build());
-            return CommandResult.success();
-        }
+        playerData.setTokensRemaining(amount + playerData.getTokensRemaining());
+        this.getPlayerController().savePlayer(playerData);
 
-        if (!amount.isPresent())
-        {
-            src.sendMessage(this.messageController.getMessage(Reference.ErrorMessages.MISSING_ARGUMENT).apply(TemplateUtils.getParameters("argument", ARGS[1])).build());
-            return CommandResult.success();
-        }
-
-        playerData.get().setTokensRemaining(amount.get() + playerData.get().getTokensRemaining());
-        this.playerController.savePlayer(playerData.get());
-
-        Optional<Player> player = Sponge.getServer().getPlayer(playerData.get().getUuid());
+        Optional<Player> player = Sponge.getServer().getPlayer(playerData.getUuid());
         if (player.isPresent())
-        {
-            player.get().sendMessage(this.messageController.getMessage(Reference.SuccessMessages.ADMIN_NICK_GIVE_RECEIVED).apply(TemplateUtils.getParameters("tokens", amount.get())).build());
-        }
+            player.get().sendMessage(
+                    this.getMessageController().getMessage(Reference.SuccessMessages.ADMIN_NICK_GIVE_RECEIVED)
+                        .apply(TemplateUtils.getParameters("tokens", amount)).build());
 
-        Map<String, Text> params = TemplateUtils.getParameters(playerData.get());
-        params.putAll(TemplateUtils.getParameters("tokens", Text.of(amount.get())));
+        Map<String, Text> params = TemplateUtils.getParameters(playerData);
+        params.putAll(TemplateUtils.getParameters("tokens", Text.of(amount)));
 
-        src.sendMessage(this.messageController.getMessage(Reference.SuccessMessages.ADMIN_NICK_GIVE).apply(params).build());
+        src.sendMessage(this.getMessageController().getMessage(Reference.SuccessMessages.ADMIN_NICK_GIVE).apply(params).build());
 
         return CommandResult.success();
     }
@@ -71,7 +60,8 @@ public class GiveNickChangesCmd extends AbstractCmd
     public static CommandSpec getCommandSpec(MessageController messageController, ISpongePlayerController playerController)
     {
         return CommandSpec.builder()
-                          .arguments(new PlayerDataArg(ARGS[0], playerController), GenericArguments.integer(Text.of(ARGS[1])))
+                          .arguments(new PlayerDataArg(ARGS[0], playerController),
+                                     GenericArguments.integer(Text.of(ARGS[1])))
                           .executor(new GiveNickChangesCmd(messageController, playerController))
                           .permission(Reference.Permissions.ADMIN_GIVE)
                           .build();

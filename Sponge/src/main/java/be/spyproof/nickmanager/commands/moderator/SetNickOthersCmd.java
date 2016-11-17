@@ -1,6 +1,10 @@
 package be.spyproof.nickmanager.commands.moderator;
 
 import be.spyproof.nickmanager.commands.AbstractCmd;
+import be.spyproof.nickmanager.commands.checks.IArgumentChecker;
+import be.spyproof.nickmanager.commands.checks.IBlacklistChecker;
+import be.spyproof.nickmanager.commands.checks.IFormatChecker;
+import be.spyproof.nickmanager.commands.checks.ILengthChecker;
 import be.spyproof.nickmanager.commands.argument.PlayerDataArg;
 import be.spyproof.nickmanager.controller.ISpongePlayerController;
 import be.spyproof.nickmanager.controller.MessageController;
@@ -21,7 +25,7 @@ import java.util.*;
 /**
  * Created by Spyproof on 28/10/2016.
  */
-public class SetNickOthersCmd extends AbstractCmd
+public class SetNickOthersCmd extends AbstractCmd implements IBlacklistChecker, IFormatChecker, ILengthChecker, IArgumentChecker
 {
     private static final String[] ARGS = new String[]{"player", "nickname"};
 
@@ -33,97 +37,27 @@ public class SetNickOthersCmd extends AbstractCmd
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException
     {
-        Optional<PlayerData> player = args.getOne(ARGS[0]);
-        if (!player.isPresent())
-        {
-            src.sendMessage(this.messageController.getMessage(Reference.ErrorMessages.MISSING_ARGUMENT).apply(TemplateUtils.getParameters("argument", ARGS[0])).build());
-            return CommandResult.success();
-        }
+        PlayerData playerData = getArgument(args, ARGS[0]);
 
-        if (src instanceof Player && player.get().getUuid().equals(((Player) src).getUniqueId()))
-        {
-            src.sendMessage(this.messageController.getMessage(Reference.ErrorMessages.CANT_FORCE_CHANGE_OWN_NICK).apply().build());
-            return CommandResult.success();
-        }
+        if (src instanceof Player && playerData.getUuid().equals(((Player) src).getUniqueId()))
+            throw new CommandException(this.getMessageController().getMessage(Reference.ErrorMessages.CANT_FORCE_CHANGE_OWN_NICK).apply().build());
 
-        Optional<String> nick = args.getOne(ARGS[1]);
-        if (!nick.isPresent())
-        {
-            src.sendMessage(this.messageController.getMessage(Reference.ErrorMessages.MISSING_ARGUMENT).apply(TemplateUtils.getParameters("argument", ARGS[1])).build());
-            return CommandResult.success();
-        }
+        String nick = getArgument(args, ARGS[1]);
 
-        // blacklist
-        {
-            Optional<String> blacklistRegex = SpongeUtils.INSTANCE.isBlacklisted(src, nick.get());
-            if (blacklistRegex.isPresent())
-            {
-                src.sendMessage(this.messageController.getMessage(Reference.ErrorMessages.BLACKLIST).apply(TemplateUtils.getParameters("regex", blacklistRegex.get())).build());
-                return CommandResult.success();
-            }
-        }
-
-        List<Colour> colours = StringUtils.getPresentColours(nick.get());
-        List<Style> styles = StringUtils.getPresentStyles(nick.get());
-
-        // colour amount
-        if (colours.size() > SpongeUtils.INSTANCE.getConfigController().maxColours())
-        {
-            src.sendMessage(this.messageController.getMessage(Reference.ErrorMessages.TO_MANY_COLOURS).apply(TemplateUtils.getParameters("amount", SpongeUtils.INSTANCE.getConfigController().maxColours())).build());
-            return CommandResult.success();
-        }
-
-        if (styles.size() > SpongeUtils.INSTANCE.getConfigController().maxStyles())
-        {
-            src.sendMessage(this.messageController.getMessage(Reference.ErrorMessages.TO_MANY_STYLES).apply(TemplateUtils.getParameters("amount", SpongeUtils.INSTANCE.getConfigController().maxColours())).build());
-            return CommandResult.success();
-        }
-
-        // colour permissions
-        {   // Verify the player is allowed to use the colours
-            Iterator<Colour> iterator = colours.iterator();
-            while (iterator.hasNext())
-                if (src.hasPermission(Reference.Permissions.COLOURS_PREFIX + iterator.next().name().toLowerCase()))
-                    iterator.remove();
-        }
-
-        {   // Verify the player is allowed to use the styles
-            Iterator<Style> iterator = styles.iterator();
-            while (iterator.hasNext())
-                if (src.hasPermission(Reference.Permissions.STYLE_PREFIX + iterator.next().name().toLowerCase()))
-                    iterator.remove();
-        }
-
-        if (colours.size() + styles.size() > 0)
-        {
-            String illegalStyles = "";
-            for (Colour colour : colours)
-                illegalStyles += " &" + colour.getColourChar();
-            for (Style style : styles)
-                illegalStyles += " &" + style.getColourChar();
-            src.sendMessage(this.messageController.getMessage(Reference.ErrorMessages.ILLEGAL_FORMAT).apply(TemplateUtils.getParameters("style", illegalStyles)).build());
-            return CommandResult.success();
-        }
-
-        // nick length
-        if (!SpongeUtils.INSTANCE.lengthCheck(nick.get()))
-        {
-            Map<String, Integer> placeholders = new HashMap<>();
-            placeholders.putAll(TemplateUtils.getParameters("length-with-colour", SpongeUtils.INSTANCE.getConfigController().maxNickLengthWithColour()));
-            placeholders.putAll(TemplateUtils.getParameters("length-without-colour", SpongeUtils.INSTANCE.getConfigController().maxNickLengthWithoutColour()));
-            src.sendMessage(this.messageController.getMessage(Reference.ErrorMessages.NICKNAME_TO_LONG).apply(placeholders).build());
-            return CommandResult.success();
-        }
+        checkBlacklist(src, nick);
+        checkFormat(src, nick);
+        checkLength(nick);
 
         // Apply
-        player.get().setNickname(nick.get());
-        player.get().setLastChanged();
-        this.playerController.savePlayer(player.get());
-        Map<String, Text> placeholders = TemplateUtils.getParameters(player.get());
-        src.sendMessage(this.messageController.getMessage(Reference.SuccessMessages.ADMIN_NICK_SET).apply(placeholders).build());
-        Optional<Player> receiver = Sponge.getServer().getPlayer(player.get().getUuid());
+        playerData.setNickname(nick);
+        playerData.setLastChanged();
+        this.getPlayerController().savePlayer(playerData);
+
+        Map<String, Text> placeholders = TemplateUtils.getParameters(playerData);
+        src.sendMessage(this.getMessageController().getMessage(Reference.SuccessMessages.ADMIN_NICK_SET).apply(placeholders).build());
+        Optional<Player> receiver = Sponge.getServer().getPlayer(playerData.getUuid());
         if (receiver.isPresent())
-            receiver.get().sendMessage(this.messageController.getMessage(Reference.SuccessMessages.NICK_SET).apply(placeholders).build());
+            receiver.get().sendMessage(this.getMessageController().getMessage(Reference.SuccessMessages.NICK_SET).apply(placeholders).build());
 
         return CommandResult.success();
     }

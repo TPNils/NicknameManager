@@ -1,6 +1,7 @@
 package be.spyproof.nickmanager.commands.player;
 
 import be.spyproof.nickmanager.commands.AbstractCmd;
+import be.spyproof.nickmanager.commands.checks.IArgumentChecker;
 import be.spyproof.nickmanager.controller.ISpongePlayerController;
 import be.spyproof.nickmanager.controller.MessageController;
 import be.spyproof.nickmanager.model.PlayerData;
@@ -24,7 +25,7 @@ import java.util.Optional;
 /**
  * Created by Spyproof on 31/10/2016.
  */
-public class RealNameCmd extends AbstractCmd
+public class RealNameCmd extends AbstractCmd implements IArgumentChecker
 {
     private static final String ARG = "nickname";
 
@@ -36,14 +37,8 @@ public class RealNameCmd extends AbstractCmd
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException
     {
-        Optional<String> nickname = args.getOne(ARG);
-        if (!nickname.isPresent())
-        {
-            src.sendMessage(this.messageController.getMessage(Reference.ErrorMessages.MISSING_ARGUMENT).apply(TemplateUtils.getParameters("argument", ARG)).build());
-            return CommandResult.success();
-        }
-
-        List<PlayerData> matches = this.playerController.getPlayerByNickname(TextSerializers.FORMATTING_CODE.stripCodes(nickname.get()));
+        String nickname = getArgument(args, ARG);
+        List<PlayerData> matches = this.getPlayerController().getPlayerByNickname(TextSerializers.FORMATTING_CODE.stripCodes(nickname));
 
         Text.Builder players = Text.builder();
         if (matches.size() > 0)
@@ -64,9 +59,9 @@ public class RealNameCmd extends AbstractCmd
         }
 
         Map<String, Text> params = new HashMap<>();
-        params.putAll(TemplateUtils.getParameters("nickname", TextSerializers.FORMATTING_CODE.deserialize(nickname.get())));
+        params.putAll(TemplateUtils.getParameters("nickname", TextSerializers.FORMATTING_CODE.deserialize(nickname)));
         params.putAll(TemplateUtils.getParameters("players", players.build()));
-        src.sendMessage(this.messageController.getMessage(Reference.SuccessMessages.NICK_REAL_NAME).apply(params).build());
+        src.sendMessage(this.getMessageController().getMessage(Reference.SuccessMessages.NICK_REAL_NAME).apply(params).build());
 
         return CommandResult.success();
     }

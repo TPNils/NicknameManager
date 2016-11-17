@@ -2,6 +2,7 @@ package be.spyproof.nickmanager.commands.moderator;
 
 import be.spyproof.nickmanager.commands.AbstractCmd;
 import be.spyproof.nickmanager.commands.argument.PlayerDataArg;
+import be.spyproof.nickmanager.commands.checks.IArgumentChecker;
 import be.spyproof.nickmanager.controller.ISpongePlayerController;
 import be.spyproof.nickmanager.controller.MessageController;
 import be.spyproof.nickmanager.model.PlayerData;
@@ -18,7 +19,7 @@ import java.util.Optional;
 /**
  * Created by Spyproof on 01/11/2016.
  */
-public class CheckOtherCmd extends AbstractCmd
+public class CheckOtherCmd extends AbstractCmd implements IArgumentChecker
 {
     private static final String ARG = "player";
 
@@ -30,20 +31,19 @@ public class CheckOtherCmd extends AbstractCmd
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException
     {
-        Optional<PlayerData> player = args.getOne(ARG);
+        PlayerData player = getArgument(args, ARG);
 
-        if (!player.isPresent())
-        {
-            src.sendMessage(this.messageController.getMessage(Reference.ErrorMessages.MISSING_ARGUMENT).apply(TemplateUtils.getParameters("argument", ARG)).build());
-            return CommandResult.success();
-        }
+        src.sendMessage(this.getMessageController()
+                            .getMessage(Reference.SuccessMessages.ADMIN_NICK_CHECK)
+                            .apply(TemplateUtils.getParameters(player))
+                            .build());
 
-        src.sendMessage(this.messageController.getMessage(Reference.SuccessMessages.ADMIN_NICK_CHECK).apply(TemplateUtils.getParameters(player.get())).build());
         return CommandResult.success();
 
     }
 
-    public static CommandSpec getCommandSpec(MessageController messageController, ISpongePlayerController playerController)
+    public static CommandSpec getCommandSpec(MessageController messageController,
+                                             ISpongePlayerController playerController)
     {
         return CommandSpec.builder()
                           .arguments(new PlayerDataArg(ARG, playerController))

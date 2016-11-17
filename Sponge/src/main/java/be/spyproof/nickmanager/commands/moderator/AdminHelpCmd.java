@@ -52,7 +52,7 @@ public class AdminHelpCmd implements CommandExecutor
 
         if (content.size() == 0)
         {
-            src.sendMessage(this.messageController.getMessage(Reference.ErrorMessages.NO_PERMISSION).apply().build());
+            throw new CommandException(this.messageController.getMessage(Reference.ErrorMessages.NO_PERMISSION).apply().build());
         }else
         {
             PaginationService paginationService = Sponge.getServiceManager().provide(PaginationService.class).get();
@@ -76,9 +76,8 @@ public class AdminHelpCmd implements CommandExecutor
             builder.contents(content);
             builder.padding(Text.of(TextColors.AQUA, "="));
             builder.sendTo(src);
+            return CommandResult.success();
         }
-
-        return CommandResult.success();
     }
 
     public static CommandSpec getCommandSpec(MessageController messageController)

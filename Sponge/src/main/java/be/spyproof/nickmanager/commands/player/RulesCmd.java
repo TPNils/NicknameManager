@@ -26,8 +26,8 @@ public class RulesCmd extends AbstractCmd
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException
     {
-        PlayerData playerData = this.playerController.wrapPlayer((Player) src);
-        src.sendMessage(this.messageController.getMessage(Reference.SuccessMessages.NICK_RULES).apply(TemplateUtils.getParameters("command", "/" + Reference.CommandKeys.ACCEPT_RULES[0])).build());
+        PlayerData playerData = this.getPlayerController().wrapPlayer((Player) src);
+        src.sendMessage(this.getMessageController().getMessage(Reference.SuccessMessages.NICK_RULES).apply(TemplateUtils.getParameters("command", "/" + Reference.CommandKeys.ACCEPT_RULES[0])).build());
         playerData.setReadRules(true);
 
         return CommandResult.success();

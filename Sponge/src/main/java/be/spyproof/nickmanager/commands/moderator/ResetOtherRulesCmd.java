@@ -2,6 +2,7 @@ package be.spyproof.nickmanager.commands.moderator;
 
 import be.spyproof.nickmanager.commands.AbstractCmd;
 import be.spyproof.nickmanager.commands.argument.PlayerDataArg;
+import be.spyproof.nickmanager.commands.checks.IArgumentChecker;
 import be.spyproof.nickmanager.controller.ISpongePlayerController;
 import be.spyproof.nickmanager.controller.MessageController;
 import be.spyproof.nickmanager.model.PlayerData;
@@ -20,7 +21,7 @@ import java.util.Optional;
 /**
  * Created by Spyproof on 01/11/2016.
  */
-public class ResetOtherRulesCmd extends AbstractCmd
+public class ResetOtherRulesCmd extends AbstractCmd implements IArgumentChecker
 {
     private static final String ARG = "player";
 
@@ -32,25 +33,17 @@ public class ResetOtherRulesCmd extends AbstractCmd
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException
     {
-        Optional<PlayerData> playerData = args.getOne(ARG);
+        PlayerData playerData = getArgument(args, ARG);
 
-        if (!playerData.isPresent())
-        {
-            src.sendMessage(this.messageController.getMessage(Reference.ErrorMessages.MISSING_ARGUMENT).apply(TemplateUtils.getParameters("argument", ARG)).build());
-            return CommandResult.success();
-        }
+        playerData.setAcceptedRules(false);
+        playerData.setReadRules(false);
+        this.getPlayerController().savePlayer(playerData);
 
-        playerData.get().setAcceptedRules(false);
-        playerData.get().setReadRules(false);
-        this.playerController.savePlayer(playerData.get());
-
-        Optional<Player> player = Sponge.getServer().getPlayer(playerData.get().getUuid());
+        Optional<Player> player = Sponge.getServer().getPlayer(playerData.getUuid());
         if (player.isPresent())
-        {
-            player.get().sendMessage(this.messageController.getMessage(Reference.SuccessMessages.ADMIN_NICK_RESET_RULES_RECEIVED).toText());
-        }
+            player.get().sendMessage(this.getMessageController().getMessage(Reference.SuccessMessages.ADMIN_NICK_RESET_RULES_RECEIVED).toText());
 
-        src.sendMessage(this.messageController.getMessage(Reference.SuccessMessages.ADMIN_NICK_RESET_RULES).apply(TemplateUtils.getParameters(playerData.get())).build());
+        src.sendMessage(this.getMessageController().getMessage(Reference.SuccessMessages.ADMIN_NICK_RESET_RULES).apply(TemplateUtils.getParameters(playerData)).build());
         return CommandResult.success();
     }
 

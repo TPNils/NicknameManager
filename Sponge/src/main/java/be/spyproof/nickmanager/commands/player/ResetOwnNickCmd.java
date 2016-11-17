@@ -1,5 +1,6 @@
 package be.spyproof.nickmanager.commands.player;
 
+import be.spyproof.nickmanager.commands.AbstractCmd;
 import be.spyproof.nickmanager.controller.ISpongePlayerController;
 import be.spyproof.nickmanager.controller.MessageController;
 import be.spyproof.nickmanager.model.PlayerData;
@@ -13,7 +14,7 @@ import org.spongepowered.api.entity.living.player.Player;
 /**
  * Created by Spyproof on 31/10/2016.
  */
-public class ResetOwnNickCmd extends AbstractPlayerCmd
+public class ResetOwnNickCmd extends AbstractCmd implements IPlayerCmd
 {
     private ResetOwnNickCmd(MessageController messageController, ISpongePlayerController playerController)
     {
@@ -23,11 +24,11 @@ public class ResetOwnNickCmd extends AbstractPlayerCmd
     @Override
     public CommandResult execute(Player src, CommandContext args) throws CommandException
     {
-        PlayerData playerData = this.playerController.wrapPlayer(src);
+        PlayerData playerData = this.getPlayerController().wrapPlayer(src);
         playerData.setNickname(null);
-        this.playerController.savePlayer(playerData);
+        this.getPlayerController().savePlayer(playerData);
 
-        src.sendMessage(this.messageController.getMessage(Reference.SuccessMessages.NICK_RESET).apply().build());
+        src.sendMessage(this.getMessageController().getMessage(Reference.SuccessMessages.NICK_RESET).apply().build());
         return CommandResult.success();
     }
 

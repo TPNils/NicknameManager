@@ -1,6 +1,7 @@
 package be.spyproof.nickmanager.commands.player;
 
 import be.spyproof.nickmanager.commands.AbstractCmd;
+import be.spyproof.nickmanager.commands.checks.IPlayerCheck;
 import be.spyproof.nickmanager.controller.ISpongePlayerController;
 import be.spyproof.nickmanager.controller.MessageController;
 import be.spyproof.nickmanager.model.PlayerData;
@@ -16,7 +17,7 @@ import org.spongepowered.api.entity.living.player.Player;
 /**
  * Created by Spyproof on 30/10/2016.
  */
-public class AcceptRulesCmd extends AbstractCmd
+public class AcceptRulesCmd extends AbstractCmd implements IPlayerCheck
 {
     private AcceptRulesCmd(MessageController messageController, ISpongePlayerController playerController)
     {
@@ -26,23 +27,16 @@ public class AcceptRulesCmd extends AbstractCmd
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException
     {
-        if (!(src instanceof Player))
-        {
-            src.sendMessage(this.messageController.getMessage(Reference.ErrorMessages.PLAYER_ONLY).toText());
-            return CommandResult.success();
-        }
+        checkIsPlayer(src);
 
-        PlayerData playerData = this.playerController.wrapPlayer((Player) src);
+        PlayerData playerData = this.getPlayerController().wrapPlayer((Player) src);
 
         if (!playerData.readRules())
-        {
-            src.sendMessage(this.messageController.getMessage(Reference.ErrorMessages.MUST_READ_RULES).apply(TemplateUtils.getParameters("command", "/nick " + Reference.CommandKeys.PLAYER_RULES[0])).build());
-            return CommandResult.success();
-        }
+            throw new CommandException(this.getMessageController().getMessage(Reference.ErrorMessages.MUST_READ_RULES).apply(TemplateUtils.getParameters("command", "/nick " + Reference.CommandKeys.PLAYER_RULES[0])).build());
 
         playerData.setAcceptedRules(true);
-        this.playerController.savePlayer(playerData);
-        src.sendMessage(this.messageController.getMessage(Reference.SuccessMessages.ACCEPTED_RULES).toText());
+        this.getPlayerController().savePlayer(playerData);
+        src.sendMessage(this.getMessageController().getMessage(Reference.SuccessMessages.ACCEPTED_RULES).toText());
 
         return CommandResult.success();
     }
