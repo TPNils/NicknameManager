@@ -4,7 +4,7 @@
 
     <groupId>be.spyproof.nickname-manager</groupId>
     <artifactId>nickname-manager</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <name>Nickname Manager</name>
     <description>Allows players to manage their own nicknames</description>
     <packaging>pom</packaging>
