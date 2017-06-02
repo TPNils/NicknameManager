@@ -5,7 +5,7 @@ import be.spyproof.nickmanager.model.PlayerData;
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 /**
@@ -29,7 +29,7 @@ public class PlayerListener implements Listener
      * @param event The fired event
      */
     @EventHandler
-    public void onLogin(PlayerLoginEvent event)
+    public void onLogin(PlayerJoinEvent event)
     {
         PlayerData playerData = this.playerController.wrap(event.getPlayer().getUniqueId(), event.getPlayer().getName());
         if (playerData.getNickname().isPresent())
