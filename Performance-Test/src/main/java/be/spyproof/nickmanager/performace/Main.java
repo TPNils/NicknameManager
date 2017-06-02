@@ -32,11 +32,15 @@ public class Main
         if (args.length > 5)
             tempDir = args[5];
 
+        if (!tempDir.matches("[\\/]$"))
+            tempDir += "\\";
+        tempDir += "nickname-test";
+
         TestReference.Init(host, port, database, user, password, tempDir);
         Performance performance = new Performance();
         try
         {
-            performance.mySql();
+            //performance.mySql();
             System.out.println();
             performance.gson();
         }

@@ -47,7 +47,7 @@ public class Performance
         PerformanceTester tester = new PerformanceTester(TestReference.getLocalSqlPlayerStorage());
         System.out.println(DateUtil.timeformat(System.currentTimeMillis() - timestamp));
 
-        tester.createPlayers(100);
+        tester.createPlayers(2000);
         tester.createAndUpdatePlayers(10);
         tester.close();
         tester.setPlayerStorage(TestReference.getLocalSqlPlayerStorage());
@@ -60,7 +60,7 @@ public class Performance
         // Remove all create players
         try (Connection connection = TestReference.getLocalSqlConnection())
         {
-            connection.prepareStatement("DELETE FROM player;").execute();
+            //connection.prepareStatement("DELETE FROM player;").execute();
         }
     }
 

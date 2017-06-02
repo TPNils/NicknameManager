@@ -41,7 +41,7 @@ public class TestReference
 
     public static GsonPlayerStorage getGsonPlayerStorage() throws IOException, SQLException
     {
-        return new GsonPlayerStorage(new File(getTempDir(), "nickname-test"));
+        return new GsonPlayerStorage(getTempDir());
     }
 
     public static File getTempDir()
