@@ -24,6 +24,14 @@
             <version>${project.parent.version}</version>
             <classifier>jar-with-dependencies</classifier>
         </dependency>
+
+        <dependency>
+            <groupId>br.net.fabiozumbi12</groupId>
+            <artifactId>UltimateChat</artifactId>
+            <version>1.7.1-b22</version>
+            <scope>system</scope>
+            <systemPath>E:\Minecraft\Server\server_pokeclub_new\mods\UltimateChat-1.7.1-b22.jar</systemPath>
+        </dependency>
     </dependencies>
 
     <repositories>

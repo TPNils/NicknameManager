@@ -8,6 +8,7 @@ import be.spyproof.nickmanager.controller.MessageController;
 import be.spyproof.nickmanager.controller.SpongePlayerController;
 import be.spyproof.nickmanager.da.config.IConfigStorage;
 import be.spyproof.nickmanager.listener.PlayerListener;
+import be.spyproof.nickmanager.listener.UltimateChatListener;
 import be.spyproof.nickmanager.listener.VanillaNicknameApplier;
 import be.spyproof.nickmanager.util.Reference;
 import be.spyproof.nickmanager.util.SpongeUtils;
@@ -21,6 +22,7 @@ import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
 import org.spongepowered.api.event.game.state.GameStartingServerEvent;
 import org.spongepowered.api.event.game.state.GameStoppingEvent;
+import org.spongepowered.api.plugin.Dependency;
 import org.spongepowered.api.plugin.Plugin;
 
 import java.io.File;
@@ -29,7 +31,13 @@ import java.io.IOException;
 /**
  * Created by Spyproof on 28/10/2016.
  */
-@Plugin(id = Reference.MetaData.PLUGIN_ID, name = Reference.MetaData.PLUGIN_NAME, version = Reference.MetaData.VERSION, description = Reference.MetaData.DESCRIPTIONS, authors = {"TPNils"})
+@Plugin(
+        id = Reference.MetaData.PLUGIN_ID,
+        name = Reference.MetaData.PLUGIN_NAME,
+        version = Reference.MetaData.VERSION,
+        description = Reference.MetaData.DESCRIPTIONS,
+        authors = {"TPNils"},
+        dependencies = @Dependency(id="ultimatechat", optional=true))
 public class Main
 {
     @Inject
@@ -124,6 +132,14 @@ public class Main
     {
         Sponge.getGame().getEventManager().registerListeners(this, new VanillaNicknameApplier(this.playerController));
         Sponge.getGame().getEventManager().registerListeners(this, new PlayerListener(this.playerController));
+
+        try
+        {
+            Class.forName("br.net.fabiozumbi12.UltimateChat.API.SendChannelMessageEvent");
+            Sponge.getEventManager().registerListener(this, br.net.fabiozumbi12.UltimateChat.API.SendChannelMessageEvent.class, new UltimateChatListener(this.playerController));
+        }
+        catch (ClassNotFoundException ignored)
+        {}
     }
 
     /**
