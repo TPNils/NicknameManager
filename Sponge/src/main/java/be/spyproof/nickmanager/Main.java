@@ -18,10 +18,7 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.game.state.GameInitializationEvent;
-import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
-import org.spongepowered.api.event.game.state.GameStartingServerEvent;
-import org.spongepowered.api.event.game.state.GameStoppingEvent;
+import org.spongepowered.api.event.game.state.*;
 import org.spongepowered.api.plugin.Dependency;
 import org.spongepowered.api.plugin.Plugin;
 
@@ -99,6 +96,16 @@ public class Main
     }
 
     /**
+     * During this event, all services are registered
+     * @param event the fired event
+     */
+    @Listener
+    public void onPostInit(GamePostInitializationEvent event)
+    {
+        registerServices();
+    }
+
+    /**
      * During this event, all commands are registered
      * @param event the fired event
      */
@@ -123,6 +130,14 @@ public class Main
         {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Register the services to sponge service manager
+     */
+    private void registerServices()
+    {
+        Sponge.getServiceManager().setProvider(this, ISpongeNicknameController.class, this.playerController);
     }
 
     /**
