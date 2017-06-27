@@ -1,6 +1,6 @@
 package be.spyproof.nickmanager.test.controller;
 
-import be.spyproof.nickmanager.controller.PlayerController;
+import be.spyproof.nickmanager.controller.NicknameController;
 import be.spyproof.nickmanager.test.da.player.DummyPlayerStorage;
 import org.testng.annotations.Test;
 
@@ -11,7 +11,7 @@ public class PlayerControllerTest extends PlayerControllerTester
 {
     public PlayerControllerTest()
     {
-        super(new PlayerController(new DummyPlayerStorage()));
+        super(new NicknameController(new DummyPlayerStorage()));
     }
 
     @Test

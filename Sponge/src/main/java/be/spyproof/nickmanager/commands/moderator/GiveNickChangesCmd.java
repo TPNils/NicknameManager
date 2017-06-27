@@ -4,9 +4,9 @@ package be.spyproof.nickmanager.commands.moderator;
 import be.spyproof.nickmanager.commands.AbstractCmd;
 import be.spyproof.nickmanager.commands.argument.PlayerDataArg;
 import be.spyproof.nickmanager.commands.checks.IArgumentChecker;
-import be.spyproof.nickmanager.controller.ISpongePlayerController;
+import be.spyproof.nickmanager.controller.ISpongeNicknameController;
 import be.spyproof.nickmanager.controller.MessageController;
-import be.spyproof.nickmanager.model.PlayerData;
+import be.spyproof.nickmanager.model.NicknameData;
 import be.spyproof.nickmanager.util.Reference;
 import be.spyproof.nickmanager.util.TemplateUtils;
 import org.spongepowered.api.Sponge;
@@ -29,7 +29,7 @@ public class GiveNickChangesCmd extends AbstractCmd implements IArgumentChecker
 {
     private static final String[] ARGS = new String[]{"player", "amount"};
 
-    private GiveNickChangesCmd(MessageController messageController, ISpongePlayerController playerController)
+    private GiveNickChangesCmd(MessageController messageController, ISpongeNicknameController playerController)
     {
         super(messageController, playerController);
     }
@@ -37,19 +37,19 @@ public class GiveNickChangesCmd extends AbstractCmd implements IArgumentChecker
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException
     {
-        PlayerData playerData = getArgument(args, ARGS[0]);
+        NicknameData nicknameData = getArgument(args, ARGS[0]);
         Integer amount = getArgument(args, ARGS[1]);
 
-        playerData.setTokensRemaining(amount + playerData.getTokensRemaining());
-        this.getPlayerController().savePlayer(playerData);
+        nicknameData.setTokensRemaining(amount + nicknameData.getTokensRemaining());
+        this.getPlayerController().savePlayer(nicknameData);
 
-        Optional<Player> player = Sponge.getServer().getPlayer(playerData.getUuid());
+        Optional<Player> player = Sponge.getServer().getPlayer(nicknameData.getUuid());
         if (player.isPresent())
             player.get().sendMessage(
                     this.getMessageController().getMessage(Reference.SuccessMessages.ADMIN_NICK_GIVE_RECEIVED)
                         .apply(TemplateUtils.getParameters("tokens", amount)).build());
 
-        Map<String, Text> params = TemplateUtils.getParameters(playerData);
+        Map<String, Text> params = TemplateUtils.getParameters(nicknameData);
         params.putAll(TemplateUtils.getParameters("tokens", Text.of(amount)));
 
         src.sendMessage(this.getMessageController().getMessage(Reference.SuccessMessages.ADMIN_NICK_GIVE).apply(params).build());
@@ -57,7 +57,7 @@ public class GiveNickChangesCmd extends AbstractCmd implements IArgumentChecker
         return CommandResult.success();
     }
 
-    public static CommandSpec getCommandSpec(MessageController messageController, ISpongePlayerController playerController)
+    public static CommandSpec getCommandSpec(MessageController messageController, ISpongeNicknameController playerController)
     {
         return CommandSpec.builder()
                           .arguments(new PlayerDataArg(ARGS[0], playerController),

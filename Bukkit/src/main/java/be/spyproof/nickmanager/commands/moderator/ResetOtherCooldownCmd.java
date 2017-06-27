@@ -2,9 +2,9 @@ package be.spyproof.nickmanager.commands.moderator;
 
 import be.spyproof.nickmanager.commands.AbstractCmd;
 import be.spyproof.nickmanager.commands.checks.IPermissionCheck;
-import be.spyproof.nickmanager.controller.IBukkitPlayerController;
+import be.spyproof.nickmanager.controller.IBukkitNicknameController;
 import be.spyproof.nickmanager.controller.MessageController;
-import be.spyproof.nickmanager.model.PlayerData;
+import be.spyproof.nickmanager.model.NicknameData;
 import be.spyproof.nickmanager.util.Reference;
 import be.spyproof.nickmanager.util.TabCompleteUtil;
 import be.spyproof.nickmanager.util.TemplateUtils;
@@ -27,7 +27,7 @@ public class ResetOtherCooldownCmd extends AbstractCmd implements TabCompleter, 
 {
     private static final String ARG = "player";
 
-    public ResetOtherCooldownCmd(MessageController messageController, IBukkitPlayerController playerController, String... keys)
+    public ResetOtherCooldownCmd(MessageController messageController, IBukkitNicknameController playerController, String... keys)
     {
         super(messageController, playerController, keys);
     }
@@ -46,7 +46,7 @@ public class ResetOtherCooldownCmd extends AbstractCmd implements TabCompleter, 
         if (args.length == 0 || args[0] == null)
             throw new CancellationException(this.messageController.getFormattedMessage(Reference.ErrorMessages.MISSING_ARGUMENT).replace("{argument}", ARG));
 
-        Optional<? extends PlayerData> playerData = this.playerController.getPlayer(args[0]);
+        Optional<? extends NicknameData> playerData = this.playerController.getPlayer(args[0]);
 
         if (!playerData.isPresent())
             throw new CommandException(this.messageController.getFormattedMessage(Reference.ErrorMessages.WRONG_ARGUMENT).replace("{argument}", args[0]));

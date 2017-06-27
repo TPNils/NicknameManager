@@ -3,9 +3,9 @@ package be.spyproof.nickmanager;
 import be.spyproof.nickmanager.commands.ParentCmd;
 import be.spyproof.nickmanager.commands.moderator.*;
 import be.spyproof.nickmanager.commands.player.*;
-import be.spyproof.nickmanager.controller.BukkitPlayerController;
+import be.spyproof.nickmanager.controller.BukkitNicknameController;
 import be.spyproof.nickmanager.controller.ConfigController;
-import be.spyproof.nickmanager.controller.IBukkitPlayerController;
+import be.spyproof.nickmanager.controller.IBukkitNicknameController;
 import be.spyproof.nickmanager.controller.MessageController;
 import be.spyproof.nickmanager.da.config.IConfigStorage;
 import be.spyproof.nickmanager.listeners.PlayerListener;
@@ -23,7 +23,7 @@ import java.io.IOException;
 public class Main extends JavaPlugin
 {
     private IConfigStorage configStorage;
-    private IBukkitPlayerController playerController;
+    private IBukkitNicknameController playerController;
     private MessageController messageController;
 
     @Override
@@ -39,7 +39,7 @@ public class Main extends JavaPlugin
         try
         {
             this.configStorage.load();
-            this.playerController = new BukkitPlayerController(this.configStorage.getPlayerStorage());
+            this.playerController = new BukkitNicknameController(this.configStorage.getPlayerStorage());
         }
         catch (Exception e)
         {

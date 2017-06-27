@@ -2,7 +2,7 @@ package be.spyproof.nickmanager.commands.player;
 
 import be.spyproof.nickmanager.commands.AbstractCmd;
 import be.spyproof.nickmanager.commands.checks.IPermissionCheck;
-import be.spyproof.nickmanager.controller.IBukkitPlayerController;
+import be.spyproof.nickmanager.controller.IBukkitNicknameController;
 import be.spyproof.nickmanager.controller.MessageController;
 import be.spyproof.nickmanager.util.Reference;
 import org.bukkit.command.CommandSender;
@@ -12,7 +12,7 @@ import org.bukkit.command.CommandSender;
  */
 public class UnlockCmd extends AbstractCmd implements IPermissionCheck
 {
-    public UnlockCmd(MessageController messageController, IBukkitPlayerController playerController, String... keys)
+    public UnlockCmd(MessageController messageController, IBukkitNicknameController playerController, String... keys)
     {
         super(messageController, playerController, keys);
     }

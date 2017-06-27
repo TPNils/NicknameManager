@@ -1,9 +1,9 @@
 package be.spyproof.nickmanager.commands.player;
 
 import be.spyproof.nickmanager.commands.AbstractCmd;
-import be.spyproof.nickmanager.controller.ISpongePlayerController;
+import be.spyproof.nickmanager.controller.ISpongeNicknameController;
 import be.spyproof.nickmanager.controller.MessageController;
-import be.spyproof.nickmanager.model.PlayerData;
+import be.spyproof.nickmanager.model.NicknameData;
 import be.spyproof.nickmanager.util.Reference;
 import be.spyproof.nickmanager.util.TemplateUtils;
 import org.spongepowered.api.command.CommandException;
@@ -18,7 +18,7 @@ import org.spongepowered.api.entity.living.player.Player;
  */
 public class RulesCmd extends AbstractCmd
 {
-    private RulesCmd(MessageController messageController, ISpongePlayerController playerController)
+    private RulesCmd(MessageController messageController, ISpongeNicknameController playerController)
     {
         super(messageController, playerController);
     }
@@ -26,14 +26,14 @@ public class RulesCmd extends AbstractCmd
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException
     {
-        PlayerData playerData = this.getPlayerController().wrapPlayer((Player) src);
+        NicknameData nicknameData = this.getPlayerController().wrapPlayer((Player) src);
         src.sendMessage(this.getMessageController().getMessage(Reference.SuccessMessages.NICK_RULES).apply(TemplateUtils.getParameters("command", "/" + Reference.CommandKeys.ACCEPT_RULES[0])).build());
-        playerData.setReadRules(true);
+        nicknameData.setReadRules(true);
 
         return CommandResult.success();
     }
 
-    public static CommandSpec getCommandSpec(MessageController messageController, ISpongePlayerController playerController)
+    public static CommandSpec getCommandSpec(MessageController messageController, ISpongeNicknameController playerController)
     {
         return CommandSpec.builder()
                           .executor(new RulesCmd(messageController, playerController))

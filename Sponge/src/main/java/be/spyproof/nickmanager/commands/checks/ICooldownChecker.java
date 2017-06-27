@@ -1,7 +1,7 @@
 package be.spyproof.nickmanager.commands.checks;
 
 import be.spyproof.nickmanager.commands.IMessageControllerHolder;
-import be.spyproof.nickmanager.model.PlayerData;
+import be.spyproof.nickmanager.model.NicknameData;
 import be.spyproof.nickmanager.util.DateUtil;
 import be.spyproof.nickmanager.util.Reference;
 import be.spyproof.nickmanager.util.SpongeUtils;
@@ -16,9 +16,9 @@ import java.util.Map;
  */
 public interface ICooldownChecker extends IMessageControllerHolder
 {
-    default void checkCooldown(PlayerData playerData, Player src) throws CommandException
+    default void checkCooldown(NicknameData nicknameData, Player src) throws CommandException
     {
-        if (!SpongeUtils.INSTANCE.canChangeNickname(playerData, src))
+        if (!SpongeUtils.INSTANCE.canChangeNickname(nicknameData, src))
         {
             long cooldown;
             if (src.hasPermission(Reference.Permissions.BYPASS_COOLDOWN))
@@ -35,7 +35,7 @@ public interface ICooldownChecker extends IMessageControllerHolder
                 }
             }
 
-            long timeDiff = playerData.getLastChanged() + cooldown - System.currentTimeMillis();
+            long timeDiff = nicknameData.getLastChanged() + cooldown - System.currentTimeMillis();
             if (timeDiff > 0)
             {
                 throw new CommandException(

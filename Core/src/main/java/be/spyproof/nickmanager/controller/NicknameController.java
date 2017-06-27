@@ -2,7 +2,7 @@ package be.spyproof.nickmanager.controller;
 
 
 import be.spyproof.nickmanager.da.player.IPlayerStorage;
-import be.spyproof.nickmanager.model.PlayerData;
+import be.spyproof.nickmanager.model.NicknameData;
 
 import java.io.IOException;
 import java.util.List;
@@ -12,69 +12,69 @@ import java.util.UUID;
 /**
  * Created by Spyproof on 28/10/2016.
  */
-public class PlayerController implements IPlayerController
+public class NicknameController implements INicknameController
 {
     protected IPlayerStorage storage;
 
-    public PlayerController(IPlayerStorage storage)
+    public NicknameController(IPlayerStorage storage)
     {
         this.storage = storage;
     }
 
     @Override
-    public void savePlayer(PlayerData player)
+    public void savePlayer(NicknameData player)
     {
         this.storage.savePlayer(player);
     }
 
     @Override
-    public Optional<PlayerData> getPlayer(String name)
+    public Optional<NicknameData> getPlayer(String name)
     {
         return getStoredPlayer(name);
     }
 
     @Override
-    public Optional<PlayerData> getPlayer(UUID uuid)
+    public Optional<NicknameData> getPlayer(UUID uuid)
     {
         return getStoredPlayer(uuid);
     }
 
     @Override
-    public List<PlayerData> getPlayerByNickname(String nickname)
+    public List<NicknameData> getPlayerByNickname(String nickname)
     {
         return getPlayerByNickname(nickname, 10);
     }
 
     @Override
-    public List<PlayerData> getPlayerByNickname(String nickname, int limit)
+    public List<NicknameData> getPlayerByNickname(String nickname, int limit)
     {
         return this.storage.getPlayerByNickname(nickname, limit);
     }
 
-    public void removePlayer(PlayerData player)
+    public void removePlayer(NicknameData player)
     {
         this.storage.removePlayer(player);
     }
 
     @Override
-    public PlayerData wrap(UUID uuid, String name)
+    public NicknameData wrap(UUID uuid, String name)
     {
-        PlayerData playerData;
-        Optional<PlayerData> optional = getStoredPlayer(uuid);
+        NicknameData nicknameData;
+        Optional<NicknameData> optional = getStoredPlayer(uuid);
         if (optional.isPresent())
-            playerData = optional.get();
+            nicknameData = optional.get();
         else
         {
-            playerData = new PlayerData(name, uuid);
+            nicknameData = new NicknameData(name, uuid);
         }
 
-        if (!playerData.getName().equals(name))
+        if (!nicknameData.getName().equals(name))
         {
-            playerData.setName(name);
-            savePlayer(playerData);
+            nicknameData.setName(name);
+            savePlayer(nicknameData);
         }
 
-        return playerData;
+        return nicknameData;
     }
 
     @Override
@@ -89,10 +89,10 @@ public class PlayerController implements IPlayerController
         this.storage.close();
     }
 
-    protected Optional<PlayerData> getStoredPlayer(String name)
+    protected Optional<NicknameData> getStoredPlayer(String name)
     {
-        Optional<PlayerData> player;
-        Optional<PlayerData> stored = this.storage.getPlayer(name);
+        Optional<NicknameData> player;
+        Optional<NicknameData> stored = this.storage.getPlayer(name);
 
         if (stored.isPresent())
             player = Optional.of(stored.get());
@@ -102,10 +102,10 @@ public class PlayerController implements IPlayerController
         return player;
     }
 
-    protected Optional<PlayerData> getStoredPlayer(UUID uuid)
+    protected Optional<NicknameData> getStoredPlayer(UUID uuid)
     {
-        Optional<PlayerData> player;
-        Optional<PlayerData> stored = this.storage.getPlayer(uuid);
+        Optional<NicknameData> player;
+        Optional<NicknameData> stored = this.storage.getPlayer(uuid);
 
         if (stored.isPresent())
             player = Optional.of(stored.get());

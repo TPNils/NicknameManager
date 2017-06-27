@@ -1,6 +1,6 @@
 package be.spyproof.nickmanager.util;
 
-import be.spyproof.nickmanager.model.PlayerData;
+import be.spyproof.nickmanager.model.NicknameData;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -25,7 +25,7 @@ public class TabCompleteUtil
         return names;
     }
 
-    public static List<String> getOldNicknames(PlayerData playerData, String nick)
+    public static List<String> getOldNicknames(NicknameData nicknameData, String nick)
     {
         List<String> names = new ArrayList<>();
         if (!nick.isEmpty())
@@ -33,7 +33,7 @@ public class TabCompleteUtil
 
         nick = ChatColor.translateAlternateColorCodes('&', nick.toLowerCase());
 
-        for (String oldNick : playerData.getPastNicknames())
+        for (String oldNick : nicknameData.getPastNicknames())
             if (oldNick.replaceAll(Reference.COLOUR_AND_STYLE_PATTERN, "").startsWith(nick) && !names.contains(oldNick))
                 names.add(oldNick);
 

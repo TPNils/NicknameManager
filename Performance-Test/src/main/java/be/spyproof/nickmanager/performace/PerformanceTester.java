@@ -1,7 +1,7 @@
 package be.spyproof.nickmanager.performace;
 
 import be.spyproof.nickmanager.da.player.IPlayerStorage;
-import be.spyproof.nickmanager.model.PlayerData;
+import be.spyproof.nickmanager.model.NicknameData;
 import be.spyproof.nickmanager.util.DateUtil;
 
 import java.io.Closeable;
@@ -20,8 +20,8 @@ public class PerformanceTester implements Closeable
 {
     private IPlayerStorage playerStorage;
     private SecureRandom random = new SecureRandom();
-    private PlayerData reference = TestReference.getPlayerData();
-    private List<PlayerData> generatedPlayers = new ArrayList<>();
+    private NicknameData reference = TestReference.getPlayerData();
+    private List<NicknameData> generatedPlayers = new ArrayList<>();
     private long timestamp;
 
     public PerformanceTester(IPlayerStorage playerStorage)
@@ -50,7 +50,7 @@ public class PerformanceTester implements Closeable
         System.out.println("Creating and updating " + amount + " players");
         for (int i = 0; i < amount; i++)
         {
-            PlayerData player = getRandomPlayer();
+            NicknameData player = getRandomPlayer();
             player.setNickname(getRandomString());
             player.setTokensRemaining(1);
             this.playerStorage.savePlayer(player);
@@ -96,13 +96,13 @@ public class PerformanceTester implements Closeable
         stopTimer();
     }
 
-    private PlayerData getRandomPlayer()
+    private NicknameData getRandomPlayer()
     {
         UUID uuid = UUID.randomUUID();
-        PlayerData playerData = new PlayerData(getRandomString(), uuid);
+        NicknameData nicknameData = new NicknameData(getRandomString(), uuid);
         if (this.generatedPlayers.size() < 1000)
-            this.generatedPlayers.add(playerData);
-        return playerData;
+            this.generatedPlayers.add(nicknameData);
+        return nicknameData;
     }
 
     private String getRandomString()

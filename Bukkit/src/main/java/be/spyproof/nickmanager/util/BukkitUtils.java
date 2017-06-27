@@ -1,8 +1,8 @@
 package be.spyproof.nickmanager.util;
 
-import be.spyproof.nickmanager.controller.IBukkitPlayerController;
+import be.spyproof.nickmanager.controller.IBukkitNicknameController;
 import be.spyproof.nickmanager.da.config.IConfigStorage;
-import be.spyproof.nickmanager.model.PlayerData;
+import be.spyproof.nickmanager.model.NicknameData;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -17,7 +17,7 @@ import java.util.Optional;
  */
 public class BukkitUtils
 {
-    protected IBukkitPlayerController playerController;
+    protected IBukkitNicknameController playerController;
     protected IConfigStorage configController;
 
     public static BukkitUtils INSTANCE;
@@ -27,12 +27,12 @@ public class BukkitUtils
      * @param playerController The controller to wrap a player in
      * @param configController The controller that contains all configuration options
      */
-    public static void initInstance(IBukkitPlayerController playerController, IConfigStorage configController)
+    public static void initInstance(IBukkitNicknameController playerController, IConfigStorage configController)
     {
         INSTANCE = new BukkitUtils(playerController, configController);
     }
 
-    private BukkitUtils(IBukkitPlayerController playerController, IConfigStorage configController)
+    private BukkitUtils(IBukkitNicknameController playerController, IConfigStorage configController)
     {
         this.playerController = playerController;
         this.configController = configController;
@@ -53,13 +53,13 @@ public class BukkitUtils
     }
 
     /**
-     * @param playerData The player that will be checked if they have accepted the rules or not
+     * @param nicknameData The player that will be checked if they have accepted the rules or not
      * @param source     Used to check to see if the player can bypass accepting the rules
      * @return true if they don't need to accept the rules, if they can bypass it or have accepted it, false if not.
      */
-    public boolean acceptedRules(PlayerData playerData, CommandSender source)
+    public boolean acceptedRules(NicknameData nicknameData, CommandSender source)
     {
-        if (playerData.hasAcceptedRules())
+        if (nicknameData.hasAcceptedRules())
             return true;
         if (source.hasPermission(Reference.Permissions.BYPASS_RULES))
             return true;
@@ -77,13 +77,13 @@ public class BukkitUtils
     }
 
     /**
-     * @param playerData The player that will be checked for the amount of nickname tokens they have
+     * @param nicknameData The player that will be checked for the amount of nickname tokens they have
      * @param source     Used to check to see if the player can bypass the change limit
      * @return true if they have enough tokens or bypass the limit, false if not.
      */
-    public boolean canChangeNickname(PlayerData playerData, CommandSender source)
+    public boolean canChangeNickname(NicknameData nicknameData, CommandSender source)
     {
-        if (playerData.getTokensRemaining() <= 0)
+        if (nicknameData.getTokensRemaining() <= 0)
             return source.hasPermission(Reference.Permissions.BYPASS_CHANGE_LIMIT);
 
         return true;

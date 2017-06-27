@@ -1,7 +1,7 @@
 package be.spyproof.nickmanager.test.controller;
 
-import be.spyproof.nickmanager.controller.IPlayerController;
-import be.spyproof.nickmanager.model.PlayerData;
+import be.spyproof.nickmanager.controller.INicknameController;
+import be.spyproof.nickmanager.model.NicknameData;
 import be.spyproof.nickmanager.test.TestReference;
 import org.testng.Assert;
 
@@ -13,17 +13,17 @@ import java.util.Optional;
  */
 public class PlayerControllerTester
 {
-    private IPlayerController playerController;
-    private PlayerData testPlayer;
+    private INicknameController playerController;
+    private NicknameData testPlayer;
 
-    public PlayerControllerTester(IPlayerController playerController)
+    public PlayerControllerTester(INicknameController playerController)
     {
         this.playerController = playerController;
     }
 
     public void wrapNewPlayer()
     {
-        PlayerData init = TestReference.getPlayerData();
+        NicknameData init = TestReference.getPlayerData();
         this.testPlayer = this.playerController.wrap(init.getUuid(), init.getName());
         Assert.assertNotNull(this.testPlayer);
     }
@@ -40,23 +40,23 @@ public class PlayerControllerTester
 
     public void getPlayerByName()
     {
-        Optional<? extends PlayerData> storedPlayer = this.playerController.getPlayer(this.testPlayer.getName());
+        Optional<? extends NicknameData> storedPlayer = this.playerController.getPlayer(this.testPlayer.getName());
         Assert.assertTrue(storedPlayer.isPresent());
         Assert.assertEquals(storedPlayer.get(), this.testPlayer);
     }
 
     public void getPlayerByUuid()
     {
-        Optional<? extends PlayerData> storedPlayer = this.playerController.getPlayer(this.testPlayer.getUuid());
+        Optional<? extends NicknameData> storedPlayer = this.playerController.getPlayer(this.testPlayer.getUuid());
         Assert.assertTrue(storedPlayer.isPresent());
         Assert.assertEquals(storedPlayer.get(), this.testPlayer);
     }
 
     public void getPlayerByNickname()
     {
-        List<? extends PlayerData> storedPlayers = this.playerController.getPlayerByNickname(this.testPlayer.getNickname().get());
+        List<? extends NicknameData> storedPlayers = this.playerController.getPlayerByNickname(this.testPlayer.getNickname().get());
 
-        for (PlayerData storedPlayer : storedPlayers)
+        for (NicknameData storedPlayer : storedPlayers)
             if (this.testPlayer.getUuid().equals(storedPlayer.getUuid()))
             {
                 Assert.assertEquals(storedPlayer, this.testPlayer);
@@ -69,7 +69,7 @@ public class PlayerControllerTester
     public void removePlayer()
     {
         this.playerController.removePlayer(this.testPlayer);
-        Optional<? extends PlayerData> storedPlayer = this.playerController.getPlayer(this.testPlayer.getUuid());
+        Optional<? extends NicknameData> storedPlayer = this.playerController.getPlayer(this.testPlayer.getUuid());
         Assert.assertFalse(storedPlayer.isPresent());
     }
 }

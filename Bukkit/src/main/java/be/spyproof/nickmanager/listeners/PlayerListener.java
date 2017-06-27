@@ -1,7 +1,7 @@
 package be.spyproof.nickmanager.listeners;
 
-import be.spyproof.nickmanager.controller.IPlayerController;
-import be.spyproof.nickmanager.model.PlayerData;
+import be.spyproof.nickmanager.controller.INicknameController;
+import be.spyproof.nickmanager.model.NicknameData;
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -15,9 +15,9 @@ import org.bukkit.event.player.PlayerQuitEvent;
  */
 public class PlayerListener implements Listener
 {
-    private IPlayerController playerController;
+    private INicknameController playerController;
 
-    public PlayerListener(IPlayerController playerController)
+    public PlayerListener(INicknameController playerController)
     {
         this.playerController = playerController;
     }
@@ -31,9 +31,9 @@ public class PlayerListener implements Listener
     @EventHandler
     public void onLogin(PlayerJoinEvent event)
     {
-        PlayerData playerData = this.playerController.wrap(event.getPlayer().getUniqueId(), event.getPlayer().getName());
-        if (playerData.getNickname().isPresent())
-            event.getPlayer().setDisplayName(ChatColor.translateAlternateColorCodes('&', playerData.getNickname().get()) + ChatColor.RESET);
+        NicknameData nicknameData = this.playerController.wrap(event.getPlayer().getUniqueId(), event.getPlayer().getName());
+        if (nicknameData.getNickname().isPresent())
+            event.getPlayer().setDisplayName(ChatColor.translateAlternateColorCodes('&', nicknameData.getNickname().get()) + ChatColor.RESET);
     }
 
     /**

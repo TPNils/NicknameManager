@@ -1,9 +1,9 @@
 package be.spyproof.nickmanager.commands.player;
 
 import be.spyproof.nickmanager.commands.AbstractCmd;
-import be.spyproof.nickmanager.controller.ISpongePlayerController;
+import be.spyproof.nickmanager.controller.ISpongeNicknameController;
 import be.spyproof.nickmanager.controller.MessageController;
-import be.spyproof.nickmanager.model.PlayerData;
+import be.spyproof.nickmanager.model.NicknameData;
 import be.spyproof.nickmanager.util.Reference;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
@@ -16,7 +16,7 @@ import org.spongepowered.api.entity.living.player.Player;
  */
 public class ResetOwnNickCmd extends AbstractCmd implements IPlayerCmd
 {
-    private ResetOwnNickCmd(MessageController messageController, ISpongePlayerController playerController)
+    private ResetOwnNickCmd(MessageController messageController, ISpongeNicknameController playerController)
     {
         super(messageController, playerController);
     }
@@ -24,15 +24,15 @@ public class ResetOwnNickCmd extends AbstractCmd implements IPlayerCmd
     @Override
     public CommandResult execute(Player src, CommandContext args) throws CommandException
     {
-        PlayerData playerData = this.getPlayerController().wrapPlayer(src);
-        playerData.setNickname(null);
-        this.getPlayerController().savePlayer(playerData);
+        NicknameData nicknameData = this.getPlayerController().wrapPlayer(src);
+        nicknameData.setNickname(null);
+        this.getPlayerController().savePlayer(nicknameData);
 
         src.sendMessage(this.getMessageController().getMessage(Reference.SuccessMessages.NICK_RESET).apply().build());
         return CommandResult.success();
     }
 
-    public static CommandSpec getCommandSpec(MessageController messageController, ISpongePlayerController playerController)
+    public static CommandSpec getCommandSpec(MessageController messageController, ISpongeNicknameController playerController)
     {
         return CommandSpec.builder()
                           .executor(new ResetOwnNickCmd(messageController, playerController))

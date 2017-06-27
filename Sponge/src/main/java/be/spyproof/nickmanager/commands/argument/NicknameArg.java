@@ -1,7 +1,7 @@
 package be.spyproof.nickmanager.commands.argument;
 
-import be.spyproof.nickmanager.controller.ISpongePlayerController;
-import be.spyproof.nickmanager.model.PlayerData;
+import be.spyproof.nickmanager.controller.ISpongeNicknameController;
+import be.spyproof.nickmanager.model.NicknameData;
 import be.spyproof.nickmanager.util.Reference;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.ArgumentParseException;
@@ -22,9 +22,9 @@ import java.util.Optional;
  */
 public class NicknameArg extends CommandElement
 {
-    private ISpongePlayerController playerController;
+    private ISpongeNicknameController playerController;
 
-    public NicknameArg(String key, ISpongePlayerController playerController)
+    public NicknameArg(String key, ISpongeNicknameController playerController)
     {
         super(Text.of(key));
         this.playerController = playerController;
@@ -47,8 +47,8 @@ public class NicknameArg extends CommandElement
 
         if (src instanceof Player)
         {
-            PlayerData playerData = this.playerController.wrapPlayer((Player) src);
-            for (String oldNick : playerData.getPastNicknames())
+            NicknameData nicknameData = this.playerController.wrapPlayer((Player) src);
+            for (String oldNick : nicknameData.getPastNicknames())
                 if (oldNick.replaceAll(Reference.COLOUR_AND_STYLE_PATTERN, "").startsWith(arg.get()) && !options.contains(oldNick))
                     options.add(oldNick);
         }

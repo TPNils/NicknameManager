@@ -1,7 +1,7 @@
 package be.spyproof.nickmanager.commands.checks;
 
 import be.spyproof.nickmanager.commands.IMessageControllerHolder;
-import be.spyproof.nickmanager.model.PlayerData;
+import be.spyproof.nickmanager.model.NicknameData;
 import be.spyproof.nickmanager.util.Reference;
 import be.spyproof.nickmanager.util.SpongeUtils;
 import be.spyproof.nickmanager.util.TemplateUtils;
@@ -14,9 +14,9 @@ import org.spongepowered.api.text.Text;
  */
 public interface ITokenChecker extends IMessageControllerHolder
 {
-    default void checkTokens(PlayerData playerData, Player src) throws CommandException
+    default void checkTokens(NicknameData nicknameData, Player src) throws CommandException
     {
-        if (!SpongeUtils.INSTANCE.canChangeNickname(playerData, src))
+        if (!SpongeUtils.INSTANCE.canChangeNickname(nicknameData, src))
         {
             throw new CommandException(this.getMessageController().getMessage(Reference.ErrorMessages.MISSING_TOKENS)
                                            .toText()

@@ -1,6 +1,6 @@
 package be.spyproof.nickmanager.util;
 
-import be.spyproof.nickmanager.model.PlayerData;
+import be.spyproof.nickmanager.model.NicknameData;
 import org.bukkit.ChatColor;
 
 import java.text.SimpleDateFormat;
@@ -17,7 +17,7 @@ public class TemplateUtils
      * Get all placeholders that can be used for a player.
      *
      * nick_manager:player
-     *      see getFormattedPlayer(PlayerData)
+     *      see getFormattedPlayer(NicknameData)
      * nick_manager:player.name
      *      The name of the player
      * nick_manager:player.uuid
@@ -34,7 +34,7 @@ public class TemplateUtils
      * @param player All placeholder values will be read from the player
      * @return A map with all the placeholder values associated with a player
      */
-    public static Map<String, String> getParameters(PlayerData player)
+    public static Map<String, String> getParameters(NicknameData player)
     {
         Map<String, String> params = new HashMap<>();
 
@@ -69,13 +69,13 @@ public class TemplateUtils
 
     /**
      * Apply all placeholders that can be used for a player.
-     * see getParameters(PlayerData)
+     * see getParameters(NicknameData)
      *
      * @param text A String that contains placeholders that need to be filled
      * @param player All placeholder values will be read from the player
      * @return A new String with filled text placeholders
      */
-    public static String apply(String text, PlayerData player)
+    public static String apply(String text, NicknameData player)
     {
         for (Map.Entry<String, String> entry : getParameters(player).entrySet())
             text = text.replace(entry.getKey(), entry.getValue());
@@ -89,7 +89,7 @@ public class TemplateUtils
      * @param player To get the nickname and normal name from
      * @return The displayed name for the player
      */
-    public static String getFormattedPlayer(PlayerData player)
+    public static String getFormattedPlayer(NicknameData player)
     {
         if (player.getNickname().isPresent())
             return ChatColor.translateAlternateColorCodes('&', player.getNickname().get());

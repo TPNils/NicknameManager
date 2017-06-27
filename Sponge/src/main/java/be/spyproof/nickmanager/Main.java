@@ -3,9 +3,9 @@ package be.spyproof.nickmanager;
 import be.spyproof.nickmanager.commands.moderator.*;
 import be.spyproof.nickmanager.commands.player.*;
 import be.spyproof.nickmanager.controller.ConfigController;
-import be.spyproof.nickmanager.controller.ISpongePlayerController;
+import be.spyproof.nickmanager.controller.ISpongeNicknameController;
 import be.spyproof.nickmanager.controller.MessageController;
-import be.spyproof.nickmanager.controller.SpongePlayerController;
+import be.spyproof.nickmanager.controller.SpongeNicknameController;
 import be.spyproof.nickmanager.da.config.IConfigStorage;
 import be.spyproof.nickmanager.listener.PlayerListener;
 import be.spyproof.nickmanager.listener.UltimateChatListener;
@@ -44,7 +44,7 @@ public class Main
     @ConfigDir(sharedRoot = false)
     private File configDir;
 
-    private ISpongePlayerController playerController;
+    private ISpongeNicknameController playerController;
     private IConfigStorage configController;
     private MessageController messageController;
 
@@ -79,7 +79,7 @@ public class Main
         }
 
         try {
-            this.playerController = new SpongePlayerController(this.configController.getPlayerStorage());
+            this.playerController = new SpongeNicknameController(this.configController.getPlayerStorage());
         }
         catch (Exception e) {
             e.printStackTrace();

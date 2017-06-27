@@ -1,7 +1,7 @@
 package be.spyproof.nickmanager.test.da;
 
 import be.spyproof.nickmanager.da.player.IPlayerStorage;
-import be.spyproof.nickmanager.model.PlayerData;
+import be.spyproof.nickmanager.model.NicknameData;
 import be.spyproof.nickmanager.test.TestReference;
 import org.testng.Assert;
 
@@ -17,9 +17,9 @@ import java.util.Optional;
 public class DaTester
 {
     private IPlayerStorage storage;
-    private PlayerData testPlayer;
+    private NicknameData testPlayer;
 
-    public DaTester(IPlayerStorage storage, PlayerData testPlayer)
+    public DaTester(IPlayerStorage storage, NicknameData testPlayer)
     {
         this.storage = storage;
         this.testPlayer = testPlayer;
@@ -37,7 +37,7 @@ public class DaTester
     {
         this.storage.savePlayer(this.testPlayer);
 
-        Optional<PlayerData> storedData = this.storage.getPlayer(this.testPlayer.getUuid());
+        Optional<NicknameData> storedData = this.storage.getPlayer(this.testPlayer.getUuid());
 
         if (storedData.isPresent())
             Assert.assertEquals(storedData.get(), this.testPlayer);
@@ -52,7 +52,7 @@ public class DaTester
         this.testPlayer.setNickname("MahActiveNickname");
         this.storage.savePlayer(this.testPlayer);
 
-        Optional<PlayerData> storedData = this.storage.getPlayer(this.testPlayer.getUuid());
+        Optional<NicknameData> storedData = this.storage.getPlayer(this.testPlayer.getUuid());
 
         if (storedData.isPresent())
             Assert.assertEquals(storedData.get(), this.testPlayer);
@@ -62,7 +62,7 @@ public class DaTester
 
     public void getByUuid()
     {
-        Optional<PlayerData> storedData = this.storage.getPlayer(this.testPlayer.getUuid());
+        Optional<NicknameData> storedData = this.storage.getPlayer(this.testPlayer.getUuid());
 
         if (storedData.isPresent())
             Assert.assertEquals(storedData.get(), this.testPlayer);
@@ -72,7 +72,7 @@ public class DaTester
 
     public void getByName()
     {
-        Optional<PlayerData> storedData = this.storage.getPlayer(this.testPlayer.getName());
+        Optional<NicknameData> storedData = this.storage.getPlayer(this.testPlayer.getName());
 
         if (storedData.isPresent())
             Assert.assertEquals(storedData.get(), this.testPlayer);
@@ -82,9 +82,9 @@ public class DaTester
 
     public void getByNickname()
     {
-        List<PlayerData> storedPlayers = this.storage.getPlayerByNickname(this.testPlayer.getNickname().get(), 10);
-        for (PlayerData playerData : storedPlayers)
-            if (playerData.equals(this.testPlayer))
+        List<NicknameData> storedPlayers = this.storage.getPlayerByNickname(this.testPlayer.getNickname().get(), 10);
+        for (NicknameData nicknameData : storedPlayers)
+            if (nicknameData.equals(this.testPlayer))
                 return;
 
         Assert.fail();
@@ -94,7 +94,7 @@ public class DaTester
     {
         this.storage.removePlayer(testPlayer);
 
-        Optional<PlayerData> storedData = this.storage.getPlayer(this.testPlayer.getUuid());
+        Optional<NicknameData> storedData = this.storage.getPlayer(this.testPlayer.getUuid());
         if (storedData.isPresent())
             Assert.assertNull(storedData.get());
 

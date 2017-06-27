@@ -19,17 +19,17 @@ public class ImmutablePlayerData
     protected final String nickname;
     protected final List<String> pastNicknames;
 
-    public static ImmutablePlayerData of(PlayerData playerData)
+    public static ImmutablePlayerData of(NicknameData nicknameData)
     {
         return new ImmutablePlayerData(
-                playerData.getUuid(),
-                playerData.getName(),
-                playerData.getTokensRemaining(),
-                playerData.getLastChanged(),
-                playerData.readRules(),
-                playerData.hasAcceptedRules(),
-                playerData.getNickname().orElse(null),
-                playerData.getPastNicknames()
+                nicknameData.getUuid(),
+                nicknameData.getName(),
+                nicknameData.getTokensRemaining(),
+                nicknameData.getLastChanged(),
+                nicknameData.readRules(),
+                nicknameData.hasAcceptedRules(),
+                nicknameData.getNickname().orElse(null),
+                nicknameData.getPastNicknames()
         );
     }
 
@@ -134,7 +134,7 @@ public class ImmutablePlayerData
     @Override
     public String toString()
     {
-        return "PlayerData{" +
+        return "NicknameData{" +
                 "uuid=" + uuid +
                 ", name='" + name + '\'' +
                 ", tokensRemaining=" + tokensRemaining +

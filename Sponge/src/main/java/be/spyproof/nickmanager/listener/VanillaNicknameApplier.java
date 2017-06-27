@@ -1,7 +1,7 @@
 package be.spyproof.nickmanager.listener;
 
-import be.spyproof.nickmanager.controller.ISpongePlayerController;
-import be.spyproof.nickmanager.model.PlayerData;
+import be.spyproof.nickmanager.controller.ISpongeNicknameController;
+import be.spyproof.nickmanager.model.NicknameData;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
@@ -25,9 +25,9 @@ import java.util.Optional;
  */
 public class VanillaNicknameApplier
 {
-    private ISpongePlayerController playerController;
+    private ISpongeNicknameController playerController;
 
-    public VanillaNicknameApplier(ISpongePlayerController playerController)
+    public VanillaNicknameApplier(ISpongeNicknameController playerController)
     {
         this.playerController = playerController;
     }
@@ -35,16 +35,16 @@ public class VanillaNicknameApplier
     @Listener(order = Order.LATE)
     public void onMessageEvent(MessageChannelEvent.Chat event, @First Player player)
     {
-        PlayerData playerData = this.playerController.wrapPlayer(player);
+        NicknameData nicknameData = this.playerController.wrapPlayer(player);
 
-        if (!event.getFormatter().getHeader().isEmpty() && playerData.getNickname().isPresent())
+        if (!event.getFormatter().getHeader().isEmpty() && nicknameData.getNickname().isPresent())
         {
             Text.Builder builder = Text.builder();
 
             Text header = event.getFormatter().getHeader().format();
             String rawHeader = TextSerializers.FORMATTING_CODE.serialize(header);
             if (rawHeader.contains(player.getName()))
-                rawHeader = rawHeader.replace(player.getName(), playerData.getNickname().get() + "&r");
+                rawHeader = rawHeader.replace(player.getName(), nicknameData.getNickname().get() + "&r");
 
             builder.append(Text.of(TextSerializers.FORMATTING_CODE.deserialize(rawHeader)));
 

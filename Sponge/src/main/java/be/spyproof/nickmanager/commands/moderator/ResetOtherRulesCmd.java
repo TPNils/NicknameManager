@@ -3,9 +3,9 @@ package be.spyproof.nickmanager.commands.moderator;
 import be.spyproof.nickmanager.commands.AbstractCmd;
 import be.spyproof.nickmanager.commands.argument.PlayerDataArg;
 import be.spyproof.nickmanager.commands.checks.IArgumentChecker;
-import be.spyproof.nickmanager.controller.ISpongePlayerController;
+import be.spyproof.nickmanager.controller.ISpongeNicknameController;
 import be.spyproof.nickmanager.controller.MessageController;
-import be.spyproof.nickmanager.model.PlayerData;
+import be.spyproof.nickmanager.model.NicknameData;
 import be.spyproof.nickmanager.util.Reference;
 import be.spyproof.nickmanager.util.TemplateUtils;
 import org.spongepowered.api.Sponge;
@@ -25,7 +25,7 @@ public class ResetOtherRulesCmd extends AbstractCmd implements IArgumentChecker
 {
     private static final String ARG = "player";
 
-    private ResetOtherRulesCmd(MessageController messageController, ISpongePlayerController playerController)
+    private ResetOtherRulesCmd(MessageController messageController, ISpongeNicknameController playerController)
     {
         super(messageController, playerController);
     }
@@ -33,21 +33,21 @@ public class ResetOtherRulesCmd extends AbstractCmd implements IArgumentChecker
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException
     {
-        PlayerData playerData = getArgument(args, ARG);
+        NicknameData nicknameData = getArgument(args, ARG);
 
-        playerData.setAcceptedRules(false);
-        playerData.setReadRules(false);
-        this.getPlayerController().savePlayer(playerData);
+        nicknameData.setAcceptedRules(false);
+        nicknameData.setReadRules(false);
+        this.getPlayerController().savePlayer(nicknameData);
 
-        Optional<Player> player = Sponge.getServer().getPlayer(playerData.getUuid());
+        Optional<Player> player = Sponge.getServer().getPlayer(nicknameData.getUuid());
         if (player.isPresent())
             player.get().sendMessage(this.getMessageController().getMessage(Reference.SuccessMessages.ADMIN_NICK_RESET_RULES_RECEIVED).toText());
 
-        src.sendMessage(this.getMessageController().getMessage(Reference.SuccessMessages.ADMIN_NICK_RESET_RULES).apply(TemplateUtils.getParameters(playerData)).build());
+        src.sendMessage(this.getMessageController().getMessage(Reference.SuccessMessages.ADMIN_NICK_RESET_RULES).apply(TemplateUtils.getParameters(nicknameData)).build());
         return CommandResult.success();
     }
 
-    public static CommandSpec getCommandSpec(MessageController messageController, ISpongePlayerController playerController)
+    public static CommandSpec getCommandSpec(MessageController messageController, ISpongeNicknameController playerController)
     {
         return CommandSpec.builder()
                           .arguments(new PlayerDataArg(ARG, playerController))

@@ -5,10 +5,12 @@ import be.spyproof.nickmanager.commands.checks.IBlacklistChecker;
 import be.spyproof.nickmanager.commands.checks.IFormatChecker;
 import be.spyproof.nickmanager.commands.checks.ILengthChecker;
 import be.spyproof.nickmanager.commands.checks.IPermissionCheck;
-import be.spyproof.nickmanager.controller.IBukkitPlayerController;
+import be.spyproof.nickmanager.controller.IBukkitNicknameController;
 import be.spyproof.nickmanager.controller.MessageController;
-import be.spyproof.nickmanager.model.PlayerData;
-import be.spyproof.nickmanager.util.*;
+import be.spyproof.nickmanager.model.NicknameData;
+import be.spyproof.nickmanager.util.Reference;
+import be.spyproof.nickmanager.util.TabCompleteUtil;
+import be.spyproof.nickmanager.util.TemplateUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -18,7 +20,6 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,7 +30,7 @@ public class SetNickOthersCmd extends AbstractCmd implements TabCompleter, IBlac
 {
     private static final String[] ARGS = new String[]{"player", "nickname"};
 
-    public SetNickOthersCmd(MessageController messageController, IBukkitPlayerController playerController, String... keys)
+    public SetNickOthersCmd(MessageController messageController, IBukkitNicknameController playerController, String... keys)
     {
         super(messageController, playerController, keys);
     }
@@ -51,7 +52,7 @@ public class SetNickOthersCmd extends AbstractCmd implements TabCompleter, IBlac
         if (args.length == 1)
             throw new CommandException(this.messageController.getFormattedMessage(Reference.ErrorMessages.MISSING_ARGUMENT).replace("{argument}", ARGS[1]));
 
-        Optional<? extends PlayerData> player = this.playerController.getPlayer(args[0]);
+        Optional<? extends NicknameData> player = this.playerController.getPlayer(args[0]);
         String nick = args[1];
 
         if (!player.isPresent())

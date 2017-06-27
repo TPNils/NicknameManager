@@ -1,6 +1,6 @@
 package be.spyproof.nickmanager.commands;
 
-import be.spyproof.nickmanager.controller.ISpongePlayerController;
+import be.spyproof.nickmanager.controller.ISpongeNicknameController;
 import be.spyproof.nickmanager.controller.MessageController;
 import org.spongepowered.api.command.spec.CommandExecutor;
 
@@ -10,16 +10,16 @@ import org.spongepowered.api.command.spec.CommandExecutor;
 public abstract class AbstractCmd implements IMessageControllerHolder, IPlayerControllerHolder, CommandExecutor
 {
     private MessageController messageController;
-    private ISpongePlayerController playerController;
+    private ISpongeNicknameController playerController;
 
-    protected AbstractCmd(MessageController messageController, ISpongePlayerController playerController)
+    protected AbstractCmd(MessageController messageController, ISpongeNicknameController playerController)
     {
         this.messageController = messageController;
         this.playerController = playerController;
     }
 
     @Override
-    public ISpongePlayerController getPlayerController()
+    public ISpongeNicknameController getPlayerController()
     {
         return this.playerController;
     }

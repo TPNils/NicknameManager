@@ -1,6 +1,6 @@
 package be.spyproof.nickmanager.da.player;
 
-import be.spyproof.nickmanager.model.PlayerData;
+import be.spyproof.nickmanager.model.NicknameData;
 import be.spyproof.nickmanager.util.Reference;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
@@ -36,30 +36,30 @@ public class GsonPlayerStorage implements IPlayerStorage
 
         for (File file : playerFiles)
         {
-            Optional<PlayerData> playerData = readPlayer(new JsonReader(new InputStreamReader(new FileInputStream(file), "UTF-8")), UUID.fromString(file.getName().replace(EXTENSION, "")));
+            Optional<NicknameData> playerData = readPlayer(new JsonReader(new InputStreamReader(new FileInputStream(file), "UTF-8")), UUID.fromString(file.getName().replace(EXTENSION, "")));
             if (playerData.isPresent())
                 addToCache(playerData.get());
         }
     }
 
-    private void addToCache(PlayerData playerData)
+    private void addToCache(NicknameData nicknameData)
     {
-        this.cachedPlayers.put(playerData.getName(), playerData.getUuid());
-        if (playerData.getNickname().isPresent())
+        this.cachedPlayers.put(nicknameData.getName(), nicknameData.getUuid());
+        if (nicknameData.getNickname().isPresent())
         {
-            List<UUID> set = this.cachedNicknames.get(playerData.getNickname().get());
+            List<UUID> set = this.cachedNicknames.get(nicknameData.getNickname().get());
             if (set == null)
             {
                 set = new ArrayList<>();
-                set.add(playerData.getUuid());
-                this.cachedNicknames.put(playerData.getNickname().get().replaceAll(Reference.COLOUR_AND_STYLE_PATTERN, ""), set);
-            }else if (!set.contains(playerData.getUuid()))
-                set.add(playerData.getUuid());
+                set.add(nicknameData.getUuid());
+                this.cachedNicknames.put(nicknameData.getNickname().get().replaceAll(Reference.COLOUR_AND_STYLE_PATTERN, ""), set);
+            }else if (!set.contains(nicknameData.getUuid()))
+                set.add(nicknameData.getUuid());
         }
     }
 
     @Override
-    public void savePlayer(PlayerData player)
+    public void savePlayer(NicknameData player)
     {
         try
         {
@@ -74,13 +74,13 @@ public class GsonPlayerStorage implements IPlayerStorage
     }
 
     @Override
-    public void removePlayer(PlayerData player)
+    public void removePlayer(NicknameData player)
     {
         removePlayerFile(player.getUuid());
     }
 
     @Override
-    public Optional<PlayerData> getPlayer(String name)
+    public Optional<NicknameData> getPlayer(String name)
     {
         UUID uuid = this.cachedPlayers.get(name);
         if (uuid == null)
@@ -90,7 +90,7 @@ public class GsonPlayerStorage implements IPlayerStorage
     }
 
     @Override
-    public Optional<PlayerData> getPlayer(UUID uuid)
+    public Optional<NicknameData> getPlayer(UUID uuid)
     {
         try
         {
@@ -104,9 +104,9 @@ public class GsonPlayerStorage implements IPlayerStorage
     }
 
     @Override
-    public List<PlayerData> getPlayerByNickname(String nickname, int limit)
+    public List<NicknameData> getPlayerByNickname(String nickname, int limit)
     {
-        List<PlayerData> players = new ArrayList<>();
+        List<NicknameData> players = new ArrayList<>();
 
         for (Map.Entry<String, List<UUID>> entry : this.cachedNicknames.entrySet())
         {
@@ -114,11 +114,11 @@ public class GsonPlayerStorage implements IPlayerStorage
             {
                 for (UUID uuid : entry.getValue())
                 {
-                    Optional<PlayerData> playerData = getPlayer(uuid);
+                    Optional<NicknameData> playerData = getPlayer(uuid);
                     if (playerData.isPresent())
                     {
                         boolean isDuplicate = false;
-                        for (PlayerData p : players)
+                        for (NicknameData p : players)
                             if (p.getUuid().equals(playerData.get().getUuid()))
                                 isDuplicate = true;
 
@@ -145,7 +145,7 @@ public class GsonPlayerStorage implements IPlayerStorage
             file.delete();
     }
 
-    private void writePlayer(PlayerData player) throws IOException
+    private void writePlayer(NicknameData player) throws IOException
     {
         File file = new File(playerDir, player.getUuid().toString() + EXTENSION);
         if (!file.exists())
@@ -156,7 +156,7 @@ public class GsonPlayerStorage implements IPlayerStorage
         writer.close();
     }
 
-    private void writePlayer(JsonWriter writer, PlayerData player) throws IOException
+    private void writePlayer(JsonWriter writer, NicknameData player) throws IOException
     {
         writer.beginObject();
         writer.name("Last known name").value(player.getName());
@@ -177,7 +177,7 @@ public class GsonPlayerStorage implements IPlayerStorage
         writer.endObject();
     }
 
-    private Optional<PlayerData> readPlayer(UUID uuid) throws IOException
+    private Optional<NicknameData> readPlayer(UUID uuid) throws IOException
     {
         File file = new File(playerDir, uuid.toString() + EXTENSION);
         if (!file.exists())
@@ -189,7 +189,7 @@ public class GsonPlayerStorage implements IPlayerStorage
         }
     }
 
-    private Optional<PlayerData> readPlayer(JsonReader reader, UUID uuid)throws IOException
+    private Optional<NicknameData> readPlayer(JsonReader reader, UUID uuid)throws IOException
     {
         reader.beginObject();
         String playerName = null, nickname = null;
@@ -227,17 +227,17 @@ public class GsonPlayerStorage implements IPlayerStorage
         if (playerName == null)
             return Optional.empty();
 
-        PlayerData playerData = new PlayerData(playerName, uuid);
+        NicknameData nicknameData = new NicknameData(playerName, uuid);
 
-        playerData.setTokensRemaining(tokens);
-        playerData.setLastChanged(lastChanged);
-        playerData.setAcceptedRules(acceptedRules);
+        nicknameData.setTokensRemaining(tokens);
+        nicknameData.setLastChanged(lastChanged);
+        nicknameData.setAcceptedRules(acceptedRules);
         if (nickname != null)
-            playerData.setNickname(nickname);
+            nicknameData.setNickname(nickname);
         if (pastNicknames.size() > 0)
-            playerData.addPastNickname(pastNicknames);
+            nicknameData.addPastNickname(pastNicknames);
 
-        return Optional.of(playerData);
+        return Optional.of(nicknameData);
     }
 
 }

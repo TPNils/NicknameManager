@@ -1,9 +1,9 @@
 package be.spyproof.nickmanager.commands.player;
 
 import be.spyproof.nickmanager.commands.AbstractCmd;
-import be.spyproof.nickmanager.controller.ISpongePlayerController;
+import be.spyproof.nickmanager.controller.ISpongeNicknameController;
 import be.spyproof.nickmanager.controller.MessageController;
-import be.spyproof.nickmanager.model.PlayerData;
+import be.spyproof.nickmanager.model.NicknameData;
 import be.spyproof.nickmanager.util.Reference;
 import be.spyproof.nickmanager.util.TemplateUtils;
 import org.spongepowered.api.command.CommandException;
@@ -17,7 +17,7 @@ import org.spongepowered.api.entity.living.player.Player;
  */
 public class CheckSelfCmd extends AbstractCmd implements IPlayerCmd
 {
-    private CheckSelfCmd(MessageController messageController, ISpongePlayerController playerController)
+    private CheckSelfCmd(MessageController messageController, ISpongeNicknameController playerController)
     {
         super(messageController, playerController);
     }
@@ -25,13 +25,13 @@ public class CheckSelfCmd extends AbstractCmd implements IPlayerCmd
     @Override
     public CommandResult execute(Player src, CommandContext args) throws CommandException
     {
-        PlayerData player = super.getPlayerController().wrapPlayer(src);
+        NicknameData player = super.getPlayerController().wrapPlayer(src);
 
         src.sendMessage(this.getMessageController().getMessage(Reference.SuccessMessages.NICK_CHECK).apply(TemplateUtils.getParameters(player)).build());
         return CommandResult.success();
     }
 
-    public static CommandSpec getCommandSpec(MessageController messageController, ISpongePlayerController playerController)
+    public static CommandSpec getCommandSpec(MessageController messageController, ISpongeNicknameController playerController)
     {
         return CommandSpec.builder()
                           .executor(new CheckSelfCmd(messageController, playerController))

@@ -2,7 +2,7 @@ package be.spyproof.nickmanager.controller;
 
 
 import be.spyproof.nickmanager.da.player.IPlayerStorage;
-import be.spyproof.nickmanager.model.PlayerData;
+import be.spyproof.nickmanager.model.NicknameData;
 
 import java.io.IOException;
 import java.util.*;
@@ -10,20 +10,20 @@ import java.util.*;
 /**
  * Created by Spyproof on 28/10/2016.
  */
-public class CachedPlayerController extends PlayerController
+public class CachedNicknameController extends NicknameController
 {
-    private Set<PlayerData> cachedPlayers;
+    private Set<NicknameData> cachedPlayers;
 
-    public CachedPlayerController(IPlayerStorage storage)
+    public CachedNicknameController(IPlayerStorage storage)
     {
         super(storage);
         this.cachedPlayers = new HashSet<>();
     }
 
     @Override
-    public Optional<PlayerData> getPlayer(String name)
+    public Optional<NicknameData> getPlayer(String name)
     {
-        Optional<PlayerData> player = getCachedOrStoredPlayer(name);
+        Optional<NicknameData> player = getCachedOrStoredPlayer(name);
 
         if (player.isPresent() && !this.cachedPlayers.contains(player.get()))
             this.cachedPlayers.add(player.get());
@@ -32,9 +32,9 @@ public class CachedPlayerController extends PlayerController
     }
 
     @Override
-    public Optional<PlayerData> getPlayer(UUID uuid)
+    public Optional<NicknameData> getPlayer(UUID uuid)
     {
-        Optional<PlayerData> player = getCachedOrStoredPlayer(uuid);
+        Optional<NicknameData> player = getCachedOrStoredPlayer(uuid);
 
         if (player.isPresent() && !this.cachedPlayers.contains(player.get()))
             this.cachedPlayers.add(player.get());
@@ -43,7 +43,7 @@ public class CachedPlayerController extends PlayerController
     }
 
     @Override
-    public void removePlayer(PlayerData player)
+    public void removePlayer(NicknameData player)
     {
         super.removePlayer(player);
         removeCachedPlayer(player.getUuid());
@@ -62,17 +62,17 @@ public class CachedPlayerController extends PlayerController
         this.cachedPlayers.clear();
     }
 
-    protected void cachePlayer(PlayerData playerData)
+    protected void cachePlayer(NicknameData nicknameData)
     {
-        this.cachedPlayers.add(playerData);
+        this.cachedPlayers.add(nicknameData);
     }
 
     protected void removeCachedPlayer(UUID... uuids)
     {
-        Iterator<PlayerData> iterator = this.cachedPlayers.iterator();
+        Iterator<NicknameData> iterator = this.cachedPlayers.iterator();
         while (iterator.hasNext())
         {
-            PlayerData data = iterator.next();
+            NicknameData data = iterator.next();
             for (UUID uuid : uuids)
             {
                 if (data.getUuid().equals(uuid))
@@ -84,44 +84,44 @@ public class CachedPlayerController extends PlayerController
         }
     }
 
-    protected Optional<PlayerData> getCachedOrStoredPlayer(String name)
+    protected Optional<NicknameData> getCachedOrStoredPlayer(String name)
     {
-        Optional<PlayerData> player = getCachedPlayer(name);
+        Optional<NicknameData> player = getCachedPlayer(name);
         if (player.isPresent())
             return player;
 
-        Optional<PlayerData> stored = super.getStoredPlayer(name);
+        Optional<NicknameData> stored = super.getStoredPlayer(name);
         if (stored.isPresent())
             return stored;
 
         return Optional.empty();
     }
 
-    protected Optional<PlayerData> getCachedOrStoredPlayer(UUID uuid)
+    protected Optional<NicknameData> getCachedOrStoredPlayer(UUID uuid)
     {
-        Optional<PlayerData> player = getCachedPlayer(uuid);
+        Optional<NicknameData> player = getCachedPlayer(uuid);
         if (player.isPresent())
             return player;
 
-        Optional<PlayerData> stored = super.getStoredPlayer(uuid);
+        Optional<NicknameData> stored = super.getStoredPlayer(uuid);
         if (stored.isPresent())
             return stored;
 
         return Optional.empty();
     }
 
-    protected Optional<PlayerData> getCachedPlayer(String name)
+    protected Optional<NicknameData> getCachedPlayer(String name)
     {
-        for (PlayerData player : this.cachedPlayers)
+        for (NicknameData player : this.cachedPlayers)
             if (player.getName().equalsIgnoreCase(name))
                 return Optional.of(player);
 
         return Optional.empty();
     }
 
-    protected Optional<PlayerData> getCachedPlayer(UUID uuid)
+    protected Optional<NicknameData> getCachedPlayer(UUID uuid)
     {
-        for (PlayerData player : this.cachedPlayers)
+        for (NicknameData player : this.cachedPlayers)
             if (player.getUuid().equals(uuid))
                 return Optional.of(player);
 

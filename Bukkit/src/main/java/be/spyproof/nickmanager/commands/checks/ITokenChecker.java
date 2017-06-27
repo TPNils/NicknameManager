@@ -1,10 +1,9 @@
 package be.spyproof.nickmanager.commands.checks;
 
 import be.spyproof.nickmanager.commands.IMessageControllerHolder;
-import be.spyproof.nickmanager.model.PlayerData;
+import be.spyproof.nickmanager.model.NicknameData;
 import be.spyproof.nickmanager.util.BukkitUtils;
 import be.spyproof.nickmanager.util.Reference;
-import be.spyproof.nickmanager.util.TemplateUtils;
 import org.bukkit.command.CommandException;
 import org.bukkit.entity.Player;
 
@@ -13,9 +12,9 @@ import org.bukkit.entity.Player;
  */
 public interface ITokenChecker extends IMessageControllerHolder
 {
-    default void checkTokens(PlayerData playerData, Player src) throws CommandException
+    default void checkTokens(NicknameData nicknameData, Player src) throws CommandException
     {
-        if (!BukkitUtils.INSTANCE.canChangeNickname(playerData, src))
+        if (!BukkitUtils.INSTANCE.canChangeNickname(nicknameData, src))
         {
             throw new CommandException(this.getMessageController().getFormattedMessage(Reference.ErrorMessages.MISSING_TOKENS)
                                            + "\n"

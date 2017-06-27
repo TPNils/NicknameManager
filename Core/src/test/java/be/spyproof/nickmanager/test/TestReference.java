@@ -2,7 +2,7 @@ package be.spyproof.nickmanager.test;
 
 import be.spyproof.nickmanager.da.player.GsonPlayerStorage;
 import be.spyproof.nickmanager.da.player.MySqlPlayerStorage;
-import be.spyproof.nickmanager.model.PlayerData;
+import be.spyproof.nickmanager.model.NicknameData;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,8 +31,8 @@ public class TestReference
         return new GsonPlayerStorage(new File(System.getProperty("java.io.tmpdir"), "nickname-test"));
     }
 
-    public static PlayerData getPlayerData()
+    public static NicknameData getPlayerData()
     {
-        return new PlayerData("NotTP", UUID.fromString("75002d64-cc35-3541-b6a4-c70e6aab5883"));
+        return new NicknameData("NotTP", UUID.fromString("75002d64-cc35-3541-b6a4-c70e6aab5883"));
     }
 }

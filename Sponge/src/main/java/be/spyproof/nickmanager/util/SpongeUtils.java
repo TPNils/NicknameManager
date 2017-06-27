@@ -1,8 +1,8 @@
 package be.spyproof.nickmanager.util;
 
-import be.spyproof.nickmanager.controller.ISpongePlayerController;
+import be.spyproof.nickmanager.controller.ISpongeNicknameController;
 import be.spyproof.nickmanager.da.config.IConfigStorage;
-import be.spyproof.nickmanager.model.PlayerData;
+import be.spyproof.nickmanager.model.NicknameData;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.serializer.TextSerializers;
@@ -18,7 +18,7 @@ import java.util.Optional;
  */
 public class SpongeUtils
 {
-    protected ISpongePlayerController playerController;
+    protected ISpongeNicknameController playerController;
     protected IConfigStorage configController;
 
     public static SpongeUtils INSTANCE;
@@ -28,12 +28,12 @@ public class SpongeUtils
      * @param playerController The controller to wrap a player in
      * @param configController The controller that contains all configuration options
      */
-    public static void initInstance(ISpongePlayerController playerController, IConfigStorage configController)
+    public static void initInstance(ISpongeNicknameController playerController, IConfigStorage configController)
     {
         INSTANCE = new SpongeUtils(playerController, configController);
     }
 
-    private SpongeUtils(ISpongePlayerController playerController, IConfigStorage configController)
+    private SpongeUtils(ISpongeNicknameController playerController, IConfigStorage configController)
     {
         this.playerController = playerController;
         this.configController = configController;
@@ -54,13 +54,13 @@ public class SpongeUtils
     }
 
     /**
-     * @param playerData The player that will be checked if they have accepted the rules or not
+     * @param nicknameData The player that will be checked if they have accepted the rules or not
      * @param source     Used to check to see if the player can bypass accepting the rules
      * @return true if they don't need to accept the rules, if they can bypass it or have accepted it, false if not.
      */
-    public boolean acceptedRules(PlayerData playerData, CommandSource source)
+    public boolean acceptedRules(NicknameData nicknameData, CommandSource source)
     {
-        if (playerData.hasAcceptedRules())
+        if (nicknameData.hasAcceptedRules())
             return true;
         if (source.hasPermission(Reference.Permissions.BYPASS_RULES))
             return true;
@@ -78,13 +78,13 @@ public class SpongeUtils
     }
 
     /**
-     * @param playerData The player that will be checked for the amount of nickname tokens they have
+     * @param nicknameData The player that will be checked for the amount of nickname tokens they have
      * @param source     Used to check to see if the player can bypass the change limit
      * @return true if they have enough tokens or bypass the limit, false if not.
      */
-    public boolean canChangeNickname(PlayerData playerData, CommandSource source)
+    public boolean canChangeNickname(NicknameData nicknameData, CommandSource source)
     {
-        if (playerData.getTokensRemaining() <= 0)
+        if (nicknameData.getTokensRemaining() <= 0)
             return source.hasPermission(Reference.Permissions.BYPASS_CHANGE_LIMIT);
 
         return true;

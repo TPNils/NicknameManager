@@ -1,9 +1,9 @@
 package be.spyproof.nickmanager.commands.player;
 
 import be.spyproof.nickmanager.commands.checks.IPermissionCheck;
-import be.spyproof.nickmanager.controller.IBukkitPlayerController;
+import be.spyproof.nickmanager.controller.IBukkitNicknameController;
 import be.spyproof.nickmanager.controller.MessageController;
-import be.spyproof.nickmanager.model.PlayerData;
+import be.spyproof.nickmanager.model.NicknameData;
 import be.spyproof.nickmanager.util.Reference;
 import be.spyproof.nickmanager.util.TemplateUtils;
 import org.bukkit.command.CommandSender;
@@ -14,7 +14,7 @@ import org.bukkit.entity.Player;
  */
 public class CheckSelfCmd extends AbstractPlayerCmd implements IPermissionCheck
 {
-    public CheckSelfCmd(MessageController messageController, IBukkitPlayerController playerController, String... keys)
+    public CheckSelfCmd(MessageController messageController, IBukkitNicknameController playerController, String... keys)
     {
         super(messageController, playerController, keys);
     }
@@ -30,7 +30,7 @@ public class CheckSelfCmd extends AbstractPlayerCmd implements IPermissionCheck
     {
         checkPermission(src, Reference.Permissions.GENERIC_PLAYER_COMMANDS);
 
-        PlayerData player = super.playerController.wrapPlayer(src);
+        NicknameData player = super.playerController.wrapPlayer(src);
         src.sendMessage(TemplateUtils.apply(this.messageController.getFormattedMessage(Reference.SuccessMessages.NICK_CHECK), player).split("\\n"));
     }
 }

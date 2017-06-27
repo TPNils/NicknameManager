@@ -1,10 +1,11 @@
 package be.spyproof.nickmanager.listener;
 
-import be.spyproof.nickmanager.controller.ISpongePlayerController;
-import be.spyproof.nickmanager.model.PlayerData;
+import be.spyproof.nickmanager.controller.ISpongeNicknameController;
+import be.spyproof.nickmanager.model.NicknameData;
 import br.net.fabiozumbi12.UltimateChat.API.SendChannelMessageEvent;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.EventListener;
+import org.spongepowered.api.text.serializer.TextSerializers;
 
 import java.util.Optional;
 
@@ -13,9 +14,9 @@ import java.util.Optional;
  */
 public class UltimateChatListener implements EventListener<SendChannelMessageEvent>
 {
-    private ISpongePlayerController playerController;
+    private ISpongeNicknameController playerController;
 
-    public UltimateChatListener(ISpongePlayerController playerController)
+    public UltimateChatListener(ISpongeNicknameController playerController)
     {
         this.playerController = playerController;
     }
@@ -24,13 +25,13 @@ public class UltimateChatListener implements EventListener<SendChannelMessageEve
     {
         if (event.getSender() instanceof Player)
         {
-            PlayerData playerData = playerController.wrapPlayer((Player) event.getSender());
-            Optional<String> nickname = playerData.getNickname();
+            NicknameData nicknameData = playerController.wrapPlayer((Player) event.getSender());
+            Optional<String> nickname = nicknameData.getNickname();
 
             if (nickname.isPresent())
-                event.addTag("{Nickname}", nickname.get());
+                event.addTag("{Nickname}", nickname.get() + TextSerializers.FORMATTING_CODE.getCharacter() + "r");
             else
-                event.addTag("{Nickname}", "");
+                event.addTag("{Nickname}", event.getSender().getName() + TextSerializers.FORMATTING_CODE.getCharacter() + "r");
         }
     }
 }

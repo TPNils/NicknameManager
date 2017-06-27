@@ -1,6 +1,6 @@
 package be.spyproof.nickmanager.util;
 
-import be.spyproof.nickmanager.model.PlayerData;
+import be.spyproof.nickmanager.model.NicknameData;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
@@ -21,7 +21,7 @@ public class TemplateUtils
      * Get all placeholders that can be used for a player.
      *
      * nick_manager:player
-     *      see getFormattedPlayer(PlayerData)
+     *      see getFormattedPlayer(NicknameData)
      * nick_manager:player.name
      *      The name of the player
      * nick_manager:player.uuid
@@ -38,7 +38,7 @@ public class TemplateUtils
      * @param player All placeholder values will be read from the player
      * @return A map with all the placeholder values associated with a player
      */
-    public static Map<String, Text> getParameters(PlayerData player)
+    public static Map<String, Text> getParameters(NicknameData player)
     {
         Map<String, Text> params = new HashMap<>();
 
@@ -76,7 +76,7 @@ public class TemplateUtils
      * @param player The player to represent
      * @return Text representing the player
      */
-    public static Text getFormattedPlayer(PlayerData player)
+    public static Text getFormattedPlayer(NicknameData player)
     {
         if (player.getNickname().isPresent())
         {

@@ -2,9 +2,9 @@ package be.spyproof.nickmanager.commands.player;
 
 import be.spyproof.nickmanager.commands.AbstractCmd;
 import be.spyproof.nickmanager.commands.checks.IPermissionCheck;
-import be.spyproof.nickmanager.controller.IBukkitPlayerController;
+import be.spyproof.nickmanager.controller.IBukkitNicknameController;
 import be.spyproof.nickmanager.controller.MessageController;
-import be.spyproof.nickmanager.model.PlayerData;
+import be.spyproof.nickmanager.model.NicknameData;
 import be.spyproof.nickmanager.util.Reference;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -14,7 +14,7 @@ import org.bukkit.entity.Player;
  */
 public class RulesCmd extends AbstractCmd implements IPermissionCheck
 {
-    public RulesCmd(MessageController messageController, IBukkitPlayerController playerController, String... keys)
+    public RulesCmd(MessageController messageController, IBukkitNicknameController playerController, String... keys)
     {
         super(messageController, playerController, keys);
     }
@@ -30,8 +30,8 @@ public class RulesCmd extends AbstractCmd implements IPermissionCheck
     {
         checkPermission(src, Reference.Permissions.GENERIC_PLAYER_COMMANDS);
 
-        PlayerData playerData = this.playerController.wrapPlayer((Player) src);
+        NicknameData nicknameData = this.playerController.wrapPlayer((Player) src);
         src.sendMessage(this.messageController.getFormattedMessage(Reference.SuccessMessages.NICK_RULES).replace("{command}", "/" + Reference.CommandKeys.ACCEPT_RULES[0]).split("\\n"));
-        playerData.setReadRules(true);
+        nicknameData.setReadRules(true);
     }
 }

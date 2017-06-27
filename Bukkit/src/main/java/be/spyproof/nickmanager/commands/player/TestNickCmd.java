@@ -1,9 +1,13 @@
 package be.spyproof.nickmanager.commands.player;
 
-import be.spyproof.nickmanager.commands.checks.*;
-import be.spyproof.nickmanager.controller.IBukkitPlayerController;
+import be.spyproof.nickmanager.commands.checks.IBlacklistChecker;
+import be.spyproof.nickmanager.commands.checks.IFormatChecker;
+import be.spyproof.nickmanager.commands.checks.ILengthChecker;
+import be.spyproof.nickmanager.commands.checks.IPermissionCheck;
+import be.spyproof.nickmanager.controller.IBukkitNicknameController;
 import be.spyproof.nickmanager.controller.MessageController;
-import be.spyproof.nickmanager.util.*;
+import be.spyproof.nickmanager.util.Reference;
+import be.spyproof.nickmanager.util.TabCompleteUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -11,9 +15,7 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Created by Spyproof on 14/11/2016.
@@ -22,7 +24,7 @@ public class TestNickCmd extends AbstractPlayerCmd implements TabCompleter, IBla
 {
     private static final String ARG = "nickname";
 
-    public TestNickCmd(MessageController messageController, IBukkitPlayerController playerController, String... keys)
+    public TestNickCmd(MessageController messageController, IBukkitNicknameController playerController, String... keys)
     {
         super(messageController, playerController, keys);
     }

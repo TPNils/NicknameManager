@@ -1,10 +1,12 @@
 package be.spyproof.nickmanager.commands.player;
 
 import be.spyproof.nickmanager.commands.checks.*;
-import be.spyproof.nickmanager.controller.IBukkitPlayerController;
+import be.spyproof.nickmanager.controller.IBukkitNicknameController;
 import be.spyproof.nickmanager.controller.MessageController;
-import be.spyproof.nickmanager.model.PlayerData;
-import be.spyproof.nickmanager.util.*;
+import be.spyproof.nickmanager.model.NicknameData;
+import be.spyproof.nickmanager.util.Reference;
+import be.spyproof.nickmanager.util.TabCompleteUtil;
+import be.spyproof.nickmanager.util.TemplateUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandException;
@@ -12,7 +14,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Spyproof on 14/11/2016.
@@ -21,7 +24,7 @@ public class SetNickCmd extends AbstractPlayerCmd implements TabCompleter, IBlac
 {
     private static final String ARG = "nickname";
 
-    public SetNickCmd(MessageController messageController, IBukkitPlayerController playerController, String... keys)
+    public SetNickCmd(MessageController messageController, IBukkitNicknameController playerController, String... keys)
     {
         super(messageController, playerController, keys);
     }
@@ -41,23 +44,23 @@ public class SetNickCmd extends AbstractPlayerCmd implements TabCompleter, IBlac
             throw new CommandException(this.messageController.getFormattedMessage(Reference.ErrorMessages.MISSING_ARGUMENT).replace("{argument}", ARG));
 
         String nick = args[0];
-        PlayerData playerData = this.playerController.wrapPlayer(src);
+        NicknameData nicknameData = this.playerController.wrapPlayer(src);
 
-        checkTokens(playerData, src);
-        checkCooldown(playerData, src);
+        checkTokens(nicknameData, src);
+        checkCooldown(nicknameData, src);
         checkBlacklist(src, nick);
         checkFormat(src, nick);
         checkLength(nick);
 
         // Apply
-        playerData.setNickname(nick);
-        playerData.setLastChanged();
+        nicknameData.setNickname(nick);
+        nicknameData.setLastChanged();
         if (!src.hasPermission(Reference.Permissions.BYPASS_CHANGE_LIMIT))
-            playerData.setTokensRemaining(playerData.getTokensRemaining()-1);
-        this.playerController.savePlayer(playerData);
+            nicknameData.setTokensRemaining(nicknameData.getTokensRemaining()-1);
+        this.playerController.savePlayer(nicknameData);
 
         src.setDisplayName(ChatColor.translateAlternateColorCodes('&', nick) + ChatColor.RESET);
-        src.sendMessage(TemplateUtils.apply(this.messageController.getFormattedMessage(Reference.SuccessMessages.NICK_SET), playerData).split("\\n"));
+        src.sendMessage(TemplateUtils.apply(this.messageController.getFormattedMessage(Reference.SuccessMessages.NICK_SET), nicknameData).split("\\n"));
     }
 
     @Override

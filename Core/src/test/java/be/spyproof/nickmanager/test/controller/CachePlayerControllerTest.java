@@ -1,6 +1,6 @@
 package be.spyproof.nickmanager.test.controller;
 
-import be.spyproof.nickmanager.controller.CachedPlayerController;
+import be.spyproof.nickmanager.controller.CachedNicknameController;
 import be.spyproof.nickmanager.test.da.player.DummyPlayerStorage;
 import org.testng.annotations.Test;
 
@@ -11,7 +11,7 @@ public class CachePlayerControllerTest extends PlayerControllerTester
 {
     public CachePlayerControllerTest()
     {
-        super(new CachedPlayerController(new DummyPlayerStorage()));
+        super(new CachedNicknameController(new DummyPlayerStorage()));
     }
 
     @Test

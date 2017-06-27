@@ -1,6 +1,6 @@
 package be.spyproof.nickmanager.da.player;
 
-import be.spyproof.nickmanager.model.PlayerData;
+import be.spyproof.nickmanager.model.NicknameData;
 
 import java.io.Closeable;
 import java.util.List;
@@ -18,7 +18,7 @@ public interface IPlayerStorage extends Closeable
      *
      * @param player The player data that needs to be saved.
      */
-    void savePlayer(PlayerData player);
+    void savePlayer(NicknameData player);
 
     /**
      * Remove the player completely from the storage system
@@ -27,20 +27,20 @@ public interface IPlayerStorage extends Closeable
      *
      * @param player The player data that needs to be removed.
      */
-    void removePlayer(PlayerData player);
+    void removePlayer(NicknameData player);
 
     /**
      * @param name The name a player might have that will be used to look for them
      * @return The player found that matches the name, or empty if none were found
      */
-    Optional<PlayerData> getPlayer(String name);
+    Optional<NicknameData> getPlayer(String name);
 
     /**
      * @see UUID
      * @param uuid The UUID a player might have that will be used to look for them
      * @return The player found that matches the UUID, or empty if none were found
      */
-    Optional<PlayerData> getPlayer(UUID uuid);
+    Optional<NicknameData> getPlayer(UUID uuid);
 
     /**
      * @param nickname An unformatted string used to search for players
@@ -48,5 +48,5 @@ public interface IPlayerStorage extends Closeable
      * @return A List of all possible players where their nickname matches the given nickname.
      *         The list will not be bigger than the given limit
      */
-    List<PlayerData> getPlayerByNickname(String nickname, int limit);
+    List<NicknameData> getPlayerByNickname(String nickname, int limit);
 }

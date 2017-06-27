@@ -1,12 +1,11 @@
 package be.spyproof.nickmanager.commands;
 
-import be.spyproof.nickmanager.controller.ISpongePlayerController;
-import be.spyproof.nickmanager.controller.MessageController;
+import be.spyproof.nickmanager.controller.ISpongeNicknameController;
 
 /**
  * Created by Spyproof on 17/11/2016.
  */
 public interface IPlayerControllerHolder
 {
-    ISpongePlayerController getPlayerController();
+    ISpongeNicknameController getPlayerController();
 }

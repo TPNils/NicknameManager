@@ -1,6 +1,6 @@
 package be.spyproof.nickmanager.listener;
 
-import be.spyproof.nickmanager.controller.ISpongePlayerController;
+import be.spyproof.nickmanager.controller.ISpongeNicknameController;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
 
@@ -11,9 +11,9 @@ import org.spongepowered.api.event.network.ClientConnectionEvent;
  */
 public class PlayerListener
 {
-    private ISpongePlayerController playerController;
+    private ISpongeNicknameController playerController;
 
-    public PlayerListener(ISpongePlayerController playerController)
+    public PlayerListener(ISpongeNicknameController playerController)
     {
         this.playerController = playerController;
     }

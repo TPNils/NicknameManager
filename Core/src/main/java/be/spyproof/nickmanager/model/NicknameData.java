@@ -6,7 +6,7 @@ import java.util.*;
 /**
  * Created by Spyproof
  */
-public class PlayerData
+public class NicknameData
 {
     //TODO last seen
     protected final UUID uuid;
@@ -19,21 +19,21 @@ public class PlayerData
     protected String nickname;
     protected List<String> pastNicknames = new ArrayList<>();
 
-    public static PlayerData of(ImmutablePlayerData immutablePlayerData)
+    public static NicknameData of(ImmutablePlayerData immutablePlayerData)
     {
-        PlayerData playerData = new PlayerData(immutablePlayerData.getName(), immutablePlayerData.getUuid());
+        NicknameData nicknameData = new NicknameData(immutablePlayerData.getName(), immutablePlayerData.getUuid());
 
-        playerData.setTokensRemaining(immutablePlayerData.getTokensRemaining());
-        playerData.setLastChanged(immutablePlayerData.getLastChanged());
-        playerData.addPastNickname(immutablePlayerData.getPastNicknames());
-        playerData.setReadRules(immutablePlayerData.readRules());
+        nicknameData.setTokensRemaining(immutablePlayerData.getTokensRemaining());
+        nicknameData.setLastChanged(immutablePlayerData.getLastChanged());
+        nicknameData.addPastNickname(immutablePlayerData.getPastNicknames());
+        nicknameData.setReadRules(immutablePlayerData.readRules());
         if (immutablePlayerData.getNickname().isPresent())
-            playerData.setNickname(immutablePlayerData.getNickname().get());
+            nicknameData.setNickname(immutablePlayerData.getNickname().get());
 
-        return playerData;
+        return nicknameData;
     }
 
-    public PlayerData(String name, UUID uuid)
+    public NicknameData(String name, UUID uuid)
     {
         this.name = name;
         this.uuid = uuid;
@@ -198,7 +198,7 @@ public class PlayerData
     {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        PlayerData that = (PlayerData) o;
+        NicknameData that = (NicknameData) o;
         return tokensRemaining == that.tokensRemaining &&
                 acceptedRules == that.acceptedRules &&
                 lastChanged == that.lastChanged &&
@@ -217,7 +217,7 @@ public class PlayerData
     @Override
     public String toString()
     {
-        return "PlayerData{" +
+        return "NicknameData{" +
                 "uuid=" + uuid +
                 ", name='" + name + '\'' +
                 ", tokensRemaining=" + tokensRemaining +

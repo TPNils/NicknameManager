@@ -1,7 +1,7 @@
 package be.spyproof.nickmanager.commands.argument;
 
-import be.spyproof.nickmanager.controller.ISpongePlayerController;
-import be.spyproof.nickmanager.model.PlayerData;
+import be.spyproof.nickmanager.controller.ISpongeNicknameController;
+import be.spyproof.nickmanager.model.NicknameData;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.ArgumentParseException;
@@ -21,9 +21,9 @@ import java.util.Optional;
  */
 public class PlayerDataArg extends CommandElement
 {
-    private ISpongePlayerController playerController;
+    private ISpongeNicknameController playerController;
 
-    public PlayerDataArg(String key, ISpongePlayerController playerController)
+    public PlayerDataArg(String key, ISpongeNicknameController playerController)
     {
         super(Text.of(key));
         this.playerController = playerController;
@@ -34,7 +34,7 @@ public class PlayerDataArg extends CommandElement
     protected Object parseValue(CommandSource source, CommandArgs args) throws ArgumentParseException
     {
         String argument = args.next();
-        Optional<? extends PlayerData> playerData = this.playerController.getPlayer(argument);
+        Optional<? extends NicknameData> playerData = this.playerController.getPlayer(argument);
 
         if (playerData.isPresent())
             return playerData.get();

@@ -196,63 +196,64 @@ public class MessageController
                         SuccessMessages.NICK_UNLOCK);
 
         // All help messages
-        setDefaultValue(n, TextTemplate.of(Text.of(TextColors.AQUA, "/nick ", TextColors.GREEN, Reference.CommandKeys.PLAYER_SET[0] + " <nickname>")
+        Text info = Text.of(TextColors.WHITE, TextStyles.BOLD, " [", TextColors.RED, TextStyles.BOLD, "INFO", TextColors.WHITE, TextStyles.BOLD, "]");
+        setDefaultValue(n, TextTemplate.of(Text.of(TextColors.AQUA, "/nick ", TextColors.GREEN, Reference.CommandKeys.PLAYER_SET[0] + " <nickname>", info)
                                                .toBuilder()
                                                .onClick(TextActions.suggestCommand("/nick " + Reference.CommandKeys.PLAYER_SET[0] + " "))
                                                .onHover(TextActions.showText(Text.of(TextColors.YELLOW, "Change your current nickname at the cost of 1 nickname token", Text.NEW_LINE, "Preview your nickname before spending a token with", Text.NEW_LINE, "/nick " + Reference.CommandKeys.PLAYER_PREVIEW[0] + " <nickname>")))
                                                .build()),
                         HelpMessages.NICK_SET);
 
-        setDefaultValue(n, TextTemplate.of(Text.of(TextColors.AQUA, "/nick ", TextColors.GREEN, Reference.CommandKeys.PLAYER_PREVIEW[0] + " <nickname>")
+        setDefaultValue(n, TextTemplate.of(Text.of(TextColors.AQUA, "/nick ", TextColors.GREEN, Reference.CommandKeys.PLAYER_PREVIEW[0] + " <nickname>", info)
                                                .toBuilder()
                                                .onClick(TextActions.suggestCommand("/nick " + Reference.CommandKeys.PLAYER_PREVIEW[0] + " "))
                                                .onHover(TextActions.showText(Text.of(TextColors.YELLOW, "Preview your nickname")))
                                                .build()),
                         HelpMessages.NICK_PREVIEW);
 
-        setDefaultValue(n, TextTemplate.of(Text.of(TextColors.AQUA, "/nick ", TextColors.GREEN, Reference.CommandKeys.PLAYER_CHECK[0])
+        setDefaultValue(n, TextTemplate.of(Text.of(TextColors.AQUA, "/nick ", TextColors.GREEN, Reference.CommandKeys.PLAYER_CHECK[0], info)
                                                .toBuilder()
                                                .onClick(TextActions.suggestCommand("/nick " + Reference.CommandKeys.PLAYER_CHECK[0]))
                                                .onHover(TextActions.showText(Text.of(TextColors.YELLOW, "See how many nickname tokens you have")))
                                                .build()),
                         HelpMessages.NICK_CHECK);
 
-        setDefaultValue(n, TextTemplate.of(Text.of(TextColors.AQUA, "/nick ", TextColors.GREEN, Reference.CommandKeys.PLAYER_FORMAT[0])
+        setDefaultValue(n, TextTemplate.of(Text.of(TextColors.AQUA, "/nick ", TextColors.GREEN, Reference.CommandKeys.PLAYER_FORMAT[0], info)
                                                .toBuilder()
                                                .onClick(TextActions.suggestCommand("/nick " + Reference.CommandKeys.PLAYER_FORMAT[0]))
                                                .onHover(TextActions.showText(Text.of(TextColors.YELLOW, "Check how to apply colours and styles to your nickname")))
                                                .build()),
                         HelpMessages.NICK_FORMAT);
 
-        setDefaultValue(n, TextTemplate.of(Text.of(TextColors.AQUA, "/nick ", TextColors.GREEN, Reference.CommandKeys.PLAYER_REAL_NAME[0] + " <player>")
+        setDefaultValue(n, TextTemplate.of(Text.of(TextColors.AQUA, "/nick ", TextColors.GREEN, Reference.CommandKeys.PLAYER_REAL_NAME[0] + " <player>", info)
                                                .toBuilder()
                                                .onClick(TextActions.suggestCommand("/nick " + Reference.CommandKeys.PLAYER_REAL_NAME[0] + " "))
                                                .onHover(TextActions.showText(Text.of(TextColors.YELLOW, "Try to find the real name of a player's nickname")))
                                                .build()),
                         HelpMessages.NICK_REAL_NAME);
 
-        setDefaultValue(n, TextTemplate.of(Text.of(TextColors.AQUA, "/nick ", TextColors.GREEN, Reference.CommandKeys.PLAYER_RESET[0])
+        setDefaultValue(n, TextTemplate.of(Text.of(TextColors.AQUA, "/nick ", TextColors.GREEN, Reference.CommandKeys.PLAYER_RESET[0], info)
                                                .toBuilder()
                                                .onClick(TextActions.suggestCommand("/nick " + Reference.CommandKeys.PLAYER_RESET[0]))
                                                .onHover(TextActions.showText(Text.of(TextColors.YELLOW, "Remove your current nickname, does not cost any nickname tokens")))
                                                .build()),
                         HelpMessages.NICK_RESET);
 
-        setDefaultValue(n, TextTemplate.of(Text.of(TextColors.AQUA, "/nick ", TextColors.GREEN, Reference.CommandKeys.PLAYER_RULES[0])
+        setDefaultValue(n, TextTemplate.of(Text.of(TextColors.AQUA, "/nick ", TextColors.GREEN, Reference.CommandKeys.PLAYER_RULES[0], info)
                                                .toBuilder()
                                                .onClick(TextActions.suggestCommand("/nick " + Reference.CommandKeys.PLAYER_RULES[0]))
                                                .onHover(TextActions.showText(Text.of(TextColors.YELLOW, "Read the rules regarding choosing a nickname")))
                                                .build()),
                         HelpMessages.NICK_RULES);
 
-        setDefaultValue(n, TextTemplate.of(Text.of(TextColors.AQUA, "/nick ", TextColors.GREEN, Reference.CommandKeys.PLAYER_UNLOCK[0])
+        setDefaultValue(n, TextTemplate.of(Text.of(TextColors.AQUA, "/nick ", TextColors.GREEN, Reference.CommandKeys.PLAYER_UNLOCK[0], info)
                                                .toBuilder()
                                                .onClick(TextActions.suggestCommand("/nick " + Reference.CommandKeys.PLAYER_UNLOCK[0]))
                                                .onHover(TextActions.showText(Text.of(TextColors.YELLOW, "Information on how to obtain a nickname token")))
                                                .build()),
                         HelpMessages.NICK_UNLOCK);
 
-        setDefaultValue(n, TextTemplate.of(Text.of(TextColors.AQUA, "/admnick ", TextColors.GREEN, Reference.CommandKeys.ADMIN_CHECK[0], " <player>")
+        setDefaultValue(n, TextTemplate.of(Text.of(TextColors.AQUA, "/admnick ", TextColors.GREEN, Reference.CommandKeys.ADMIN_CHECK[0], " <player>", info)
                                                .toBuilder()
                                                .onClick(TextActions.suggestCommand("/admnick " + Reference.CommandKeys.ADMIN_CHECK[0] + " "))
                                                .onHover(TextActions.showText(Text.of(TextColors.YELLOW, "See information about the player")))
@@ -260,28 +261,28 @@ public class MessageController
                         HelpMessages.ADMIN_NICK_CHECK);
 
 
-        setDefaultValue(n, TextTemplate.of(Text.of(TextColors.AQUA, "/admnick ", TextColors.GREEN, Reference.CommandKeys.ADMIN_SET[0], " <player> <amount>")
+        setDefaultValue(n, TextTemplate.of(Text.of(TextColors.AQUA, "/admnick ", TextColors.GREEN, Reference.CommandKeys.ADMIN_SET[0], " <player> <amount>", info)
                                                .toBuilder()
                                                .onClick(TextActions.suggestCommand("/admnick " + Reference.CommandKeys.ADMIN_SET[0] + " "))
                                                .onHover(TextActions.showText(Text.of(TextColors.YELLOW, "Give the player a nickname token")))
                                                .build()),
                         HelpMessages.ADMIN_NICK_GIVE);
 
-        setDefaultValue(n, TextTemplate.of(Text.of(TextColors.AQUA, "/admnick ", TextColors.GREEN, Reference.CommandKeys.ADMIN_SET[0], " <player> <nickname>")
+        setDefaultValue(n, TextTemplate.of(Text.of(TextColors.AQUA, "/admnick ", TextColors.GREEN, Reference.CommandKeys.ADMIN_SET[0], " <player> <nickname>", info)
                                                .toBuilder()
                                                .onClick(TextActions.suggestCommand("/admnick " + Reference.CommandKeys.ADMIN_SET[0] + " "))
                                                .onHover(TextActions.showText(Text.of(TextColors.YELLOW, "Change the player's nickname")))
                                                .build()),
                         HelpMessages.ADMIN_NICK_SET);
 
-        setDefaultValue(n, TextTemplate.of(Text.of(TextColors.AQUA, "/admnick ", TextColors.GREEN, "reset " + Reference.CommandKeys.ADMIN_RESET_NICKNAME[0], " <player>")
+        setDefaultValue(n, TextTemplate.of(Text.of(TextColors.AQUA, "/admnick ", TextColors.GREEN, "reset " + Reference.CommandKeys.ADMIN_RESET_NICKNAME[0], " <player>", info)
                                                .toBuilder()
                                                .onClick(TextActions.suggestCommand("/admnick reset " + Reference.CommandKeys.ADMIN_RESET_NICKNAME[0] + " "))
                                                .onHover(TextActions.showText(Text.of(TextColors.YELLOW, "Reset the player's nickname")))
                                                .build()),
                         HelpMessages.ADMIN_NICK_RESET_NICKNAME);
 
-        setDefaultValue(n, TextTemplate.of(Text.of(TextColors.AQUA, "/admnick ", TextColors.GREEN, "reset " + Reference.CommandKeys.ADMIN_RESET_TOKENS[0], " <player>")
+        setDefaultValue(n, TextTemplate.of(Text.of(TextColors.AQUA, "/admnick ", TextColors.GREEN, "reset " + Reference.CommandKeys.ADMIN_RESET_TOKENS[0], " <player>", info)
                                                .toBuilder()
                                                .onClick(TextActions.suggestCommand("/admnick reset " + Reference.CommandKeys.ADMIN_RESET_TOKENS[0] + " "))
                                                .onHover(TextActions.showText(Text.of(TextColors.YELLOW, "Reset the player's tokens")))
@@ -289,7 +290,7 @@ public class MessageController
                         HelpMessages.ADMIN_NICK_RESET_TOKENS);
 
 
-        setDefaultValue(n, TextTemplate.of(Text.of(TextColors.AQUA, "/admnick ", TextColors.GREEN, "reset " + Reference.CommandKeys.ADMIN_RESET_RULES[0], " <player>")
+        setDefaultValue(n, TextTemplate.of(Text.of(TextColors.AQUA, "/admnick ", TextColors.GREEN, "reset " + Reference.CommandKeys.ADMIN_RESET_RULES[0], " <player>", info)
                                                .toBuilder()
                                                .onClick(TextActions.suggestCommand("/admnick reset " + Reference.CommandKeys.ADMIN_RESET_RULES[0] + " "))
                                                .onHover(TextActions.showText(Text.of(TextColors.YELLOW, "Force the player to accept the rules again before they can use any /nick commands")))
@@ -297,7 +298,7 @@ public class MessageController
                         HelpMessages.ADMIN_NICK_RESET_RULES);
 
 
-        setDefaultValue(n, TextTemplate.of(Text.of(TextColors.AQUA, "/admnick ", TextColors.GREEN, "reset " + Reference.CommandKeys.ADMIN_RESET_COOLDOWN[0], " <player>")
+        setDefaultValue(n, TextTemplate.of(Text.of(TextColors.AQUA, "/admnick ", TextColors.GREEN, "reset " + Reference.CommandKeys.ADMIN_RESET_COOLDOWN[0], " <player>", info)
                                                .toBuilder()
                                                .onClick(TextActions.suggestCommand("/admnick reset " + Reference.CommandKeys.ADMIN_RESET_COOLDOWN[0] + " "))
                                                .onHover(TextActions.showText(Text.of(TextColors.YELLOW, "Reset the player's cooldown")))

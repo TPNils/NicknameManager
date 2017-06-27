@@ -2,9 +2,9 @@ package be.spyproof.nickmanager.commands.player;
 
 import be.spyproof.nickmanager.commands.AbstractCmd;
 import be.spyproof.nickmanager.commands.checks.IPermissionCheck;
-import be.spyproof.nickmanager.controller.IBukkitPlayerController;
+import be.spyproof.nickmanager.controller.IBukkitNicknameController;
 import be.spyproof.nickmanager.controller.MessageController;
-import be.spyproof.nickmanager.model.PlayerData;
+import be.spyproof.nickmanager.model.NicknameData;
 import be.spyproof.nickmanager.util.Reference;
 import be.spyproof.nickmanager.util.TabCompleteUtil;
 import org.bukkit.ChatColor;
@@ -22,7 +22,7 @@ public class RealNameCmd extends AbstractCmd implements TabCompleter, IPermissio
 {
     private static final String ARG = "nickname";
 
-    public RealNameCmd(MessageController messageController, IBukkitPlayerController playerController, String... keys)
+    public RealNameCmd(MessageController messageController, IBukkitNicknameController playerController, String... keys)
     {
         super(messageController, playerController, keys);
     }
@@ -42,7 +42,7 @@ public class RealNameCmd extends AbstractCmd implements TabCompleter, IPermissio
             throw new ClassCastException(this.messageController.getFormattedMessage(Reference.ErrorMessages.MISSING_ARGUMENT).replace("{argument}", ARG));
 
         String nickname = ChatColor.translateAlternateColorCodes('&', args[0]);
-        List<PlayerData> matches = this.playerController.getPlayerByNickname(ChatColor.stripColor(nickname));
+        List<NicknameData> matches = this.playerController.getPlayerByNickname(ChatColor.stripColor(nickname));
 
         StringBuilder players = new StringBuilder();
         if (matches.size() > 0)

@@ -2,9 +2,9 @@ package be.spyproof.nickmanager.commands.player;
 
 import be.spyproof.nickmanager.commands.AbstractCmd;
 import be.spyproof.nickmanager.commands.checks.IArgumentChecker;
-import be.spyproof.nickmanager.controller.ISpongePlayerController;
+import be.spyproof.nickmanager.controller.ISpongeNicknameController;
 import be.spyproof.nickmanager.controller.MessageController;
-import be.spyproof.nickmanager.model.PlayerData;
+import be.spyproof.nickmanager.model.NicknameData;
 import be.spyproof.nickmanager.util.Reference;
 import be.spyproof.nickmanager.util.TemplateUtils;
 import org.spongepowered.api.command.CommandException;
@@ -20,7 +20,6 @@ import org.spongepowered.api.text.serializer.TextSerializers;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * Created by Spyproof on 31/10/2016.
@@ -29,7 +28,7 @@ public class RealNameCmd extends AbstractCmd implements IArgumentChecker
 {
     private static final String ARG = "nickname";
 
-    private RealNameCmd(MessageController messageController, ISpongePlayerController playerController)
+    private RealNameCmd(MessageController messageController, ISpongeNicknameController playerController)
     {
         super(messageController, playerController);
     }
@@ -38,7 +37,7 @@ public class RealNameCmd extends AbstractCmd implements IArgumentChecker
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException
     {
         String nickname = getArgument(args, ARG);
-        List<PlayerData> matches = this.getPlayerController().getPlayerByNickname(TextSerializers.FORMATTING_CODE.stripCodes(nickname));
+        List<NicknameData> matches = this.getPlayerController().getPlayerByNickname(TextSerializers.FORMATTING_CODE.stripCodes(nickname));
 
         Text.Builder players = Text.builder();
         if (matches.size() > 0)
@@ -66,7 +65,7 @@ public class RealNameCmd extends AbstractCmd implements IArgumentChecker
         return CommandResult.success();
     }
 
-    public static CommandSpec getCommandSpec(MessageController messageController, ISpongePlayerController playerController)
+    public static CommandSpec getCommandSpec(MessageController messageController, ISpongeNicknameController playerController)
     {
         return CommandSpec.builder()
                           .executor(new RealNameCmd(messageController, playerController))

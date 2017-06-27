@@ -2,7 +2,7 @@ package be.spyproof.nickmanager.commands.player;
 
 import be.spyproof.nickmanager.commands.AbstractCmd;
 import be.spyproof.nickmanager.commands.checks.IPlayerCheck;
-import be.spyproof.nickmanager.controller.IBukkitPlayerController;
+import be.spyproof.nickmanager.controller.IBukkitNicknameController;
 import be.spyproof.nickmanager.controller.MessageController;
 import be.spyproof.nickmanager.util.BukkitUtils;
 import be.spyproof.nickmanager.util.Reference;
@@ -14,7 +14,7 @@ import org.bukkit.entity.Player;
  */
 public abstract class AbstractPlayerCmd extends AbstractCmd implements IPlayerCheck
 {
-    protected AbstractPlayerCmd(MessageController messageController, IBukkitPlayerController playerController, String... keys)
+    protected AbstractPlayerCmd(MessageController messageController, IBukkitNicknameController playerController, String... keys)
     {
         super(messageController, playerController, keys);
     }

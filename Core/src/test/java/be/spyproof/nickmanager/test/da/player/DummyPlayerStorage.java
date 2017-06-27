@@ -1,7 +1,7 @@
 package be.spyproof.nickmanager.test.da.player;
 
 import be.spyproof.nickmanager.da.player.IPlayerStorage;
-import be.spyproof.nickmanager.model.PlayerData;
+import be.spyproof.nickmanager.model.NicknameData;
 import be.spyproof.nickmanager.util.Reference;
 
 import java.io.IOException;
@@ -15,10 +15,10 @@ import java.util.UUID;
  */
 public class DummyPlayerStorage implements IPlayerStorage
 {
-    public List<PlayerData> players = new ArrayList<>();
+    public List<NicknameData> players = new ArrayList<>();
 
     @Override
-    public void savePlayer(PlayerData player)
+    public void savePlayer(NicknameData player)
     {
         for (int i = 0; i < this.players.size(); i++)
         {
@@ -33,7 +33,7 @@ public class DummyPlayerStorage implements IPlayerStorage
     }
 
     @Override
-    public void removePlayer(PlayerData player)
+    public void removePlayer(NicknameData player)
     {
         for (int i = 0; i < this.players.size(); i++)
         {
@@ -46,9 +46,9 @@ public class DummyPlayerStorage implements IPlayerStorage
     }
 
     @Override
-    public Optional<PlayerData> getPlayer(String name)
+    public Optional<NicknameData> getPlayer(String name)
     {
-        for (PlayerData player : this.players)
+        for (NicknameData player : this.players)
             if (player.getName().equals(name))
                 return Optional.of(player);
 
@@ -56,9 +56,9 @@ public class DummyPlayerStorage implements IPlayerStorage
     }
 
     @Override
-    public Optional<PlayerData> getPlayer(UUID uuid)
+    public Optional<NicknameData> getPlayer(UUID uuid)
     {
-        for (PlayerData player : this.players)
+        for (NicknameData player : this.players)
             if (player.getUuid().equals(uuid))
                 return Optional.of(player);
 
@@ -66,11 +66,11 @@ public class DummyPlayerStorage implements IPlayerStorage
     }
 
     @Override
-    public List<PlayerData> getPlayerByNickname(String nickname, int limit)
+    public List<NicknameData> getPlayerByNickname(String nickname, int limit)
     {
-        List<PlayerData> players = new ArrayList<>();
+        List<NicknameData> players = new ArrayList<>();
 
-        for (PlayerData player : this.players)
+        for (NicknameData player : this.players)
             if (player.getNickname().isPresent() && player.getNickname().get().replaceAll(Reference.COLOUR_AND_STYLE_PATTERN, "").contains(nickname))
                 players.add(player);
 

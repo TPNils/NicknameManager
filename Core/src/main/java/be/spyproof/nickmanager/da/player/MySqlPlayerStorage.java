@@ -1,7 +1,7 @@
 package be.spyproof.nickmanager.da.player;
 
 import be.spyproof.nickmanager.model.ImmutablePlayerData;
-import be.spyproof.nickmanager.model.PlayerData;
+import be.spyproof.nickmanager.model.NicknameData;
 import be.spyproof.nickmanager.util.Reference;
 
 import java.io.BufferedReader;
@@ -67,7 +67,7 @@ public class MySqlPlayerStorage implements IPlayerStorage
     }
 
     @Override
-    public void savePlayer(PlayerData player)
+    public void savePlayer(NicknameData player)
     {
         ImmutablePlayerData immutablePlayer = ImmutablePlayerData.of(player);
         this.pendingSaving.add(immutablePlayer);
@@ -100,7 +100,7 @@ public class MySqlPlayerStorage implements IPlayerStorage
     }
 
     @Override
-    public void removePlayer(PlayerData player)
+    public void removePlayer(NicknameData player)
     {
         remainingTasks++;
         this.executorService.execute(() -> {
@@ -110,9 +110,9 @@ public class MySqlPlayerStorage implements IPlayerStorage
     }
 
     @Override
-    public Optional<PlayerData> getPlayer(String name)
+    public Optional<NicknameData> getPlayer(String name)
     {
-        Optional<PlayerData> cache = getSavePendingPlayer(name);
+        Optional<NicknameData> cache = getSavePendingPlayer(name);
         if (cache.isPresent())
             return cache;
 
@@ -128,9 +128,9 @@ public class MySqlPlayerStorage implements IPlayerStorage
     }
 
     @Override
-    public Optional<PlayerData> getPlayer(UUID uuid)
+    public Optional<NicknameData> getPlayer(UUID uuid)
     {
-        Optional<PlayerData> cache = getSavePendingPlayer(uuid);
+        Optional<NicknameData> cache = getSavePendingPlayer(uuid);
         if (cache.isPresent())
             return cache;
 
@@ -146,9 +146,9 @@ public class MySqlPlayerStorage implements IPlayerStorage
     }
 
     @Override
-    public List<PlayerData> getPlayerByNickname(String unformattedNickname, int limit)
+    public List<NicknameData> getPlayerByNickname(String unformattedNickname, int limit)
     {
-        Optional<List<PlayerData>> cache = getSavePendingPlayerByNickname(unformattedNickname, limit);
+        Optional<List<NicknameData>> cache = getSavePendingPlayerByNickname(unformattedNickname, limit);
         if (cache.isPresent())
             return cache.get();
 
@@ -252,7 +252,7 @@ public class MySqlPlayerStorage implements IPlayerStorage
         return null;
     }
 
-    private Optional<PlayerData> getSavePendingPlayer(UUID uuid)
+    private Optional<NicknameData> getSavePendingPlayer(UUID uuid)
     {
         ImmutablePlayerData immutablePlayerData = null;
         Iterator<ImmutablePlayerData> iterator = this.pendingSaving.iterator();
@@ -266,10 +266,10 @@ public class MySqlPlayerStorage implements IPlayerStorage
         if (immutablePlayerData == null)
             return Optional.empty();
         else
-            return Optional.of(PlayerData.of(immutablePlayerData));
+            return Optional.of(NicknameData.of(immutablePlayerData));
     }
 
-    private Optional<PlayerData> getSavePendingPlayer(String name)
+    private Optional<NicknameData> getSavePendingPlayer(String name)
     {
         ImmutablePlayerData immutablePlayerData = null;
         Iterator<ImmutablePlayerData> iterator = this.pendingSaving.iterator();
@@ -283,10 +283,10 @@ public class MySqlPlayerStorage implements IPlayerStorage
         if (immutablePlayerData == null)
             return Optional.empty();
         else
-            return Optional.of(PlayerData.of(immutablePlayerData));
+            return Optional.of(NicknameData.of(immutablePlayerData));
     }
 
-    private Optional<List<PlayerData>> getSavePendingPlayerByNickname(String unformattedNickname, int limit)
+    private Optional<List<NicknameData>> getSavePendingPlayerByNickname(String unformattedNickname, int limit)
     {
         List<ImmutablePlayerData> immutablePlayers = new LinkedList<>();
 
@@ -303,11 +303,11 @@ public class MySqlPlayerStorage implements IPlayerStorage
             return Optional.empty();
         else
         {
-            return Optional.of(immutablePlayers.stream().map(PlayerData::of).collect(Collectors.toList()));
+            return Optional.of(immutablePlayers.stream().map(NicknameData::of).collect(Collectors.toList()));
         }
     }
 
-    private Optional<PlayerData> getPlayerSql(String name) throws SQLException
+    private Optional<NicknameData> getPlayerSql(String name) throws SQLException
     {
         CallableStatement call = this.connection.prepareCall("CALL getNicknameDataByName('" + name + "')");
         call.execute();
@@ -317,22 +317,22 @@ public class MySqlPlayerStorage implements IPlayerStorage
 
         if (set.next())
         {
-            PlayerData playerData = new PlayerData(name, UUID.fromString(set.getString("UUID")));
-            playerData.setNickname(set.getString("Nickname"));
-            playerData.setLastChanged(set.getLong("Last changed"));
-            playerData.setTokensRemaining(set.getInt("Tokens"));
-            playerData.setAcceptedRules(set.getBoolean("Accepted rules"));
+            NicknameData nicknameData = new NicknameData(name, UUID.fromString(set.getString("UUID")));
+            nicknameData.setNickname(set.getString("Nickname"));
+            nicknameData.setLastChanged(set.getLong("Last changed"));
+            nicknameData.setTokensRemaining(set.getInt("Tokens"));
+            nicknameData.setAcceptedRules(set.getBoolean("Accepted rules"));
             String archive = set.getString("Archived nicknames");
             if (archive != null)
                 for (String nick : archive.split(";"))
-                    playerData.addPastNickname(nick);
-            return Optional.of(playerData);
+                    nicknameData.addPastNickname(nick);
+            return Optional.of(nicknameData);
         }
 
         return Optional.empty();
     }
 
-    private Optional<PlayerData> getPlayerSql(UUID uuid) throws SQLException
+    private Optional<NicknameData> getPlayerSql(UUID uuid) throws SQLException
     {
         CallableStatement call = this.connection.prepareCall("CALL getNicknameDataByUuid('" + uuid.toString() + "')");
         call.execute();
@@ -342,24 +342,24 @@ public class MySqlPlayerStorage implements IPlayerStorage
 
         if (set.next())
         {
-            PlayerData playerData = new PlayerData(set.getString("Last known name"), uuid);
-            playerData.setNickname(set.getString("Nickname"));
-            playerData.setLastChanged(set.getLong("Last changed"));
-            playerData.setTokensRemaining(set.getInt("Tokens"));
-            playerData.setAcceptedRules(set.getBoolean("Accepted rules"));
+            NicknameData nicknameData = new NicknameData(set.getString("Last known name"), uuid);
+            nicknameData.setNickname(set.getString("Nickname"));
+            nicknameData.setLastChanged(set.getLong("Last changed"));
+            nicknameData.setTokensRemaining(set.getInt("Tokens"));
+            nicknameData.setAcceptedRules(set.getBoolean("Accepted rules"));
             String archive = set.getString("Archived nicknames");
             if (archive != null)
                 for (String nick : archive.split(";"))
-                    playerData.addPastNickname(nick);
-            return Optional.of(playerData);
+                    nicknameData.addPastNickname(nick);
+            return Optional.of(nicknameData);
         }
 
         return Optional.empty();
     }
 
-    private List<PlayerData> getPlayerByNicknameSql(String unformattedNickname, int limit) throws SQLException
+    private List<NicknameData> getPlayerByNicknameSql(String unformattedNickname, int limit) throws SQLException
     {
-        List<PlayerData> players = new ArrayList<>();
+        List<NicknameData> players = new ArrayList<>();
 
         CallableStatement call = this.connection
                 .prepareCall("CALL getNicknameDataByNickname('" + unformattedNickname + "'," + limit + ")");
@@ -367,14 +367,14 @@ public class MySqlPlayerStorage implements IPlayerStorage
         ResultSet set = call.getResultSet();
         while (set != null && set.next())
         {
-            PlayerData playerData = new PlayerData(set.getString("Last known name"),
+            NicknameData nicknameData = new NicknameData(set.getString("Last known name"),
                                                    UUID.fromString(set.getString("UUID")));
-            playerData.setNickname(set.getString("Nickname"));
+            nicknameData.setNickname(set.getString("Nickname"));
             String archive = set.getString("Archived nicknames");
             if (archive != null)
                 for (String nick : archive.split(";"))
-                    playerData.addPastNickname(nick);
-            players.add(playerData);
+                    nicknameData.addPastNickname(nick);
+            players.add(nicknameData);
         }
 
 
