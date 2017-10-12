@@ -150,8 +150,8 @@ public class Main
 
         try
         {
-            Class.forName("br.net.fabiozumbi12.UltimateChat.API.SendChannelMessageEvent");
-            Sponge.getEventManager().registerListener(this, br.net.fabiozumbi12.UltimateChat.API.SendChannelMessageEvent.class, new UltimateChatListener(this.playerController));
+            Class.forName("br.net.fabiozumbi12.UltimateChat.Sponge.API.SendChannelMessageEvent");
+            Sponge.getEventManager().registerListener(this, br.net.fabiozumbi12.UltimateChat.Sponge.API.SendChannelMessageEvent.class, new UltimateChatListener(this.playerController));
         }
         catch (ClassNotFoundException ignored)
         {}

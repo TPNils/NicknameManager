@@ -8,7 +8,7 @@
         <version>1.0.1</version>
     </parent>
     <artifactId>nickname-manager-sponge</artifactId>
-    <version>1.0.1c</version>
+    <version>1.0.1d</version>
 
     <dependencies>
         <dependency>
@@ -31,7 +31,7 @@
             <artifactId>UltimateChat</artifactId>
             <version>1.7.1-b22</version>
             <scope>system</scope>
-            <systemPath>E:\Minecraft\Server\server_pokeclub_new\mods\UltimateChat-1.7.1-b22.jar</systemPath>
+            <systemPath>E:\Minecraft\plugins\Sponge\1.10.2\UltimateChat-1.8.3-b97-Universal.jar</systemPath>
         </dependency>
     </dependencies>
 

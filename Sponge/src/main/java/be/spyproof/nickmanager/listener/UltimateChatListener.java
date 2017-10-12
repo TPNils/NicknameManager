@@ -2,7 +2,7 @@ package be.spyproof.nickmanager.listener;
 
 import be.spyproof.nickmanager.controller.ISpongeNicknameController;
 import be.spyproof.nickmanager.model.NicknameData;
-import br.net.fabiozumbi12.UltimateChat.API.SendChannelMessageEvent;
+import br.net.fabiozumbi12.UltimateChat.Sponge.API.SendChannelMessageEvent;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.EventListener;
 import org.spongepowered.api.text.serializer.TextSerializers;
