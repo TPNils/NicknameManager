@@ -31,7 +31,7 @@
             <artifactId>UltimateChat</artifactId>
             <version>1.7.1-b22</version>
             <scope>system</scope>
-            <systemPath>E:\Minecraft\plugins\Sponge\1.10.2\UltimateChat-1.8.3-b97-Universal.jar</systemPath>
+            <systemPath>D:\Minecraft\plugins\Sponge\1.10.2\UltimateChat-1.8.3-b97-Universal.jar</systemPath>
         </dependency>
     </dependencies>
 
