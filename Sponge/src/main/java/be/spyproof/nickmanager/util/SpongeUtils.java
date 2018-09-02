@@ -5,6 +5,7 @@ import be.spyproof.nickmanager.da.config.IConfigStorage;
 import be.spyproof.nickmanager.model.NicknameData;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.serializer.TextSerializers;
 
 import java.util.List;
@@ -151,5 +152,22 @@ public class SpongeUtils
         Map<String, Long> cooldowns = this.configController.getCooldowns();
         cooldowns.remove("default");
         return cooldowns;
+    }
+
+    public void applyNicknameToTabList(NicknameData nicknameData, Player player) {
+        if (this.configController.setTabListName()) {
+            String nicknameString = nicknameData.getNickname().orElse(nicknameData.getName());
+
+            // If the nickname has formatting, apply a reset at the end
+            if (nicknameString.indexOf('&') > -1 && !nicknameString.endsWith("&r")) {
+                nicknameString = nicknameString + "&r";
+            }
+
+            final Text nickname = TextSerializers.FORMATTING_CODE.deserialize(nicknameString);
+
+            player.getTabList().getEntry(player.getUniqueId()).ifPresent(
+              tabListEntry -> tabListEntry.setDisplayName(nickname)
+            );
+        }
     }
 }

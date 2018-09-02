@@ -4,6 +4,7 @@ import be.spyproof.nickmanager.commands.checks.IPermissionCheck;
 import be.spyproof.nickmanager.controller.IBukkitNicknameController;
 import be.spyproof.nickmanager.controller.MessageController;
 import be.spyproof.nickmanager.model.NicknameData;
+import be.spyproof.nickmanager.util.BukkitUtils;
 import be.spyproof.nickmanager.util.Reference;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -33,7 +34,7 @@ public class ResetOwnNickCmd extends AbstractPlayerCmd implements IPermissionChe
         nicknameData.setNickname(null);
         this.playerController.savePlayer(nicknameData);
 
-        src.setDisplayName(src.getName());
+        BukkitUtils.INSTANCE.applyNickname(nicknameData, src);
         src.sendMessage(this.messageController.getFormattedMessage(Reference.SuccessMessages.NICK_RESET).split("\\n"));
     }
 }

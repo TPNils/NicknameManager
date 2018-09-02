@@ -7,6 +7,7 @@ import be.spyproof.nickmanager.controller.ISpongeNicknameController;
 import be.spyproof.nickmanager.controller.MessageController;
 import be.spyproof.nickmanager.model.NicknameData;
 import be.spyproof.nickmanager.util.Reference;
+import be.spyproof.nickmanager.util.SpongeUtils;
 import be.spyproof.nickmanager.util.TemplateUtils;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
@@ -39,8 +40,10 @@ public class ResetOtherNickCmd extends AbstractCmd implements IArgumentChecker
         this.getPlayerController().savePlayer(nicknameData);
 
         Optional<Player> player = Sponge.getServer().getPlayer(nicknameData.getUuid());
-        if (player.isPresent())
+        if (player.isPresent()){
+            SpongeUtils.INSTANCE.applyNicknameToTabList(nicknameData, player.get());
             player.get().sendMessage(this.getMessageController().getMessage(Reference.SuccessMessages.NICK_RESET).toText());
+        }
 
         src.sendMessage(this.getMessageController().getMessage(Reference.SuccessMessages.ADMIN_NICK_RESET_NICKNAME).apply(TemplateUtils.getParameters(nicknameData)).build());
         return CommandResult.success();

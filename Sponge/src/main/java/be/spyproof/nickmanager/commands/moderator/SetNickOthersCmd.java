@@ -10,6 +10,7 @@ import be.spyproof.nickmanager.controller.ISpongeNicknameController;
 import be.spyproof.nickmanager.controller.MessageController;
 import be.spyproof.nickmanager.model.NicknameData;
 import be.spyproof.nickmanager.util.Reference;
+import be.spyproof.nickmanager.util.SpongeUtils;
 import be.spyproof.nickmanager.util.TemplateUtils;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
@@ -58,8 +59,10 @@ public class SetNickOthersCmd extends AbstractCmd implements IBlacklistChecker, 
         Map<String, Text> placeholders = TemplateUtils.getParameters(nicknameData);
         src.sendMessage(this.getMessageController().getMessage(Reference.SuccessMessages.ADMIN_NICK_SET).apply(placeholders).build());
         Optional<Player> receiver = Sponge.getServer().getPlayer(nicknameData.getUuid());
-        if (receiver.isPresent())
+        if (receiver.isPresent()) {
+            SpongeUtils.INSTANCE.applyNicknameToTabList(nicknameData, receiver.get());
             receiver.get().sendMessage(this.getMessageController().getMessage(Reference.SuccessMessages.NICK_SET).apply(placeholders).build());
+        }
 
         return CommandResult.success();
     }

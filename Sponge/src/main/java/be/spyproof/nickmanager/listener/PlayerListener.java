@@ -1,6 +1,8 @@
 package be.spyproof.nickmanager.listener;
 
 import be.spyproof.nickmanager.controller.ISpongeNicknameController;
+import be.spyproof.nickmanager.model.NicknameData;
+import be.spyproof.nickmanager.util.SpongeUtils;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
 
@@ -25,7 +27,8 @@ public class PlayerListener
     @Listener
     public void onJoin(ClientConnectionEvent.Join event)
     {
-        this.playerController.wrap(event.getTargetEntity().getUniqueId(), event.getTargetEntity().getName());
+        NicknameData nicknameData = this.playerController.wrap(event.getTargetEntity().getUniqueId(), event.getTargetEntity().getName());
+        SpongeUtils.INSTANCE.applyNicknameToTabList(nicknameData, event.getTargetEntity());
     }
 
     /**

@@ -17,6 +17,9 @@ maxeffects: 2
 # Decide if players need to accept the rules first
 mustAcceptRules: true
 
+# Player nicknames will also appear in the tab list.
+setTablistName: true
+
 # Banned nicknames with regex syntax (not case sensitive)
 blacklist:
 - '[o0]wn[e3]r' # owner

@@ -32,6 +32,10 @@ public class ConfigController implements IConfigStorage
     public void load() throws Exception
     {
         this.configuration = YamlConfiguration.loadConfiguration(this.file);
+        if (!this.configuration.contains("setTabListName")) {
+            this.configuration.set("setTabListName", true);
+            this.configuration.save(this.file);
+        }
     }
 
     public String getLanguage()
@@ -117,5 +121,11 @@ public class ConfigController implements IConfigStorage
     public List<String> getBlacklist()
     {
         return this.configuration.getStringList("blacklist");
+    }
+
+    @Override
+    public boolean setTabListName()
+    {
+        return this.configuration.getBoolean("setTabListName", true);
     }
 }

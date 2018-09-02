@@ -5,6 +5,7 @@ import be.spyproof.nickmanager.commands.checks.IPermissionCheck;
 import be.spyproof.nickmanager.controller.IBukkitNicknameController;
 import be.spyproof.nickmanager.controller.MessageController;
 import be.spyproof.nickmanager.model.NicknameData;
+import be.spyproof.nickmanager.util.BukkitUtils;
 import be.spyproof.nickmanager.util.Reference;
 import be.spyproof.nickmanager.util.TabCompleteUtil;
 import be.spyproof.nickmanager.util.TemplateUtils;
@@ -57,7 +58,7 @@ public class ResetOtherNickCmd extends AbstractCmd implements TabCompleter, IPer
         Player player = Bukkit.getPlayer(playerData.get().getUuid());
         if (player != null)
         {
-            player.setDisplayName(player.getName());
+            BukkitUtils.INSTANCE.applyNickname(playerData.get(), player);
             player.sendMessage(this.messageController.getFormattedMessage(Reference.SuccessMessages.NICK_RESET));
         }
 

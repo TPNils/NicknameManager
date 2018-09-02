@@ -26,6 +26,7 @@ import java.util.Map;
  */
 public class ConfigController implements IConfigStorage
 {
+    private static final int VERSION = 2;
     private File file;
 
     private ConfigurationLoader<CommentedConfigurationNode> loader;
@@ -50,12 +51,25 @@ public class ConfigController implements IConfigStorage
         if (saveDefaults)
             saveDefaults();
 
-        {   // Used to update a live test version. Will remove later on TODO remove
-            CommentedConfigurationNode node = this.root.getNode("config version");
-            if (!node.getComment().isPresent())
+        {
+            boolean requiresSave = false;
+            CommentedConfigurationNode configVersion = this.root.getNode("config version");
+            if (!configVersion.getComment().isPresent())
             {
-                node.setComment("Do not change this number!");
-                node.setValue(1);
+                configVersion.setComment("Do not change this number!");
+                requiresSave = true;
+            }
+            if (configVersion.getInt() == 1) {
+                this.root.getNode("Set tab list name").setValue(true).setComment("Player nicknames will also appear in the tab list.");
+                requiresSave = true;
+            }
+            if (configVersion.getInt() != VERSION) {
+                configVersion.setValue(VERSION);
+                requiresSave = true;
+            }
+
+            if (requiresSave) {
+                this.loader.save(this.root);
             }
         }
     }
@@ -68,6 +82,7 @@ public class ConfigController implements IConfigStorage
 
     public void saveDefaults() throws IOException
     {
+        this.root.getNode("Set tab list name").setValue(true).setComment("Player nicknames will also appear in the tab list.");
         this.root.getNode("Must accept rules").setValue(true).setComment("Decide if players need to accept the rules first before getting access to the /nick commands");
         this.root.getNode("Max colours").setValue(4).setComment("Maximum colour combinations per nickname, there are 16 colours");
         this.root.getNode("Max styles").setValue(2).setComment("Maximum styles combinations per nickname, there are 5 colours\n(bold, strikethrough, underline, italic, obfuscated)");
@@ -83,7 +98,7 @@ public class ConfigController implements IConfigStorage
         {
             CommentedConfigurationNode node = this.root.getNode("config version");
             node.setComment("Do not change this number!");
-            node.setValue(1);
+            node.setValue(VERSION);
         }
 
         {
@@ -213,5 +228,10 @@ public class ConfigController implements IConfigStorage
             e.printStackTrace();
             return new ArrayList<>();
         }
+    }
+
+    @Override
+    public boolean setTabListName() {
+        return this.root.getNode("Set tab list name").getBoolean(true);
     }
 }

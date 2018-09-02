@@ -8,11 +8,11 @@ import be.spyproof.nickmanager.commands.checks.IPermissionCheck;
 import be.spyproof.nickmanager.controller.IBukkitNicknameController;
 import be.spyproof.nickmanager.controller.MessageController;
 import be.spyproof.nickmanager.model.NicknameData;
+import be.spyproof.nickmanager.util.BukkitUtils;
 import be.spyproof.nickmanager.util.Reference;
 import be.spyproof.nickmanager.util.TabCompleteUtil;
 import be.spyproof.nickmanager.util.TemplateUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandSender;
@@ -74,7 +74,7 @@ public class SetNickOthersCmd extends AbstractCmd implements TabCompleter, IBlac
         Player receiver = Bukkit.getPlayer(player.get().getUuid());
         if (receiver != null)
         {
-            receiver.setDisplayName(ChatColor.translateAlternateColorCodes('&', nick) + ChatColor.RESET);
+            BukkitUtils.INSTANCE.applyNickname(player.get(), receiver);
             receiver.sendMessage(TemplateUtils.apply(this.messageController.getFormattedMessage(Reference.SuccessMessages.NICK_SET), player.get()));
         }
     }

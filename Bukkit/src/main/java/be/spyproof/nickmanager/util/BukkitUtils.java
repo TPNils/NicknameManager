@@ -3,6 +3,7 @@ package be.spyproof.nickmanager.util;
 import be.spyproof.nickmanager.controller.IBukkitNicknameController;
 import be.spyproof.nickmanager.da.config.IConfigStorage;
 import be.spyproof.nickmanager.model.NicknameData;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -150,5 +151,19 @@ public class BukkitUtils
         Map<String, Long> cooldowns = this.configController.getCooldowns();
         cooldowns.remove("default");
         return cooldowns;
+    }
+
+    public void applyNickname(NicknameData nicknameData, final Player player) {
+        String nickname = nicknameData.getNickname().orElse(nicknameData.getName());
+
+        // If the nickname has formatting, apply a reset at the end
+        if (nickname.indexOf('&') > -1 && !nickname.endsWith(new String(new char[]{'&', ChatColor.RESET.getChar()}))) {
+            nickname = ChatColor.translateAlternateColorCodes('&', nickname) + ChatColor.RESET;
+        }
+
+        player.setDisplayName(nickname);
+        if (this.configController.setTabListName()) {
+            player.setPlayerListName(nickname);
+        }
     }
 }

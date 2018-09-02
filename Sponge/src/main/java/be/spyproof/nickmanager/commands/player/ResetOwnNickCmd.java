@@ -5,6 +5,7 @@ import be.spyproof.nickmanager.controller.ISpongeNicknameController;
 import be.spyproof.nickmanager.controller.MessageController;
 import be.spyproof.nickmanager.model.NicknameData;
 import be.spyproof.nickmanager.util.Reference;
+import be.spyproof.nickmanager.util.SpongeUtils;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.args.CommandContext;
@@ -26,6 +27,7 @@ public class ResetOwnNickCmd extends AbstractCmd implements IPlayerCmd
     {
         NicknameData nicknameData = this.getPlayerController().wrapPlayer(src);
         nicknameData.setNickname(null);
+        SpongeUtils.INSTANCE.applyNicknameToTabList(nicknameData, src);
         this.getPlayerController().savePlayer(nicknameData);
 
         src.sendMessage(this.getMessageController().getMessage(Reference.SuccessMessages.NICK_RESET).apply().build());

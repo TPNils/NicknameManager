@@ -69,4 +69,9 @@ public interface IConfigStorage
      * @return A List of regex strings. A non formatted nickname can not match any of these values
      */
     List<String> getBlacklist();
+
+    /**
+     * @return If players nicknames will also be set in the tab list
+     */
+    boolean setTabListName();
 }
