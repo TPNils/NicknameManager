@@ -27,11 +27,10 @@
         </dependency>
 
         <dependency>
-            <groupId>br.net.fabiozumbi12</groupId>
-            <artifactId>UltimateChat</artifactId>
-            <version>1.7.1-b22</version>
-            <scope>system</scope>
-            <systemPath>D:\Minecraft\plugins\Sponge\1.10.2\UltimateChat-1.8.3-b97-Universal.jar</systemPath>
+            <groupId>br.net.fabiozumbi12.UltimateChat</groupId>
+            <artifactId>UltimateChat-Sponge-5.0-6.0</artifactId>
+            <version>1.8.6</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
@@ -46,6 +45,10 @@
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
+        </repository>
+        <repository>
+            <id>ultimatechat-repo</id>
+            <url>https://raw.github.com/FabioZumbi12/UltimateChat/mvn-repo/</url>
         </repository>
     </repositories>
 
