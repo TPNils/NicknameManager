@@ -1,5 +1,5 @@
-name: 'Nickname Manager'
-version: 1.0.0
+name: 'Nickname-Manager'
+version: 1.1.0
 description: Allows players to manage their own nicknames
 authors: [TPNils]
 main: be.spyproof.nickmanager.Main
