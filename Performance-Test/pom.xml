@@ -5,7 +5,7 @@
     <parent>
         <groupId>be.spyproof.nickname-manager</groupId>
         <artifactId>nickname-manager</artifactId>
-        <version>1.0.1</version>
+        <version>1.1.0</version>
     </parent>
     <artifactId>nickname-manager-perfermance_test</artifactId>
 
