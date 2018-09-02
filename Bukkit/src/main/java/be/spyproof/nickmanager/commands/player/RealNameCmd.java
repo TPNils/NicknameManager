@@ -9,6 +9,7 @@ import be.spyproof.nickmanager.util.Reference;
 import be.spyproof.nickmanager.util.TabCompleteUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 
@@ -39,7 +40,7 @@ public class RealNameCmd extends AbstractCmd implements TabCompleter, IPermissio
         checkPermission(src, Reference.Permissions.GENERIC_PLAYER_COMMANDS);
 
         if (args.length == 0 || args[0] == null)
-            throw new ClassCastException(this.messageController.getFormattedMessage(Reference.ErrorMessages.MISSING_ARGUMENT).replace("{argument}", ARG));
+            throw new CommandException(this.messageController.getFormattedMessage(Reference.ErrorMessages.MISSING_ARGUMENT).replace("{argument}", ARG));
 
         String nickname = ChatColor.translateAlternateColorCodes('&', args[0]);
         List<NicknameData> matches = this.playerController.getPlayerByNickname(ChatColor.stripColor(nickname));
@@ -66,7 +67,7 @@ public class RealNameCmd extends AbstractCmd implements TabCompleter, IPermissio
     public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings)
     {
         if (strings.length == 1 && strings[0] != null)
-            return TabCompleteUtil.getPlayers(strings[0]);
+            return TabCompleteUtil.getPlayersByNickname(strings[0], this.playerController);
         else
             return new ArrayList<>();
     }

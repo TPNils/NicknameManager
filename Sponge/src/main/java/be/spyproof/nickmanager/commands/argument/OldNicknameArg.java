@@ -20,11 +20,11 @@ import java.util.Optional;
 /**
  * Created by Spyproof on 15/11/2016.
  */
-public class NicknameArg extends CommandElement
+public class OldNicknameArg extends CommandElement
 {
     private ISpongeNicknameController playerController;
 
-    public NicknameArg(String key, ISpongeNicknameController playerController)
+    public OldNicknameArg(String key, ISpongeNicknameController playerController)
     {
         super(Text.of(key));
         this.playerController = playerController;

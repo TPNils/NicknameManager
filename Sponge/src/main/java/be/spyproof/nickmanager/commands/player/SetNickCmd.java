@@ -1,7 +1,7 @@
 package be.spyproof.nickmanager.commands.player;
 
 import be.spyproof.nickmanager.commands.AbstractCmd;
-import be.spyproof.nickmanager.commands.argument.NicknameArg;
+import be.spyproof.nickmanager.commands.argument.OldNicknameArg;
 import be.spyproof.nickmanager.commands.checks.*;
 import be.spyproof.nickmanager.controller.ISpongeNicknameController;
 import be.spyproof.nickmanager.controller.MessageController;
@@ -54,7 +54,7 @@ public class SetNickCmd extends AbstractCmd implements IPlayerCmd, IArgumentChec
     public static CommandSpec getCommandSpec(MessageController messageController, ISpongeNicknameController playerController)
     {
         return CommandSpec.builder()
-                          .arguments(new NicknameArg(ARG, playerController))
+                          .arguments(new OldNicknameArg(ARG, playerController))
                           .executor(new SetNickCmd(messageController, playerController))
                           .permission(Reference.Permissions.GENERIC_PLAYER_COMMANDS)
                           .build();

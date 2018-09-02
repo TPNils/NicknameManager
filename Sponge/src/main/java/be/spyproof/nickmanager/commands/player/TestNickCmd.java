@@ -1,7 +1,7 @@
 package be.spyproof.nickmanager.commands.player;
 
 import be.spyproof.nickmanager.commands.AbstractCmd;
-import be.spyproof.nickmanager.commands.argument.NicknameArg;
+import be.spyproof.nickmanager.commands.argument.OldNicknameArg;
 import be.spyproof.nickmanager.commands.checks.IArgumentChecker;
 import be.spyproof.nickmanager.commands.checks.IBlacklistChecker;
 import be.spyproof.nickmanager.commands.checks.IFormatChecker;
@@ -46,7 +46,7 @@ public class TestNickCmd extends AbstractCmd implements IPlayerCmd, IBlacklistCh
     public static CommandSpec getCommandSpec(MessageController messageController, ISpongeNicknameController playerController)
     {
         return CommandSpec.builder()
-                          .arguments(new NicknameArg(ARG, playerController))
+                          .arguments(new OldNicknameArg(ARG, playerController))
                           .executor(new TestNickCmd(messageController, playerController))
                           .permission(Reference.Permissions.GENERIC_PLAYER_COMMANDS)
                           .build();

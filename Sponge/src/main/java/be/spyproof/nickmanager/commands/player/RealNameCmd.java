@@ -1,6 +1,7 @@
 package be.spyproof.nickmanager.commands.player;
 
 import be.spyproof.nickmanager.commands.AbstractCmd;
+import be.spyproof.nickmanager.commands.argument.OnlinePlayerNicknameArg;
 import be.spyproof.nickmanager.commands.checks.IArgumentChecker;
 import be.spyproof.nickmanager.controller.ISpongeNicknameController;
 import be.spyproof.nickmanager.controller.MessageController;
@@ -11,7 +12,6 @@ import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
-import org.spongepowered.api.command.args.GenericArguments;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
@@ -69,7 +69,7 @@ public class RealNameCmd extends AbstractCmd implements IArgumentChecker
     {
         return CommandSpec.builder()
                           .executor(new RealNameCmd(messageController, playerController))
-                          .arguments(GenericArguments.string(Text.of(ARG)))
+                          .arguments(new OnlinePlayerNicknameArg(ARG, playerController))
                           .permission(Reference.Permissions.GENERIC_PLAYER_COMMANDS)
                           .build();
     }
