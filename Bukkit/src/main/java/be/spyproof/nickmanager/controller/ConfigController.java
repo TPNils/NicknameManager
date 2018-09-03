@@ -32,9 +32,21 @@ public class ConfigController implements IConfigStorage
     public void load() throws Exception
     {
         this.configuration = YamlConfiguration.loadConfiguration(this.file);
+        boolean saveConfig = false;
         if (!this.configuration.contains("setTabListName")) {
             this.configuration.set("setTabListName", true);
-            this.configuration.save(this.file);
+            saveConfig = true;
+        }
+
+        // Fixing an issue i caused
+        if (this.configuration.contains("setTablistName")) {
+            this.configuration.set("setTablistName", null);
+            saveConfig = true;
+        }
+
+
+      if (saveConfig) {
+          this.configuration.save(this.file);
         }
     }
 
