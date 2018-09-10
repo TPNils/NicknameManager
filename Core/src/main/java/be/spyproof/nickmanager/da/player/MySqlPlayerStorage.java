@@ -65,13 +65,11 @@ public class MySqlPlayerStorage implements IPlayerStorage
             executeSqlFile("mysql/createViews.sql");*/
 
         // Create functions
-        if (!getConnection().prepareStatement("SHOW FUNCTION STATUS " + "WHERE Db='" + database + "'").executeQuery()
-                       .next())
+        if (!getConnection().prepareStatement("SHOW FUNCTION STATUS " + "WHERE Db='" + database + "'").executeQuery().next())
             executeSqlFile("mysql/createFunctions.sql");
 
         // Create procedures
-        if (!getConnection().prepareStatement("SHOW PROCEDURE STATUS " + "WHERE Db='" + database + "'").executeQuery()
-                       .next())
+        if (!getConnection().prepareStatement("SHOW PROCEDURE STATUS " + "WHERE Db='" + database + "'").executeQuery().next())
             executeSqlFile("mysql/createProcedures.sql");
     }
 
@@ -81,29 +79,25 @@ public class MySqlPlayerStorage implements IPlayerStorage
         ImmutablePlayerData immutablePlayer = ImmutablePlayerData.of(player);
         this.pendingSaving.add(immutablePlayer);
         remainingTasks++;
-        this.executorService.execute(() -> {
-            try
-            {
-                createStatement("CALL savePlayer(?, ?)", immutablePlayer.getName(), immutablePlayer.getUuid().toString()).execute();
-                createStatement("CALL saveNicknamePlayerData(?, ?, ?, ?)", immutablePlayer.getUuid().toString(), immutablePlayer.getLastChanged(), immutablePlayer.getTokensRemaining(), immutablePlayer.hasAcceptedRules()).execute();
+        this.executorService.execute((AsyncMysqlExecution) () -> {
+          try
+          {
+            createStatement("CALL savePlayer(?, ?)", immutablePlayer.getName(), immutablePlayer.getUuid().toString()).execute();
+            createStatement("CALL saveNicknamePlayerData(?, ?, ?, ?)", immutablePlayer.getUuid().toString(), immutablePlayer.getLastChanged(), immutablePlayer.getTokensRemaining(), immutablePlayer.hasAcceptedRules()).execute();
 
-                PreparedStatement statement = getConnection().prepareStatement("CALL setActiveNickname(?, ?)");
-                statement.setString(1, immutablePlayer.getUuid().toString());
-                if (immutablePlayer.getNickname().isPresent())
-                    statement.setString(2, immutablePlayer.getNickname().get());
-                else
-                    statement.setNull(2, Types.VARCHAR);
-                statement.execute();
-            }
-            catch (SQLException e)
-            {
-                e.printStackTrace();
-            }
-            finally
-            {
-                pendingSaving.remove(immutablePlayer);
-                remainingTasks--;
-            }
+            PreparedStatement statement = getConnection().prepareStatement("CALL setActiveNickname(?, ?)");
+            statement.setString(1, immutablePlayer.getUuid().toString());
+            if (immutablePlayer.getNickname().isPresent())
+              statement.setString(2, immutablePlayer.getNickname().get());
+            else
+              statement.setNull(2, Types.VARCHAR);
+            statement.execute();
+          }
+          finally
+          {
+            pendingSaving.remove(immutablePlayer);
+            remainingTasks--;
+          }
         });
     }
 
@@ -111,13 +105,12 @@ public class MySqlPlayerStorage implements IPlayerStorage
     public void removePlayer(NicknameData player)
     {
         remainingTasks++;
-        this.executorService.execute(() -> {
+        this.executorService.execute((AsyncMysqlExecution)() -> {
             try {
                 createStatement("CALL removePlayer(?)", player.getUuid().toString()).execute();
-            } catch (SQLException e) {
-                e.printStackTrace();
+            } finally {
+                remainingTasks--;
             }
-            remainingTasks--;
         });
     }
 
@@ -425,6 +418,7 @@ public class MySqlPlayerStorage implements IPlayerStorage
     private Connection getConnection() throws SQLException {
         if (this.connection == null || this.connection.isClosed()) {
             this.connection = createConnection();
+          System.out.println("test");
         }
         return this.connection;
     }
