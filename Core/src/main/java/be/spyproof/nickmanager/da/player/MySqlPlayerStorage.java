@@ -418,7 +418,6 @@ public class MySqlPlayerStorage implements IPlayerStorage
     private Connection getConnection() throws SQLException {
         if (this.connection == null || this.connection.isClosed()) {
             this.connection = createConnection();
-          System.out.println("test");
         }
         return this.connection;
     }
