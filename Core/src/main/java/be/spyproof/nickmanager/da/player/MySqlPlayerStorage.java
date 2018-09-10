@@ -24,9 +24,19 @@ public class MySqlPlayerStorage implements IPlayerStorage
     private List<ImmutablePlayerData> pendingSaving = new ArrayList<>();
     private static int remainingTasks = 0;
 
-    public MySqlPlayerStorage(String host, int port, String database, String user, String password)
-            throws SQLException, IOException
-    {
+    private final String host;
+    private final int port;
+    private final String database;
+    private final String user;
+    private final String password;
+
+    public MySqlPlayerStorage(String host, int port, String database, String user, String password) throws IOException, SQLException {
+        this.host = host;
+        this.port = port;
+        this.database = database;
+        this.user = user;
+        this.password = password;
+
         try
         {
             Class.forName("com.mysql.jdbc.Driver");
@@ -41,8 +51,7 @@ public class MySqlPlayerStorage implements IPlayerStorage
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             executorService.shutdown();
         }));
-        this.connection = DriverManager
-                .getConnection("jdbc:mysql://" + host + ':' + port + "/" + database, user, password);
+        this.connection = createConnection();
         setupDatabase(database);
     }
 
@@ -56,12 +65,12 @@ public class MySqlPlayerStorage implements IPlayerStorage
             executeSqlFile("mysql/createViews.sql");*/
 
         // Create functions
-        if (!connection.prepareStatement("SHOW FUNCTION STATUS " + "WHERE Db='" + database + "'").executeQuery()
+        if (!getConnection().prepareStatement("SHOW FUNCTION STATUS " + "WHERE Db='" + database + "'").executeQuery()
                        .next())
             executeSqlFile("mysql/createFunctions.sql");
 
         // Create procedures
-        if (!connection.prepareStatement("SHOW PROCEDURE STATUS " + "WHERE Db='" + database + "'").executeQuery()
+        if (!getConnection().prepareStatement("SHOW PROCEDURE STATUS " + "WHERE Db='" + database + "'").executeQuery()
                        .next())
             executeSqlFile("mysql/createProcedures.sql");
     }
@@ -73,13 +82,12 @@ public class MySqlPlayerStorage implements IPlayerStorage
         this.pendingSaving.add(immutablePlayer);
         remainingTasks++;
         this.executorService.execute(() -> {
-            executeQuery("CALL savePlayer(?, ?)", immutablePlayer.getName(), immutablePlayer.getUuid().toString());
-            executeQuery("CALL saveNicknamePlayerData(?, ?, ?, ?)", immutablePlayer.getUuid().toString(),
-                         immutablePlayer.getLastChanged(), immutablePlayer.getTokensRemaining(),
-                         immutablePlayer.hasAcceptedRules());
             try
             {
-                PreparedStatement statement = this.connection.prepareStatement("CALL setActiveNickname(?, ?)");
+                createStatement("CALL savePlayer(?, ?)", immutablePlayer.getName(), immutablePlayer.getUuid().toString()).execute();
+                createStatement("CALL saveNicknamePlayerData(?, ?, ?, ?)", immutablePlayer.getUuid().toString(), immutablePlayer.getLastChanged(), immutablePlayer.getTokensRemaining(), immutablePlayer.hasAcceptedRules()).execute();
+
+                PreparedStatement statement = getConnection().prepareStatement("CALL setActiveNickname(?, ?)");
                 statement.setString(1, immutablePlayer.getUuid().toString());
                 if (immutablePlayer.getNickname().isPresent())
                     statement.setString(2, immutablePlayer.getNickname().get());
@@ -104,7 +112,11 @@ public class MySqlPlayerStorage implements IPlayerStorage
     {
         remainingTasks++;
         this.executorService.execute(() -> {
-            executeQuery("CALL removePlayer(?)", player.getUuid().toString());
+            try {
+                createStatement("CALL removePlayer(?)", player.getUuid().toString()).execute();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
             remainingTasks--;
         });
     }
@@ -173,9 +185,7 @@ public class MySqlPlayerStorage implements IPlayerStorage
             {
                 try
                 {
-                    System.out
-                            .println(
-                                    Reference.MetaData.PLUGIN_ID + ":MySQLPlayerStorage - Remaining players to save: " + remainingTasks);
+                    System.out.println(Reference.MetaData.PLUGIN_ID + ":MySQLPlayerStorage - Remaining players to save: " + remainingTasks);
                     this.wait(500);
                 }
                 catch (InterruptedException e)
@@ -201,55 +211,35 @@ public class MySqlPlayerStorage implements IPlayerStorage
 
     }
 
-    private ResultSet executeQuery(String query, Object... args)
-    {
-        try
+    private PreparedStatement createStatement(String query, Object... args) throws SQLException {
+        PreparedStatement prepStatement = getConnection().prepareStatement(query);
+        for (int i = 0; i < args.length; i++)
         {
-            PreparedStatement prepStatement = connection.prepareStatement(query);
-            for (int i = 0; i < args.length; i++)
+            if (args[i] instanceof String)
             {
-                if (args[i] instanceof String)
-                {
-                    prepStatement.setString(i + 1, (String) args[i]);
-                } else if (args[i] instanceof Boolean)
-                {
-                    prepStatement.setBoolean(i + 1, (Boolean) args[i]);
-                } else if (args[i] instanceof Integer)
-                {
-                    prepStatement.setInt(i + 1, (Integer) args[i]);
-                } else if (args[i] instanceof Long)
-                {
-                    prepStatement.setLong(i + 1, (Long) args[i]);
-                } else if (args[i] instanceof Double)
-                {
-                    prepStatement.setDouble(i + 1, (Double) args[i]);
-                } else if (args[i] instanceof Float)
-                {
-                    prepStatement.setFloat(i + 1, (Float) args[i]);
-                } else if (args[i] == null)
-                {
-                    prepStatement.setNull(i + 1, Types.VARCHAR);
-                }
+                prepStatement.setString(i + 1, (String) args[i]);
+            } else if (args[i] instanceof Boolean)
+            {
+                prepStatement.setBoolean(i + 1, (Boolean) args[i]);
+            } else if (args[i] instanceof Integer)
+            {
+                prepStatement.setInt(i + 1, (Integer) args[i]);
+            } else if (args[i] instanceof Long)
+            {
+                prepStatement.setLong(i + 1, (Long) args[i]);
+            } else if (args[i] instanceof Double)
+            {
+                prepStatement.setDouble(i + 1, (Double) args[i]);
+            } else if (args[i] instanceof Float)
+            {
+                prepStatement.setFloat(i + 1, (Float) args[i]);
+            } else if (args[i] == null)
+            {
+                prepStatement.setNull(i + 1, Types.VARCHAR);
             }
-
-            ResultSet data;
-
-            if (query.toLowerCase().startsWith("select"))
-            {
-                data = prepStatement.executeQuery();
-            } else
-            {
-                int rows = prepStatement.executeUpdate();
-                data = null;
-            }
-
-            return data;
         }
-        catch (SQLException e)
-        {
-            e.printStackTrace();
-        }
-        return null;
+
+        return prepStatement;
     }
 
     private Optional<NicknameData> getSavePendingPlayer(UUID uuid)
@@ -309,7 +299,7 @@ public class MySqlPlayerStorage implements IPlayerStorage
 
     private Optional<NicknameData> getPlayerSql(String name) throws SQLException
     {
-        CallableStatement call = this.connection.prepareCall("CALL getNicknameDataByName('" + name + "')");
+        CallableStatement call = this.getConnection().prepareCall("CALL getNicknameDataByName('" + name + "')");
         call.execute();
         ResultSet set = call.getResultSet();
         if (set == null)
@@ -334,7 +324,7 @@ public class MySqlPlayerStorage implements IPlayerStorage
 
     private Optional<NicknameData> getPlayerSql(UUID uuid) throws SQLException
     {
-        CallableStatement call = this.connection.prepareCall("CALL getNicknameDataByUuid('" + uuid.toString() + "')");
+        CallableStatement call = this.getConnection().prepareCall("CALL getNicknameDataByUuid('" + uuid.toString() + "')");
         call.execute();
         ResultSet set = call.getResultSet();
         if (set == null)
@@ -361,19 +351,18 @@ public class MySqlPlayerStorage implements IPlayerStorage
     {
         List<NicknameData> players = new ArrayList<>();
 
-        CallableStatement call = this.connection
-                .prepareCall("CALL getNicknameDataByNickname('" + unformattedNickname + "'," + limit + ")");
+        CallableStatement call = this.getConnection().prepareCall("CALL getNicknameDataByNickname('" + unformattedNickname + "'," + limit + ")");
         call.execute();
         ResultSet set = call.getResultSet();
-        while (set != null && set.next())
-        {
-            NicknameData nicknameData = new NicknameData(set.getString("Last known name"),
-                                                   UUID.fromString(set.getString("UUID")));
+        while (set != null && set.next()) {
+            NicknameData nicknameData = new NicknameData(set.getString("Last known name"), UUID.fromString(set.getString("UUID")));
             nicknameData.setNickname(set.getString("Nickname"));
             String archive = set.getString("Archived nicknames");
-            if (archive != null)
-                for (String nick : archive.split(";"))
+            if (archive != null) {
+                for (String nick : archive.split(";")) {
                     nicknameData.addPastNickname(nick);
+                }
+            }
             players.add(nicknameData);
         }
 
@@ -389,7 +378,7 @@ public class MySqlPlayerStorage implements IPlayerStorage
     private void executeMultipleStatements(Collection<String> bigQuery) throws SQLException
     {
         String delimiter = ";";
-        Statement s = connection.createStatement();
+        Statement s = getConnection().createStatement();
 
         StringBuilder statement = new StringBuilder();
         for (String sqlQuery : bigQuery)
@@ -427,5 +416,16 @@ public class MySqlPlayerStorage implements IPlayerStorage
             fileContent.add(line);
 
         return fileContent;
+    }
+
+    private Connection createConnection() throws SQLException {
+        return DriverManager.getConnection("jdbc:mysql://" + host + ':' + port + "/" + database, user, password);
+    }
+
+    private Connection getConnection() throws SQLException {
+        if (this.connection == null || this.connection.isClosed()) {
+            this.connection = createConnection();
+        }
+        return this.connection;
     }
 }
