@@ -66,6 +66,7 @@ public class NicknameController implements INicknameController
         else
         {
             nicknameData = new NicknameData(name, uuid);
+            savePlayer(nicknameData);
         }
 
         if (!nicknameData.getName().equals(name))
