@@ -18,12 +18,12 @@ public class TestReference
 {
     public static MySqlPlayerStorage getLocalSqlPlayerStorage() throws IOException, SQLException
     {
-        return new MySqlPlayerStorage("localhost", 3306, "nickname_test", "root", "");
+        return new MySqlPlayerStorage("localhost", 3306, "nickname_test", "root", "N88p&SPIkazV!q");
     }
 
     public static Connection getSqlConnection() throws SQLException
     {
-        return DriverManager.getConnection("jdbc:mysql://localhost:3306/nickname_test", "root", "");
+        return DriverManager.getConnection("jdbc:mysql://localhost:3306/nickname_test", "root", "N88p&SPIkazV!q");
     }
 
     public static GsonPlayerStorage getGsonPlayerStorage() throws IOException, SQLException
