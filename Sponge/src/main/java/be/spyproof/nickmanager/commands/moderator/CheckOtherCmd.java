@@ -8,6 +8,7 @@ import be.spyproof.nickmanager.controller.MessageController;
 import be.spyproof.nickmanager.model.NicknameData;
 import be.spyproof.nickmanager.util.Reference;
 import be.spyproof.nickmanager.util.TemplateUtils;
+import be.spyproof.nickmanager.util.TextUtils;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -31,17 +32,19 @@ public class CheckOtherCmd extends AbstractCmd implements IArgumentChecker
     {
         NicknameData player = getArgument(args, ARG);
 
-        src.sendMessage(this.getMessageController()
-                            .getMessage(Reference.SuccessMessages.ADMIN_NICK_CHECK)
-                            .apply(TemplateUtils.getParameters(player))
-                            .build());
+        src.sendMessages(
+          TextUtils.splitLines(
+            this.getMessageController()
+                .getMessage(Reference.SuccessMessages.ADMIN_NICK_CHECK)
+                .apply(TemplateUtils.getParameters(player))
+                .build()
+          )
+        );
 
         return CommandResult.success();
-
     }
 
-    public static CommandSpec getCommandSpec(MessageController messageController,
-                                             ISpongeNicknameController playerController)
+    public static CommandSpec getCommandSpec(MessageController messageController, ISpongeNicknameController playerController)
     {
         return CommandSpec.builder()
                           .arguments(new PlayerDataArg(ARG, playerController))
