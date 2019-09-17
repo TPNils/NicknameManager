@@ -14,6 +14,10 @@ import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandSpec;
+import org.spongepowered.api.service.pagination.PaginationList;
+import org.spongepowered.api.text.Text;
+
+import java.util.List;
 
 /**
  * Created by Spyproof on 01/11/2016.
@@ -32,14 +36,18 @@ public class CheckOtherCmd extends AbstractCmd implements IArgumentChecker
     {
         NicknameData player = getArgument(args, ARG);
 
-        src.sendMessages(
-          TextUtils.splitLines(
-            this.getMessageController()
-                .getMessage(Reference.SuccessMessages.ADMIN_NICK_CHECK)
-                .apply(TemplateUtils.getParameters(player))
-                .build()
-          )
+        List<Text> split = TextUtils.splitLines(
+          this.getMessageController()
+              .getMessage(Reference.SuccessMessages.ADMIN_NICK_CHECK)
+              .apply(TemplateUtils.getParameters(player))
+              .build()
         );
+
+        if (split.size() > 20) {
+          PaginationList.builder().contents(split).linesPerPage(15).sendTo(src);
+        } else {
+          src.sendMessages(split);
+        }
 
         return CommandResult.success();
     }
