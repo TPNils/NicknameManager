@@ -22,6 +22,7 @@ import java.util.regex.Pattern;
  * Created by Spyproof on 28/10/2016.
  */
 public class PlayerDataArg extends CommandElement {
+
   private static final Pattern uuidPattern = Pattern.compile("[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12}");
   private ISpongeNicknameController playerController;
 
@@ -34,9 +35,6 @@ public class PlayerDataArg extends CommandElement {
   @Override
   protected Object parseValue(CommandSource source, CommandArgs args) throws ArgumentParseException {
     String argument = args.next();
-    if (argument == null) {
-      return null;
-    }
 
     Optional<? extends NicknameData> playerData;
     if (uuidPattern.matcher(argument).matches()) {
@@ -51,8 +49,9 @@ public class PlayerDataArg extends CommandElement {
   @Override
   public List<String> complete(CommandSource src, CommandArgs args, CommandContext context) {
     List<String> names = new ArrayList<>();
-    if (!args.hasNext())
+    if (!args.hasNext()) {
       return names;
+    }
 
     String peek;
     try {
@@ -61,10 +60,13 @@ public class PlayerDataArg extends CommandElement {
       return names;
     }
 
-    for (Player player : Sponge.getServer().getOnlinePlayers())
-      if (player.getName().toLowerCase().startsWith(peek))
+    for (Player player : Sponge.getServer().getOnlinePlayers()) {
+      if (player.getName().toLowerCase().startsWith(peek)) {
         names.add(player.getName());
+      }
+    }
 
     return names;
   }
+
 }

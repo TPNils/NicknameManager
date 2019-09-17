@@ -15,27 +15,25 @@ import org.spongepowered.api.entity.living.player.Player;
 /**
  * Created by Spyproof on 31/10/2016.
  */
-public class CheckSelfCmd extends AbstractCmd implements IPlayerCmd
-{
-    private CheckSelfCmd(MessageController messageController, ISpongeNicknameController playerController)
-    {
-        super(messageController, playerController);
-    }
+public class CheckSelfCmd extends AbstractCmd implements IPlayerCmd {
 
-    @Override
-    public CommandResult execute(Player src, CommandContext args) throws CommandException
-    {
-        NicknameData player = super.getPlayerController().wrapPlayer(src);
+  private CheckSelfCmd(MessageController messageController, ISpongeNicknameController playerController) {
+    super(messageController, playerController);
+  }
 
-        src.sendMessage(this.getMessageController().getMessage(Reference.SuccessMessages.NICK_CHECK).apply(TemplateUtils.getParameters(player)).build());
-        return CommandResult.success();
-    }
+  @Override
+  public CommandResult execute(Player src, CommandContext args) throws CommandException {
+    NicknameData player = super.getPlayerController().wrapPlayer(src);
 
-    public static CommandSpec getCommandSpec(MessageController messageController, ISpongeNicknameController playerController)
-    {
-        return CommandSpec.builder()
-                          .executor(new CheckSelfCmd(messageController, playerController))
-                          .permission(Reference.Permissions.GENERIC_PLAYER_COMMANDS)
-                          .build();
-    }
+    src.sendMessage(this.getMessageController().getMessage(Reference.SuccessMessages.NICK_CHECK).apply(TemplateUtils.getParameters(player)).build());
+    return CommandResult.success();
+  }
+
+  public static CommandSpec getCommandSpec(MessageController messageController, ISpongeNicknameController playerController) {
+    return CommandSpec.builder()
+                      .executor(new CheckSelfCmd(messageController, playerController))
+                      .permission(Reference.Permissions.GENERIC_PLAYER_COMMANDS)
+                      .build();
+  }
+
 }

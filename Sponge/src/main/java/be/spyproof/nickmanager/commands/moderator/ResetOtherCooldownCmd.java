@@ -21,37 +21,34 @@ import java.util.Optional;
 /**
  * Created by Spyproof on 01/11/2016.
  */
-public class ResetOtherCooldownCmd extends AbstractCmd implements IArgumentChecker
-{
-    private static final String ARG = "player";
+public class ResetOtherCooldownCmd extends AbstractCmd implements IArgumentChecker {
 
-    private ResetOtherCooldownCmd(MessageController messageController, ISpongeNicknameController playerController)
-    {
-        super(messageController, playerController);
-    }
+  private static final String ARG = "player";
 
-    @Override
-    public CommandResult execute(CommandSource src, CommandContext args) throws CommandException
-    {
-        NicknameData nicknameData = getArgument(args, ARG);
+  private ResetOtherCooldownCmd(MessageController messageController, ISpongeNicknameController playerController) {
+    super(messageController, playerController);
+  }
 
-        nicknameData.setLastChanged(0);
-        this.getPlayerController().savePlayer(nicknameData);
+  @Override
+  public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+    NicknameData nicknameData = getArgument(args, ARG);
 
-        Optional<Player> player = Sponge.getServer().getPlayer(nicknameData.getUuid());
-        if (player.isPresent())
-            player.get().sendMessage(this.getMessageController().getMessage(Reference.SuccessMessages.ADMIN_NICK_RESET_COOLDOWN_RECEIVED).toText());
+    nicknameData.setLastChanged(0);
+    this.getPlayerController().savePlayer(nicknameData);
 
-        src.sendMessage(this.getMessageController().getMessage(Reference.SuccessMessages.ADMIN_NICK_RESET_COOLDOWN).apply(TemplateUtils.getParameters(nicknameData)).build());
-        return CommandResult.success();
-    }
+    Optional<Player> player = Sponge.getServer().getPlayer(nicknameData.getUuid());
+    player.ifPresent(value -> value.sendMessage(this.getMessageController().getMessage(Reference.SuccessMessages.ADMIN_NICK_RESET_COOLDOWN_RECEIVED).toText()));
 
-    public static CommandSpec getCommandSpec(MessageController messageController, ISpongeNicknameController playerController)
-    {
-        return CommandSpec.builder()
-                          .arguments(new PlayerDataArg(ARG, playerController))
-                          .executor(new ResetOtherCooldownCmd(messageController, playerController))
-                          .permission(Reference.Permissions.ADMIN_RESET)
-                          .build();
-    }
+    src.sendMessage(this.getMessageController().getMessage(Reference.SuccessMessages.ADMIN_NICK_RESET_COOLDOWN).apply(TemplateUtils.getParameters(nicknameData)).build());
+    return CommandResult.success();
+  }
+
+  public static CommandSpec getCommandSpec(MessageController messageController, ISpongeNicknameController playerController) {
+    return CommandSpec.builder()
+                      .arguments(new PlayerDataArg(ARG, playerController))
+                      .executor(new ResetOtherCooldownCmd(messageController, playerController))
+                      .permission(Reference.Permissions.ADMIN_RESET)
+                      .build();
+  }
+
 }

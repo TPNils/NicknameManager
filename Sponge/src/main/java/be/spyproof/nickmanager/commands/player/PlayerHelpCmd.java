@@ -21,58 +21,56 @@ import java.util.List;
 /**
  * Created by Spyproof on 04/11/2016.
  */
-public class PlayerHelpCmd implements CommandExecutor
-{
-    private MessageController messageController;
+public class PlayerHelpCmd implements CommandExecutor {
 
-    public PlayerHelpCmd(MessageController messageController)
-    {
-        this.messageController = messageController;
+  private MessageController messageController;
+
+  public PlayerHelpCmd(MessageController messageController) {
+    this.messageController = messageController;
+  }
+
+  @Override
+  public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+    PaginationService paginationService = Sponge.getServiceManager().provide(PaginationService.class).get();
+    PaginationList.Builder builder = paginationService.builder();
+    String devs = "";
+
+    for (int i = 0; i < Reference.MetaData.AUTHORS.length; i++) {
+      devs += Reference.MetaData.AUTHORS[i];
+      if (i != Reference.MetaData.AUTHORS.length - 1) {
+        devs += ", ";
+      }
     }
 
-    @Override
-    public CommandResult execute(CommandSource src, CommandContext args) throws CommandException
-    {
-        PaginationService paginationService = Sponge.getServiceManager().provide(PaginationService.class).get();
-        PaginationList.Builder builder = paginationService.builder();
-        String devs = "";
+    builder.title(Text.of(TextColors.DARK_GREEN, Reference.MetaData.PLUGIN_NAME)
+                      .toBuilder()
+                      .onHover(TextActions.showText(
+                        Text.of(TextColors.GOLD, "Developers: ", TextColors.YELLOW, devs, Text.NEW_LINE,
+                          TextColors.GOLD, "Version: ", TextColors.YELLOW, Reference.MetaData.VERSION)))
+                      .build());
 
-        for (int i = 0; i < Reference.MetaData.AUTHORS.length; i++)
-        {
-            devs += Reference.MetaData.AUTHORS[i];
-            if (i != Reference.MetaData.AUTHORS.length - 1)
-                devs += ", ";
-        }
+    List<Text> content = new ArrayList<>();
 
-        builder.title(Text.of(TextColors.DARK_GREEN, Reference.MetaData.PLUGIN_NAME)
-                          .toBuilder()
-                          .onHover(TextActions.showText(
-                                  Text.of(TextColors.GOLD, "Developers: ", TextColors.YELLOW, devs, Text.NEW_LINE,
-                                          TextColors.GOLD, "Version: ", TextColors.YELLOW, Reference.MetaData.VERSION)))
-                          .build());
+    content.add(this.messageController.getMessage(Reference.HelpMessages.NICK_CHECK).apply().build());
+    content.add(this.messageController.getMessage(Reference.HelpMessages.NICK_FORMAT).apply().build());
+    content.add(this.messageController.getMessage(Reference.HelpMessages.NICK_PREVIEW).apply().build());
+    content.add(this.messageController.getMessage(Reference.HelpMessages.NICK_SET).apply().build());
+    content.add(this.messageController.getMessage(Reference.HelpMessages.NICK_RESET).apply().build());
+    content.add(this.messageController.getMessage(Reference.HelpMessages.NICK_REAL_NAME).apply().build());
+    content.add(this.messageController.getMessage(Reference.HelpMessages.NICK_RULES).apply().build());
+    content.add(this.messageController.getMessage(Reference.HelpMessages.NICK_UNLOCK).apply().build());
 
-        List<Text> content = new ArrayList<>();
+    builder.contents(content);
+    builder.padding(Text.of(TextColors.AQUA, "="));
+    builder.sendTo(src);
+    return CommandResult.success();
+  }
 
-        content.add(this.messageController.getMessage(Reference.HelpMessages.NICK_CHECK).apply().build());
-        content.add(this.messageController.getMessage(Reference.HelpMessages.NICK_FORMAT).apply().build());
-        content.add(this.messageController.getMessage(Reference.HelpMessages.NICK_PREVIEW).apply().build());
-        content.add(this.messageController.getMessage(Reference.HelpMessages.NICK_SET).apply().build());
-        content.add(this.messageController.getMessage(Reference.HelpMessages.NICK_RESET).apply().build());
-        content.add(this.messageController.getMessage(Reference.HelpMessages.NICK_REAL_NAME).apply().build());
-        content.add(this.messageController.getMessage(Reference.HelpMessages.NICK_RULES).apply().build());
-        content.add(this.messageController.getMessage(Reference.HelpMessages.NICK_UNLOCK).apply().build());
+  public static CommandSpec getCommandSpec(MessageController messageController) {
+    return CommandSpec.builder()
+                      .executor(new PlayerHelpCmd(messageController))
+                      .permission(Reference.Permissions.GENERIC_PLAYER_COMMANDS)
+                      .build();
+  }
 
-        builder.contents(content);
-        builder.padding(Text.of(TextColors.AQUA, "="));
-        builder.sendTo(src);
-        return CommandResult.success();
-    }
-
-    public static CommandSpec getCommandSpec(MessageController messageController)
-    {
-        return CommandSpec.builder()
-                          .executor(new PlayerHelpCmd(messageController))
-                          .permission(Reference.Permissions.GENERIC_PLAYER_COMMANDS)
-                          .build();
-    }
 }

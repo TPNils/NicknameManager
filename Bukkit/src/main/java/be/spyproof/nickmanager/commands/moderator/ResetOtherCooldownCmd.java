@@ -23,52 +23,51 @@ import java.util.concurrent.CancellationException;
 /**
  * Created by Spyproof on 15/11/2016.
  */
-public class ResetOtherCooldownCmd extends AbstractCmd implements TabCompleter, IPermissionCheck
-{
-    private static final String ARG = "player";
+public class ResetOtherCooldownCmd extends AbstractCmd implements TabCompleter, IPermissionCheck {
 
-    public ResetOtherCooldownCmd(MessageController messageController, IBukkitNicknameController playerController, String... keys)
-    {
-        super(messageController, playerController, keys);
+  private static final String ARG = "player";
+
+  public ResetOtherCooldownCmd(MessageController messageController, IBukkitNicknameController playerController, String... keys) {
+    super(messageController, playerController, keys);
+  }
+
+  @Override
+  public void sendHelpMsg(CommandSender src) {
+    src.sendMessage(this.messageController.getFormattedMessage(Reference.HelpMessages.ADMIN_NICK_RESET_COOLDOWN));
+  }
+
+  @Override
+  public void execute(CommandSender src, String cmd, String[] args) {
+    checkPermission(src, Reference.Permissions.ADMIN_RESET);
+
+    if (args.length == 0 || args[0] == null) {
+      throw new CancellationException(this.messageController.getFormattedMessage(Reference.ErrorMessages.MISSING_ARGUMENT).replace("{argument}", ARG));
     }
 
-    @Override
-    public void sendHelpMsg(CommandSender src)
-    {
-        src.sendMessage(this.messageController.getFormattedMessage(Reference.HelpMessages.ADMIN_NICK_RESET_COOLDOWN));
+    Optional<? extends NicknameData> playerData = this.playerController.getPlayer(args[0]);
+
+    if (!playerData.isPresent()) {
+      throw new CommandException(this.messageController.getFormattedMessage(Reference.ErrorMessages.WRONG_ARGUMENT).replace("{argument}", args[0]));
     }
 
-    @Override
-    public void execute(CommandSender src, String cmd, String[] args)
-    {
-        checkPermission(src, Reference.Permissions.ADMIN_RESET);
+    playerData.get().setLastChanged(0);
+    this.playerController.savePlayer(playerData.get());
 
-        if (args.length == 0 || args[0] == null)
-            throw new CancellationException(this.messageController.getFormattedMessage(Reference.ErrorMessages.MISSING_ARGUMENT).replace("{argument}", ARG));
-
-        Optional<? extends NicknameData> playerData = this.playerController.getPlayer(args[0]);
-
-        if (!playerData.isPresent())
-            throw new CommandException(this.messageController.getFormattedMessage(Reference.ErrorMessages.WRONG_ARGUMENT).replace("{argument}", args[0]));
-
-        playerData.get().setLastChanged(0);
-        this.playerController.savePlayer(playerData.get());
-
-        Player player = Bukkit.getPlayer(playerData.get().getUuid());
-        if (player != null)
-        {
-            player.sendMessage(this.messageController.getFormattedMessage(Reference.SuccessMessages.ADMIN_NICK_RESET_COOLDOWN_RECEIVED));
-        }
-
-        src.sendMessage(TemplateUtils.apply(this.messageController.getFormattedMessage(Reference.SuccessMessages.ADMIN_NICK_RESET_COOLDOWN), playerData.get()));
+    Player player = Bukkit.getPlayer(playerData.get().getUuid());
+    if (player != null) {
+      player.sendMessage(this.messageController.getFormattedMessage(Reference.SuccessMessages.ADMIN_NICK_RESET_COOLDOWN_RECEIVED));
     }
 
-    @Override
-    public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings)
-    {
-        if (strings.length == 1 && strings[0] != null)
-            return TabCompleteUtil.getPlayers(strings[0]);
-        else
-            return new ArrayList<>();
+    src.sendMessage(TemplateUtils.apply(this.messageController.getFormattedMessage(Reference.SuccessMessages.ADMIN_NICK_RESET_COOLDOWN), playerData.get()));
+  }
+
+  @Override
+  public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
+    if (strings.length == 1 && strings[0] != null) {
+      return TabCompleteUtil.getPlayers(strings[0]);
+    } else {
+      return new ArrayList<>();
     }
+  }
+
 }

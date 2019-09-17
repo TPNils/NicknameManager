@@ -9,40 +9,40 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 /**
  * Created by Spyproof on 13/11/2016.
- *
+ * <p>
  * Listen to players logging in and out.
  */
-public class PlayerListener implements Listener
-{
-    private INicknameController playerController;
+public class PlayerListener implements Listener {
 
-    public PlayerListener(INicknameController playerController)
-    {
-        this.playerController = playerController;
-    }
+  private INicknameController playerController;
 
-    /**
-     * Wrap the player with the player controller, which should save the player to the underlying storage.
-     *
-     * If the player has a nickname, apply it to the player
-     * @param event The fired event
-     */
-    @EventHandler
-    public void onLogin(PlayerJoinEvent event)
-    {
-        BukkitUtils.INSTANCE.applyNickname(
-          this.playerController.wrap(event.getPlayer().getUniqueId(), event.getPlayer().getName()),
-          event.getPlayer()
-        );
-    }
+  public PlayerListener(INicknameController playerController) {
+    this.playerController = playerController;
+  }
 
-    /**
-     * Trigger the logout method from the player controller.
-     * @param event The fired event
-     */
-    @EventHandler
-    public void onLogin(PlayerQuitEvent event)
-    {
-        this.playerController.logout(event.getPlayer().getUniqueId());
-    }
+  /**
+   * Wrap the player with the player controller, which should save the player to the underlying storage.
+   * <p>
+   * If the player has a nickname, apply it to the player
+   *
+   * @param event The fired event
+   */
+  @EventHandler
+  public void onLogin(PlayerJoinEvent event) {
+    BukkitUtils.INSTANCE.applyNickname(
+      this.playerController.wrap(event.getPlayer().getUniqueId(), event.getPlayer().getName()),
+      event.getPlayer()
+    );
+  }
+
+  /**
+   * Trigger the logout method from the player controller.
+   *
+   * @param event The fired event
+   */
+  @EventHandler
+  public void onLogin(PlayerQuitEvent event) {
+    this.playerController.logout(event.getPlayer().getUniqueId());
+  }
+
 }

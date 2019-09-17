@@ -13,73 +13,70 @@ import java.util.UUID;
 /**
  * Created by Spyproof on 04/11/2016.
  */
-public class DummyPlayerStorage implements IPlayerStorage
-{
-    public List<NicknameData> players = new ArrayList<>();
+public class DummyPlayerStorage implements IPlayerStorage {
 
-    @Override
-    public void savePlayer(NicknameData player)
-    {
-        for (int i = 0; i < this.players.size(); i++)
-        {
-            if (this.players.get(i).getUuid().equals(player.getUuid()))
-            {
-                this.players.set(i, player);
-                return;
-            }
-        }
+  public List<NicknameData> players = new ArrayList<>();
 
-        this.players.add(player);
+  @Override
+  public void savePlayer(NicknameData player) {
+    for (int i = 0; i < this.players.size(); i++) {
+      if (this.players.get(i).getUuid().equals(player.getUuid())) {
+        this.players.set(i, player);
+        return;
+      }
     }
 
-    @Override
-    public void removePlayer(NicknameData player)
-    {
-        for (int i = 0; i < this.players.size(); i++)
-        {
-            if (this.players.get(i).getUuid().equals(player.getUuid()))
-            {
-                this.players.remove(i);
-                return;
-            }
-        }
+    this.players.add(player);
+  }
+
+  @Override
+  public void removePlayer(NicknameData player) {
+    for (int i = 0; i < this.players.size(); i++) {
+      if (this.players.get(i).getUuid().equals(player.getUuid())) {
+        this.players.remove(i);
+        return;
+      }
+    }
+  }
+
+  @Override
+  public Optional<NicknameData> getPlayer(String name) {
+    for (NicknameData player : this.players) {
+      if (player.getName().equals(name)) {
+        return Optional.of(player);
+      }
     }
 
-    @Override
-    public Optional<NicknameData> getPlayer(String name)
-    {
-        for (NicknameData player : this.players)
-            if (player.getName().equals(name))
-                return Optional.of(player);
+    return Optional.empty();
+  }
 
-        return Optional.empty();
+  @Override
+  public Optional<NicknameData> getPlayer(UUID uuid) {
+    for (NicknameData player : this.players) {
+      if (player.getUuid().equals(uuid)) {
+        return Optional.of(player);
+      }
     }
 
-    @Override
-    public Optional<NicknameData> getPlayer(UUID uuid)
-    {
-        for (NicknameData player : this.players)
-            if (player.getUuid().equals(uuid))
-                return Optional.of(player);
+    return Optional.empty();
+  }
 
-        return Optional.empty();
+  @Override
+  public List<NicknameData> getPlayerByNickname(String nickname, int limit) {
+    List<NicknameData> players = new ArrayList<>();
+
+    for (NicknameData player : this.players) {
+      if (player.getNickname().isPresent() && player.getNickname().get().replaceAll(Reference.COLOUR_AND_STYLE_PATTERN, "").contains(nickname)) {
+        players.add(player);
+      }
     }
 
-    @Override
-    public List<NicknameData> getPlayerByNickname(String nickname, int limit)
-    {
-        List<NicknameData> players = new ArrayList<>();
+    return players;
+  }
 
-        for (NicknameData player : this.players)
-            if (player.getNickname().isPresent() && player.getNickname().get().replaceAll(Reference.COLOUR_AND_STYLE_PATTERN, "").contains(nickname))
-                players.add(player);
+  @Override
+  public void close() throws IOException {
 
-        return players;
-    }
+  }
 
-    @Override
-    public void close() throws IOException
-    {
-
-    }
 }

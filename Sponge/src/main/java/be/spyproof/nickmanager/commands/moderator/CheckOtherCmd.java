@@ -22,42 +22,38 @@ import java.util.List;
 /**
  * Created by Spyproof on 01/11/2016.
  */
-public class CheckOtherCmd extends AbstractCmd implements IArgumentChecker
-{
-    private static final String ARG = "player";
+public class CheckOtherCmd extends AbstractCmd implements IArgumentChecker {
 
-    private CheckOtherCmd(MessageController messageController, ISpongeNicknameController playerController)
-    {
-        super(messageController, playerController);
+  private static final String ARG = "player";
+
+  private CheckOtherCmd(MessageController messageController, ISpongeNicknameController playerController) {
+    super(messageController, playerController);
+  }
+
+  @Override
+  public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+    NicknameData player = getArgument(args, ARG);
+
+    List<Text> split = TextUtils.splitLines(this.getMessageController()
+                                                .getMessage(Reference.SuccessMessages.ADMIN_NICK_CHECK)
+                                                .apply(TemplateUtils.getParameters(player))
+                                                .build());
+
+    if (split.size() > 20) {
+      PaginationList.builder().contents(split).linesPerPage(15).sendTo(src);
+    } else {
+      src.sendMessages(split);
     }
 
-    @Override
-    public CommandResult execute(CommandSource src, CommandContext args) throws CommandException
-    {
-        NicknameData player = getArgument(args, ARG);
+    return CommandResult.success();
+  }
 
-        List<Text> split = TextUtils.splitLines(
-          this.getMessageController()
-              .getMessage(Reference.SuccessMessages.ADMIN_NICK_CHECK)
-              .apply(TemplateUtils.getParameters(player))
-              .build()
-        );
+  public static CommandSpec getCommandSpec(MessageController messageController, ISpongeNicknameController playerController) {
+    return CommandSpec.builder()
+                      .arguments(new PlayerDataArg(ARG, playerController))
+                      .executor(new CheckOtherCmd(messageController, playerController))
+                      .permission(Reference.Permissions.ADMIN_CHECK)
+                      .build();
+  }
 
-        if (split.size() > 20) {
-          PaginationList.builder().contents(split).linesPerPage(15).sendTo(src);
-        } else {
-          src.sendMessages(split);
-        }
-
-        return CommandResult.success();
-    }
-
-    public static CommandSpec getCommandSpec(MessageController messageController, ISpongeNicknameController playerController)
-    {
-        return CommandSpec.builder()
-                          .arguments(new PlayerDataArg(ARG, playerController))
-                          .executor(new CheckOtherCmd(messageController, playerController))
-                          .permission(Reference.Permissions.ADMIN_CHECK)
-                          .build();
-    }
 }

@@ -17,35 +17,34 @@ import org.spongepowered.api.entity.living.player.Player;
 /**
  * Created by Spyproof on 30/10/2016.
  */
-public class AcceptRulesCmd extends AbstractCmd implements IPlayerCheck
-{
-    private AcceptRulesCmd(MessageController messageController, ISpongeNicknameController playerController)
-    {
-        super(messageController, playerController);
+public class AcceptRulesCmd extends AbstractCmd implements IPlayerCheck {
+
+  private AcceptRulesCmd(MessageController messageController, ISpongeNicknameController playerController) {
+    super(messageController, playerController);
+  }
+
+  @Override
+  public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+    checkIsPlayer(src);
+
+    NicknameData nicknameData = this.getPlayerController().wrapPlayer((Player) src);
+
+    if (!nicknameData.readRules()) {
+      throw new CommandException(this.getMessageController().getMessage(Reference.ErrorMessages.MUST_READ_RULES).apply(TemplateUtils.getParameters("command", "/nick " + Reference.CommandKeys.PLAYER_RULES[0])).build());
     }
 
-    @Override
-    public CommandResult execute(CommandSource src, CommandContext args) throws CommandException
-    {
-        checkIsPlayer(src);
+    nicknameData.setAcceptedRules(true);
+    this.getPlayerController().savePlayer(nicknameData);
+    src.sendMessage(this.getMessageController().getMessage(Reference.SuccessMessages.ACCEPTED_RULES).toText());
 
-        NicknameData nicknameData = this.getPlayerController().wrapPlayer((Player) src);
+    return CommandResult.success();
+  }
 
-        if (!nicknameData.readRules())
-            throw new CommandException(this.getMessageController().getMessage(Reference.ErrorMessages.MUST_READ_RULES).apply(TemplateUtils.getParameters("command", "/nick " + Reference.CommandKeys.PLAYER_RULES[0])).build());
+  public static CommandSpec getCommandSpec(MessageController messageController, ISpongeNicknameController playerController) {
+    return CommandSpec.builder()
+                      .executor(new AcceptRulesCmd(messageController, playerController))
+                      .permission(Reference.Permissions.GENERIC_PLAYER_COMMANDS)
+                      .build();
+  }
 
-        nicknameData.setAcceptedRules(true);
-        this.getPlayerController().savePlayer(nicknameData);
-        src.sendMessage(this.getMessageController().getMessage(Reference.SuccessMessages.ACCEPTED_RULES).toText());
-
-        return CommandResult.success();
-    }
-
-    public static CommandSpec getCommandSpec(MessageController messageController, ISpongeNicknameController playerController)
-    {
-        return CommandSpec.builder()
-                          .executor(new AcceptRulesCmd(messageController, playerController))
-                          .permission(Reference.Permissions.GENERIC_PLAYER_COMMANDS)
-                          .build();
-    }
 }

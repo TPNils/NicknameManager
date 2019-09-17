@@ -13,6 +13,7 @@ import java.util.*;
  * Created by Spyproof on 03/11/2016.
  */
 public class GsonPlayerStorage implements IPlayerStorage {
+
   private static final String EXTENSION = ".json";
   private File playerDir;
 
@@ -29,8 +30,9 @@ public class GsonPlayerStorage implements IPlayerStorage {
 
   private void loadPlayerCache() throws IOException {
     File[] playerFiles = playerDir.listFiles();
-    if (playerFiles == null)
+    if (playerFiles == null) {
       return;
+    }
 
     for (File file : playerFiles) {
       Optional<NicknameData> playerData = readPlayer(new JsonReader(new InputStreamReader(new FileInputStream(file), "UTF-8")), UUID.fromString(file.getName()
@@ -49,8 +51,7 @@ public class GsonPlayerStorage implements IPlayerStorage {
         set = new HashSet<>();
         set.add(nicknameData.getUuid());
         this.cachedNicknames.put(nicknameData.getNickname().get().replaceAll(Reference.COLOUR_AND_STYLE_PATTERN, "").toLowerCase(), set);
-      }
-      else {
+      } else {
         set.add(nicknameData.getUuid());
       }
     }
@@ -74,10 +75,11 @@ public class GsonPlayerStorage implements IPlayerStorage {
   @Override
   public Optional<NicknameData> getPlayer(String name) {
     UUID uuid = this.cachedPlayers.get(name.toLowerCase());
-    if (uuid == null)
+    if (uuid == null) {
       return Optional.empty();
-    else
+    } else {
       return getPlayer(uuid);
+    }
   }
 
   @Override
@@ -101,12 +103,15 @@ public class GsonPlayerStorage implements IPlayerStorage {
           Optional<NicknameData> playerData = getPlayer(uuid);
           if (playerData.isPresent()) {
             boolean isDuplicate = false;
-            for (NicknameData p : players)
-              if (p.getUuid().equals(playerData.get().getUuid()))
+            for (NicknameData p : players) {
+              if (p.getUuid().equals(playerData.get().getUuid())) {
                 isDuplicate = true;
+              }
+            }
 
-            if (!isDuplicate)
+            if (!isDuplicate) {
               players.add(playerData.get());
+            }
           }
         }
       }
@@ -144,15 +149,17 @@ public class GsonPlayerStorage implements IPlayerStorage {
     writer.name("Tokens").value(player.getTokensRemaining());
     writer.name("Last changed").value(player.getLastChanged());
     writer.name("Accepted rules").value(player.hasAcceptedRules());
-    if (player.getNickname().isPresent())
+    if (player.getNickname().isPresent()) {
       writer.name("Nickname").value(player.getNickname().get());
-    else
+    } else {
       writer.name("Nickname").nullValue();
+    }
 
     writer.name("Past nicknames").beginArray();
 
-    for (String nick : player.getPastNicknames())
+    for (String nick : player.getPastNicknames()) {
       writer.value(nick);
+    }
 
     writer.endArray();
     writer.endObject();
@@ -160,8 +167,9 @@ public class GsonPlayerStorage implements IPlayerStorage {
 
   private Optional<NicknameData> readPlayer(UUID uuid) throws IOException {
     File file = new File(playerDir, uuid.toString() + EXTENSION);
-    if (!file.exists())
+    if (!file.exists()) {
       return Optional.empty();
+    }
 
     try (JsonReader reader = new JsonReader(new InputStreamReader(new FileInputStream(file), "UTF-8"))) {
       return readPlayer(reader, uuid);
@@ -178,41 +186,45 @@ public class GsonPlayerStorage implements IPlayerStorage {
 
     while (reader.hasNext()) {
       String name = reader.nextName();
-      if (name.equals("Last known name"))
+      if (name.equals("Last known name")) {
         playerName = reader.nextString();
-      else if (name.equals("Nickname") && reader.peek() != JsonToken.NULL)
+      } else if (name.equals("Nickname") && reader.peek() != JsonToken.NULL) {
         nickname = reader.nextString();
-      else if (name.equals("Tokens"))
+      } else if (name.equals("Tokens")) {
         tokens = reader.nextInt();
-      else if (name.equals("Last changed"))
+      } else if (name.equals("Last changed")) {
         lastChanged = reader.nextLong();
-      else if (name.equals("Accepted rules"))
+      } else if (name.equals("Accepted rules")) {
         acceptedRules = reader.nextBoolean();
-      else if (name.equals("Past nicknames")) {
+      } else if (name.equals("Past nicknames")) {
         reader.beginArray();
 
-        while (reader.hasNext())
+        while (reader.hasNext()) {
           pastNicknames.add(reader.nextString());
+        }
 
         reader.endArray();
-      }
-      else
+      } else {
         reader.skipValue();
+      }
     }
 
     reader.endObject();
-    if (playerName == null)
+    if (playerName == null) {
       return Optional.empty();
+    }
 
     NicknameData nicknameData = new NicknameData(playerName, uuid);
 
     nicknameData.setTokensRemaining(tokens);
     nicknameData.setLastChanged(lastChanged);
     nicknameData.setAcceptedRules(acceptedRules);
-    if (nickname != null)
+    if (nickname != null) {
       nicknameData.setNickname(nickname);
-    if (pastNicknames.size() > 0)
+    }
+    if (pastNicknames.size() > 0) {
       nicknameData.addPastNickname(pastNicknames);
+    }
 
     return Optional.of(nicknameData);
   }

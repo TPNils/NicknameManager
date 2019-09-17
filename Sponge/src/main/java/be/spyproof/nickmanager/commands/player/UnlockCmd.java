@@ -12,27 +12,25 @@ import org.spongepowered.api.command.spec.CommandSpec;
 /**
  * Created by Spyproof on 01/11/2016.
  */
-public class UnlockCmd implements CommandExecutor
-{
-    private MessageController messageController;
+public class UnlockCmd implements CommandExecutor {
 
-    private UnlockCmd(MessageController messageController)
-    {
-        this.messageController = messageController;
-    }
+  private MessageController messageController;
 
-    @Override
-    public CommandResult execute(CommandSource src, CommandContext args) throws CommandException
-    {
-        src.sendMessage(this.messageController.getMessage(Reference.SuccessMessages.NICK_UNLOCK));
-        return CommandResult.success();
-    }
+  private UnlockCmd(MessageController messageController) {
+    this.messageController = messageController;
+  }
 
-    public static CommandSpec getCommandSpec(MessageController messageController)
-    {
-        return CommandSpec.builder()
-                          .executor(new UnlockCmd(messageController))
-                          .permission(Reference.Permissions.GENERIC_PLAYER_COMMANDS)
-                          .build();
-    }
+  @Override
+  public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+    src.sendMessage(this.messageController.getMessage(Reference.SuccessMessages.NICK_UNLOCK));
+    return CommandResult.success();
+  }
+
+  public static CommandSpec getCommandSpec(MessageController messageController) {
+    return CommandSpec.builder()
+                      .executor(new UnlockCmd(messageController))
+                      .permission(Reference.Permissions.GENERIC_PLAYER_COMMANDS)
+                      .build();
+  }
+
 }

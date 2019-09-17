@@ -7,26 +7,24 @@ import org.spongepowered.api.command.spec.CommandExecutor;
 /**
  * Created by Spyproof on 01/11/2016.
  */
-public abstract class AbstractCmd implements IMessageControllerHolder, IPlayerControllerHolder, CommandExecutor
-{
-    private MessageController messageController;
-    private ISpongeNicknameController playerController;
+public abstract class AbstractCmd implements IMessageControllerHolder, IPlayerControllerHolder, CommandExecutor {
 
-    protected AbstractCmd(MessageController messageController, ISpongeNicknameController playerController)
-    {
-        this.messageController = messageController;
-        this.playerController = playerController;
-    }
+  private MessageController messageController;
+  private ISpongeNicknameController playerController;
 
-    @Override
-    public ISpongeNicknameController getPlayerController()
-    {
-        return this.playerController;
-    }
+  protected AbstractCmd(MessageController messageController, ISpongeNicknameController playerController) {
+    this.messageController = messageController;
+    this.playerController = playerController;
+  }
 
-    @Override
-    public MessageController getMessageController()
-    {
-        return this.messageController;
-    }
+  @Override
+  public ISpongeNicknameController getPlayerController() {
+    return this.playerController;
+  }
+
+  @Override
+  public MessageController getMessageController() {
+    return this.messageController;
+  }
+
 }

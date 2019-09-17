@@ -20,39 +20,39 @@ import java.util.Optional;
 /**
  * Created by Spyproof on 15/11/2016.
  */
-public class OldNicknameArg extends CommandElement
-{
-    private ISpongeNicknameController playerController;
+public class OldNicknameArg extends CommandElement {
 
-    public OldNicknameArg(String key, ISpongeNicknameController playerController)
-    {
-        super(Text.of(key));
-        this.playerController = playerController;
+  private ISpongeNicknameController playerController;
+
+  public OldNicknameArg(String key, ISpongeNicknameController playerController) {
+    super(Text.of(key));
+    this.playerController = playerController;
+  }
+
+  @Nullable
+  @Override
+  protected Object parseValue(CommandSource source, CommandArgs args) throws ArgumentParseException {
+    return args.next();
+  }
+
+  @Override
+  public List<String> complete(CommandSource src, CommandArgs args, CommandContext context) {
+    List<String> options = new ArrayList<>();
+    Optional<String> arg = args.nextIfPresent();
+    if (!arg.isPresent()) {
+      return Collections.emptyList();
     }
 
-    @Nullable
-    @Override
-    protected Object parseValue(CommandSource source, CommandArgs args) throws ArgumentParseException
-    {
-        return args.next();
-    }
-
-    @Override
-    public List<String> complete(CommandSource src, CommandArgs args, CommandContext context)
-    {
-        List<String> options = new ArrayList<>();
-        Optional<String> arg = args.nextIfPresent();
-        if (!arg.isPresent())
-            return Collections.EMPTY_LIST;
-
-        if (src instanceof Player)
-        {
-            NicknameData nicknameData = this.playerController.wrapPlayer((Player) src);
-            for (String oldNick : nicknameData.getPastNicknames())
-                if (oldNick.replaceAll(Reference.COLOUR_AND_STYLE_PATTERN, "").startsWith(arg.get()) && !options.contains(oldNick))
-                    options.add(oldNick);
+    if (src instanceof Player) {
+      NicknameData nicknameData = this.playerController.wrapPlayer((Player) src);
+      for (String oldNick : nicknameData.getPastNicknames()) {
+        if (oldNick.replaceAll(Reference.COLOUR_AND_STYLE_PATTERN, "").startsWith(arg.get()) && !options.contains(oldNick)) {
+          options.add(oldNick);
         }
-
-        return options;
+      }
     }
+
+    return options;
+  }
+
 }

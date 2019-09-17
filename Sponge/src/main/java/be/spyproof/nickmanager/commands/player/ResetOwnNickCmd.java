@@ -15,30 +15,28 @@ import org.spongepowered.api.entity.living.player.Player;
 /**
  * Created by Spyproof on 31/10/2016.
  */
-public class ResetOwnNickCmd extends AbstractCmd implements IPlayerCmd
-{
-    private ResetOwnNickCmd(MessageController messageController, ISpongeNicknameController playerController)
-    {
-        super(messageController, playerController);
-    }
+public class ResetOwnNickCmd extends AbstractCmd implements IPlayerCmd {
 
-    @Override
-    public CommandResult execute(Player src, CommandContext args) throws CommandException
-    {
-        NicknameData nicknameData = this.getPlayerController().wrapPlayer(src);
-        nicknameData.setNickname(null);
-        SpongeUtils.INSTANCE.applyNicknameToTabList(nicknameData, src);
-        this.getPlayerController().savePlayer(nicknameData);
+  private ResetOwnNickCmd(MessageController messageController, ISpongeNicknameController playerController) {
+    super(messageController, playerController);
+  }
 
-        src.sendMessage(this.getMessageController().getMessage(Reference.SuccessMessages.NICK_RESET).apply().build());
-        return CommandResult.success();
-    }
+  @Override
+  public CommandResult execute(Player src, CommandContext args) throws CommandException {
+    NicknameData nicknameData = this.getPlayerController().wrapPlayer(src);
+    nicknameData.setNickname(null);
+    SpongeUtils.INSTANCE.applyNicknameToTabList(nicknameData, src);
+    this.getPlayerController().savePlayer(nicknameData);
 
-    public static CommandSpec getCommandSpec(MessageController messageController, ISpongeNicknameController playerController)
-    {
-        return CommandSpec.builder()
-                          .executor(new ResetOwnNickCmd(messageController, playerController))
-                          .permission(Reference.Permissions.GENERIC_PLAYER_COMMANDS)
-                          .build();
-    }
+    src.sendMessage(this.getMessageController().getMessage(Reference.SuccessMessages.NICK_RESET).apply().build());
+    return CommandResult.success();
+  }
+
+  public static CommandSpec getCommandSpec(MessageController messageController, ISpongeNicknameController playerController) {
+    return CommandSpec.builder()
+                      .executor(new ResetOwnNickCmd(messageController, playerController))
+                      .permission(Reference.Permissions.GENERIC_PLAYER_COMMANDS)
+                      .build();
+  }
+
 }

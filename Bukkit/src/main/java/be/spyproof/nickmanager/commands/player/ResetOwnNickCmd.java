@@ -12,29 +12,27 @@ import org.bukkit.entity.Player;
 /**
  * Created by Spyproof on 14/11/2016.
  */
-public class ResetOwnNickCmd extends AbstractPlayerCmd implements IPermissionCheck
-{
-    public ResetOwnNickCmd(MessageController messageController, IBukkitNicknameController playerController, String... keys)
-    {
-        super(messageController, playerController, keys);
-    }
+public class ResetOwnNickCmd extends AbstractPlayerCmd implements IPermissionCheck {
 
-    @Override
-    public void sendHelpMsg(CommandSender src)
-    {
-        src.sendMessage(this.messageController.getFormattedMessage(Reference.HelpMessages.NICK_RESET));
-    }
+  public ResetOwnNickCmd(MessageController messageController, IBukkitNicknameController playerController, String... keys) {
+    super(messageController, playerController, keys);
+  }
 
-    @Override
-    public void execute(Player src, String cmd, String[] args)
-    {
-        checkPermission(src, Reference.Permissions.GENERIC_PLAYER_COMMANDS);
+  @Override
+  public void sendHelpMsg(CommandSender src) {
+    src.sendMessage(this.messageController.getFormattedMessage(Reference.HelpMessages.NICK_RESET));
+  }
 
-        NicknameData nicknameData = this.playerController.wrapPlayer(src);
-        nicknameData.setNickname(null);
-        this.playerController.savePlayer(nicknameData);
+  @Override
+  public void execute(Player src, String cmd, String[] args) {
+    checkPermission(src, Reference.Permissions.GENERIC_PLAYER_COMMANDS);
 
-        BukkitUtils.INSTANCE.applyNickname(nicknameData, src);
-        src.sendMessage(this.messageController.getFormattedMessage(Reference.SuccessMessages.NICK_RESET).split("\\n"));
-    }
+    NicknameData nicknameData = this.playerController.wrapPlayer(src);
+    nicknameData.setNickname(null);
+    this.playerController.savePlayer(nicknameData);
+
+    BukkitUtils.INSTANCE.applyNickname(nicknameData, src);
+    src.sendMessage(this.messageController.getFormattedMessage(Reference.SuccessMessages.NICK_RESET).split("\\n"));
+  }
+
 }

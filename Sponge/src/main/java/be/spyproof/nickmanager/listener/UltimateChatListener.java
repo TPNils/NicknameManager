@@ -12,26 +12,25 @@ import java.util.Optional;
 /**
  * Created by Spyproof on 25/04/2017.
  */
-public class UltimateChatListener implements EventListener<SendChannelMessageEvent>
-{
-    private ISpongeNicknameController playerController;
+public class UltimateChatListener implements EventListener<SendChannelMessageEvent> {
 
-    public UltimateChatListener(ISpongeNicknameController playerController)
-    {
-        this.playerController = playerController;
+  private ISpongeNicknameController playerController;
+
+  public UltimateChatListener(ISpongeNicknameController playerController) {
+    this.playerController = playerController;
+  }
+
+  public void handle(SendChannelMessageEvent event) {
+    if (event.getSender() instanceof Player) {
+      NicknameData nicknameData = playerController.wrapPlayer((Player) event.getSender());
+      Optional<String> nickname = nicknameData.getNickname();
+
+      if (nickname.isPresent()) {
+        event.addTag("{Nickname}", nickname.get() + TextSerializers.FORMATTING_CODE.getCharacter() + "r");
+      } else {
+        event.addTag("{Nickname}", event.getSender().getName() + TextSerializers.FORMATTING_CODE.getCharacter() + "r");
+      }
     }
+  }
 
-    public void handle(SendChannelMessageEvent event)
-    {
-        if (event.getSender() instanceof Player)
-        {
-            NicknameData nicknameData = playerController.wrapPlayer((Player) event.getSender());
-            Optional<String> nickname = nicknameData.getNickname();
-
-            if (nickname.isPresent())
-                event.addTag("{Nickname}", nickname.get() + TextSerializers.FORMATTING_CODE.getCharacter() + "r");
-            else
-                event.addTag("{Nickname}", event.getSender().getName() + TextSerializers.FORMATTING_CODE.getCharacter() + "r");
-        }
-    }
 }

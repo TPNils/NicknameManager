@@ -12,30 +12,27 @@ import org.bukkit.entity.Player;
 /**
  * Created by Spyproof on 14/11/2016.
  */
-public abstract class AbstractPlayerCmd extends AbstractCmd implements IPlayerCheck
-{
-    protected AbstractPlayerCmd(MessageController messageController, IBukkitNicknameController playerController, String... keys)
-    {
-        super(messageController, playerController, keys);
+public abstract class AbstractPlayerCmd extends AbstractCmd implements IPlayerCheck {
+
+  protected AbstractPlayerCmd(MessageController messageController, IBukkitNicknameController playerController, String... keys) {
+    super(messageController, playerController, keys);
+  }
+
+  @Override
+  public void execute(CommandSender src, String cmd, String[] args) {
+    if (!(src instanceof Player)) {
+      src.sendMessage(this.messageController.getFormattedMessage(Reference.ErrorMessages.PLAYER_ONLY).split("\\n"));
+      return;
     }
 
-    @Override
-    public void execute(CommandSender src, String cmd, String[] args)
-    {
-        if (!(src instanceof Player))
-        {
-            src.sendMessage(this.messageController.getFormattedMessage(Reference.ErrorMessages.PLAYER_ONLY).split("\\n"));
-            return;
-        }
-
-        if (!BukkitUtils.INSTANCE.acceptedRules((Player) src))
-        {
-            src.sendMessage(this.messageController.getFormattedMessage(Reference.ErrorMessages.MUST_ACCEPT_RULES).replace("{command}", Reference.CommandKeys.ACCEPT_RULES[0]).split("\\n"));
-            return;
-        }
-
-        execute((Player) src, cmd, args);
+    if (!BukkitUtils.INSTANCE.acceptedRules((Player) src)) {
+      src.sendMessage(this.messageController.getFormattedMessage(Reference.ErrorMessages.MUST_ACCEPT_RULES).replace("{command}", Reference.CommandKeys.ACCEPT_RULES[0]).split("\\n"));
+      return;
     }
 
-    public abstract void execute(Player src, String cmd, String[] args);
+    execute((Player) src, cmd, args);
+  }
+
+  public abstract void execute(Player src, String cmd, String[] args);
+
 }

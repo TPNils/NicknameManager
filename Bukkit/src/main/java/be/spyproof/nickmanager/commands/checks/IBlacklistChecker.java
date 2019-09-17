@@ -11,15 +11,14 @@ import java.util.Optional;
 /**
  * Created by Spyproof on 17/11/2016.
  */
-public interface IBlacklistChecker extends IMessageControllerHolder
-{
-    default void checkBlacklist(CommandSender src, String nickname) throws CommandException
-    {
-        Optional<String> blacklistRegex = BukkitUtils.INSTANCE.isBlacklisted(src, nickname);
-        if (blacklistRegex.isPresent())
-        {
-            throw new CommandException(this.getMessageController().getFormattedMessage(Reference.ErrorMessages.BLACKLIST)
-                                           .replace("{regex}", blacklistRegex.get()));
-        }
+public interface IBlacklistChecker extends IMessageControllerHolder {
+
+  default void checkBlacklist(CommandSender src, String nickname) throws CommandException {
+    Optional<String> blacklistRegex = BukkitUtils.INSTANCE.isBlacklisted(src, nickname);
+    if (blacklistRegex.isPresent()) {
+      throw new CommandException(this.getMessageController().getFormattedMessage(Reference.ErrorMessages.BLACKLIST)
+                                     .replace("{regex}", blacklistRegex.get()));
     }
+  }
+
 }

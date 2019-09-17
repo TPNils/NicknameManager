@@ -10,24 +10,22 @@ import org.bukkit.command.CommandSender;
 /**
  * Created by Spyproof on 14/11/2016.
  */
-public class UnlockCmd extends AbstractCmd implements IPermissionCheck
-{
-    public UnlockCmd(MessageController messageController, IBukkitNicknameController playerController, String... keys)
-    {
-        super(messageController, playerController, keys);
-    }
+public class UnlockCmd extends AbstractCmd implements IPermissionCheck {
 
-    @Override
-    public void sendHelpMsg(CommandSender src)
-    {
-        src.sendMessage(this.messageController.getFormattedMessage(Reference.HelpMessages.NICK_UNLOCK));
-    }
+  public UnlockCmd(MessageController messageController, IBukkitNicknameController playerController, String... keys) {
+    super(messageController, playerController, keys);
+  }
 
-    @Override
-    public void execute(CommandSender src, String cmd, String[] args)
-    {
-        checkPermission(src, Reference.Permissions.GENERIC_PLAYER_COMMANDS);
+  @Override
+  public void sendHelpMsg(CommandSender src) {
+    src.sendMessage(this.messageController.getFormattedMessage(Reference.HelpMessages.NICK_UNLOCK));
+  }
 
-        src.sendMessage(this.messageController.getFormattedMessage(Reference.SuccessMessages.NICK_UNLOCK).split("\\n"));
-    }
+  @Override
+  public void execute(CommandSender src, String cmd, String[] args) {
+    checkPermission(src, Reference.Permissions.GENERIC_PLAYER_COMMANDS);
+
+    src.sendMessage(this.messageController.getFormattedMessage(Reference.SuccessMessages.NICK_UNLOCK).split("\\n"));
+  }
+
 }

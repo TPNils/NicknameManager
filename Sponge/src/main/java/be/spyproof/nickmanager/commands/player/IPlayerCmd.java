@@ -15,20 +15,19 @@ import org.spongepowered.api.entity.living.player.Player;
 /**
  * Created by Spyproof on 30/10/2016.
  */
-public interface IPlayerCmd extends IMessageControllerHolder, IPlayerCheck, CommandExecutor
-{
-    default CommandResult execute(CommandSource src, CommandContext args) throws CommandException
-    {
-        checkIsPlayer(src);
+public interface IPlayerCmd extends IMessageControllerHolder, IPlayerCheck, CommandExecutor {
 
-        if (!SpongeUtils.INSTANCE.acceptedRules((Player) src))
-        {
-            src.sendMessage(this.getMessageController().getMessage(Reference.ErrorMessages.MUST_ACCEPT_RULES).apply(TemplateUtils.getParameters("command", "/" + Reference.CommandKeys.ACCEPT_RULES[0])).build());
-            return CommandResult.success();
-        }
+  default CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+    checkIsPlayer(src);
 
-        return execute((Player) src, args);
+    if (!SpongeUtils.INSTANCE.acceptedRules((Player) src)) {
+      src.sendMessage(this.getMessageController().getMessage(Reference.ErrorMessages.MUST_ACCEPT_RULES).apply(TemplateUtils.getParameters("command", "/" + Reference.CommandKeys.ACCEPT_RULES[0])).build());
+      return CommandResult.success();
     }
 
-    CommandResult execute(Player src, CommandContext args) throws CommandException;
+    return execute((Player) src, args);
+  }
+
+  CommandResult execute(Player src, CommandContext args) throws CommandException;
+
 }

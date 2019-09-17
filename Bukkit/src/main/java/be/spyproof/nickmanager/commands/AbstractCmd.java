@@ -8,45 +8,40 @@ import java.util.Optional;
 /**
  * Created by Spyproof on 14/11/2016.
  */
-public abstract class AbstractCmd implements ICommand, IMessageControllerHolder, IPlayerControllerHolder
-{
-    protected MessageController messageController;
-    protected IBukkitNicknameController playerController;
-    protected String[] keys;
-    protected ICommand parent;
+public abstract class AbstractCmd implements ICommand, IMessageControllerHolder, IPlayerControllerHolder {
 
-    protected AbstractCmd(MessageController messageController, IBukkitNicknameController playerController, String... keys)
-    {
-        this.messageController = messageController;
-        this.playerController = playerController;
-        this.keys = keys;
-    }
+  protected MessageController messageController;
+  protected IBukkitNicknameController playerController;
+  protected String[] keys;
+  protected ICommand parent;
 
-    @Override
-    public String[] getKeys()
-    {
-        return this.keys;
-    }
+  protected AbstractCmd(MessageController messageController, IBukkitNicknameController playerController, String... keys) {
+    this.messageController = messageController;
+    this.playerController = playerController;
+    this.keys = keys;
+  }
 
-    public Optional<ICommand> getParent()
-    {
-        return Optional.ofNullable(this.parent);
-    }
+  @Override
+  public String[] getKeys() {
+    return this.keys;
+  }
 
-    public void setParent(ICommand parent)
-    {
-        this.parent = parent;
-    }
+  public Optional<ICommand> getParent() {
+    return Optional.ofNullable(this.parent);
+  }
 
-    @Override
-    public IBukkitNicknameController getPlayerController()
-    {
-        return this.playerController;
-    }
+  public void setParent(ICommand parent) {
+    this.parent = parent;
+  }
 
-    @Override
-    public MessageController getMessageController()
-    {
-        return this.messageController;
-    }
+  @Override
+  public IBukkitNicknameController getPlayerController() {
+    return this.playerController;
+  }
+
+  @Override
+  public MessageController getMessageController() {
+    return this.messageController;
+  }
+
 }

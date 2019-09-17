@@ -11,75 +11,72 @@ import org.bukkit.command.CommandSender;
 /**
  * Created by Spyproof on 14/11/2016.
  */
-public class DisplayFormatsCmd extends AbstractCmd implements IPermissionCheck
-{
-    public DisplayFormatsCmd(MessageController messageController, IBukkitNicknameController playerController, String... keys)
-    {
-        super(messageController, playerController, keys);
-    }
+public class DisplayFormatsCmd extends AbstractCmd implements IPermissionCheck {
 
-    private String getColour(ChatColor color)
-    {
-        return color.toString() + "&" + color.getChar() + ChatColor.RESET;
-    }
+  public DisplayFormatsCmd(MessageController messageController, IBukkitNicknameController playerController, String... keys) {
+    super(messageController, playerController, keys);
+  }
 
-    @Override
-    public void sendHelpMsg(CommandSender src)
-    {
-        src.sendMessage(this.messageController.getFormattedMessage(Reference.HelpMessages.NICK_FORMAT));
-    }
+  private String getColour(ChatColor color) {
+    return color.toString() + "&" + color.getChar() + ChatColor.RESET;
+  }
 
-    @Override
-    public void execute(CommandSender src, String s, String[] strings)
-    {
-        checkPermission(src, Reference.Permissions.GENERIC_PLAYER_COMMANDS);
+  @Override
+  public void sendHelpMsg(CommandSender src) {
+    src.sendMessage(this.messageController.getFormattedMessage(Reference.HelpMessages.NICK_FORMAT));
+  }
 
-        StringBuilder builder = new StringBuilder();
+  @Override
+  public void execute(CommandSender src, String s, String[] strings) {
+    checkPermission(src, Reference.Permissions.GENERIC_PLAYER_COMMANDS);
 
-        builder.append(getColour(ChatColor.BLACK));
-        builder.append(" ");
-        builder.append(getColour(ChatColor.DARK_BLUE));
-        builder.append(" ");
-        builder.append(getColour(ChatColor.DARK_GREEN));
-        builder.append(" ");
-        builder.append(getColour(ChatColor.DARK_AQUA));
-        builder.append("\n");
-        builder.append(getColour(ChatColor.DARK_RED));
-        builder.append(" ");
-        builder.append(getColour(ChatColor.DARK_PURPLE));
-        builder.append(" ");
-        builder.append(getColour(ChatColor.GOLD));
-        builder.append(" ");
-        builder.append(getColour(ChatColor.GRAY));
-        builder.append("\n");
-        builder.append(getColour(ChatColor.DARK_GRAY));
-        builder.append(" ");
-        builder.append(getColour(ChatColor.BLUE));
-        builder.append(" ");
-        builder.append(getColour(ChatColor.GREEN));
-        builder.append(" ");
-        builder.append(getColour(ChatColor.AQUA));
-        builder.append("\n");
-        builder.append(getColour(ChatColor.RED));
-        builder.append(" ");
-        builder.append(getColour(ChatColor.LIGHT_PURPLE));
-        builder.append(" ");
-        builder.append(getColour(ChatColor.YELLOW));
-        builder.append(" ");
-        builder.append(getColour(ChatColor.WHITE));
+    StringBuilder builder = new StringBuilder();
 
-        builder.append("\n").append("\n");
+    builder.append(getColour(ChatColor.BLACK));
+    builder.append(" ");
+    builder.append(getColour(ChatColor.DARK_BLUE));
+    builder.append(" ");
+    builder.append(getColour(ChatColor.DARK_GREEN));
+    builder.append(" ");
+    builder.append(getColour(ChatColor.DARK_AQUA));
+    builder.append("\n");
+    builder.append(getColour(ChatColor.DARK_RED));
+    builder.append(" ");
+    builder.append(getColour(ChatColor.DARK_PURPLE));
+    builder.append(" ");
+    builder.append(getColour(ChatColor.GOLD));
+    builder.append(" ");
+    builder.append(getColour(ChatColor.GRAY));
+    builder.append("\n");
+    builder.append(getColour(ChatColor.DARK_GRAY));
+    builder.append(" ");
+    builder.append(getColour(ChatColor.BLUE));
+    builder.append(" ");
+    builder.append(getColour(ChatColor.GREEN));
+    builder.append(" ");
+    builder.append(getColour(ChatColor.AQUA));
+    builder.append("\n");
+    builder.append(getColour(ChatColor.RED));
+    builder.append(" ");
+    builder.append(getColour(ChatColor.LIGHT_PURPLE));
+    builder.append(" ");
+    builder.append(getColour(ChatColor.YELLOW));
+    builder.append(" ");
+    builder.append(getColour(ChatColor.WHITE));
 
-        builder.append(getColour(ChatColor.BOLD));
-        builder.append(" ");
-        builder.append(getColour(ChatColor.ITALIC));
-        builder.append("\n");
-        builder.append(getColour(ChatColor.STRIKETHROUGH));
-        builder.append(" ");
-        builder.append(getColour(ChatColor.UNDERLINE));
-        builder.append("\n");
-        builder.append("&k > ").append(ChatColor.MAGIC).append("Obfuscated");
+    builder.append("\n").append("\n");
 
-        src.sendMessage(builder.toString().split("\\n"));
-    }
+    builder.append(getColour(ChatColor.BOLD));
+    builder.append(" ");
+    builder.append(getColour(ChatColor.ITALIC));
+    builder.append("\n");
+    builder.append(getColour(ChatColor.STRIKETHROUGH));
+    builder.append(" ");
+    builder.append(getColour(ChatColor.UNDERLINE));
+    builder.append("\n");
+    builder.append("&k > ").append(ChatColor.MAGIC).append("Obfuscated");
+
+    src.sendMessage(builder.toString().split("\\n"));
+  }
+
 }

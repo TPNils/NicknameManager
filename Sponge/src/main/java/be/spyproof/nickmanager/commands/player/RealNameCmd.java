@@ -24,53 +24,49 @@ import java.util.Map;
 /**
  * Created by Spyproof on 31/10/2016.
  */
-public class RealNameCmd extends AbstractCmd implements IArgumentChecker
-{
-    private static final String ARG = "nickname";
+public class RealNameCmd extends AbstractCmd implements IArgumentChecker {
 
-    private RealNameCmd(MessageController messageController, ISpongeNicknameController playerController)
-    {
-        super(messageController, playerController);
-    }
+  private static final String ARG = "nickname";
 
-    @Override
-    public CommandResult execute(CommandSource src, CommandContext args) throws CommandException
-    {
-        String nickname = getArgument(args, ARG);
-        List<NicknameData> matches = this.getPlayerController().getPlayerByNickname(TextSerializers.FORMATTING_CODE.stripCodes(nickname));
+  private RealNameCmd(MessageController messageController, ISpongeNicknameController playerController) {
+    super(messageController, playerController);
+  }
 
-        Text.Builder players = Text.builder();
-        if (matches.size() > 0)
-        {
-            for (int i = 0; i < matches.size(); i++)
-            {
-                players.append(Text.of(matches.get(i).getName())
-                                   .toBuilder()
-                                   .onHover(TextActions.showText(Text.of(matches.get(i).getUuid().toString())))
-                                   .build());
-                if (i + 1 < matches.size())
-                    players.append(Text.NEW_LINE);
+  @Override
+  public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+    String nickname = getArgument(args, ARG);
+    List<NicknameData> matches = this.getPlayerController().getPlayerByNickname(TextSerializers.FORMATTING_CODE.stripCodes(nickname));
 
-            }
-        } else
-        {
-            players.append(Text.of("None"));
+    Text.Builder players = Text.builder();
+    if (matches.size() > 0) {
+      for (int i = 0; i < matches.size(); i++) {
+        players.append(Text.of(matches.get(i).getName())
+                           .toBuilder()
+                           .onHover(TextActions.showText(Text.of(matches.get(i).getUuid().toString())))
+                           .build());
+        if (i + 1 < matches.size()) {
+          players.append(Text.NEW_LINE);
         }
 
-        Map<String, Text> params = new HashMap<>();
-        params.putAll(TemplateUtils.getParameters("nickname", TextSerializers.FORMATTING_CODE.deserialize(nickname)));
-        params.putAll(TemplateUtils.getParameters("players", players.build()));
-        src.sendMessage(this.getMessageController().getMessage(Reference.SuccessMessages.NICK_REAL_NAME).apply(params).build());
-
-        return CommandResult.success();
+      }
+    } else {
+      players.append(Text.of("None"));
     }
 
-    public static CommandSpec getCommandSpec(MessageController messageController, ISpongeNicknameController playerController)
-    {
-        return CommandSpec.builder()
-                          .executor(new RealNameCmd(messageController, playerController))
-                          .arguments(new OnlinePlayerNicknameArg(ARG, playerController))
-                          .permission(Reference.Permissions.GENERIC_PLAYER_COMMANDS)
-                          .build();
-    }
+    Map<String, Text> params = new HashMap<>();
+    params.putAll(TemplateUtils.getParameters("nickname", TextSerializers.FORMATTING_CODE.deserialize(nickname)));
+    params.putAll(TemplateUtils.getParameters("players", players.build()));
+    src.sendMessage(this.getMessageController().getMessage(Reference.SuccessMessages.NICK_REAL_NAME).apply(params).build());
+
+    return CommandResult.success();
+  }
+
+  public static CommandSpec getCommandSpec(MessageController messageController, ISpongeNicknameController playerController) {
+    return CommandSpec.builder()
+                      .executor(new RealNameCmd(messageController, playerController))
+                      .arguments(new OnlinePlayerNicknameArg(ARG, playerController))
+                      .permission(Reference.Permissions.GENERIC_PLAYER_COMMANDS)
+                      .build();
+  }
+
 }

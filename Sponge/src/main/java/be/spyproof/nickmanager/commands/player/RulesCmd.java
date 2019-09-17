@@ -16,28 +16,26 @@ import org.spongepowered.api.entity.living.player.Player;
 /**
  * Created by Spyproof on 30/10/2016.
  */
-public class RulesCmd extends AbstractCmd
-{
-    private RulesCmd(MessageController messageController, ISpongeNicknameController playerController)
-    {
-        super(messageController, playerController);
-    }
+public class RulesCmd extends AbstractCmd {
 
-    @Override
-    public CommandResult execute(CommandSource src, CommandContext args) throws CommandException
-    {
-        NicknameData nicknameData = this.getPlayerController().wrapPlayer((Player) src);
-        src.sendMessage(this.getMessageController().getMessage(Reference.SuccessMessages.NICK_RULES).apply(TemplateUtils.getParameters("command", "/" + Reference.CommandKeys.ACCEPT_RULES[0])).build());
-        nicknameData.setReadRules(true);
+  private RulesCmd(MessageController messageController, ISpongeNicknameController playerController) {
+    super(messageController, playerController);
+  }
 
-        return CommandResult.success();
-    }
+  @Override
+  public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+    NicknameData nicknameData = this.getPlayerController().wrapPlayer((Player) src);
+    src.sendMessage(this.getMessageController().getMessage(Reference.SuccessMessages.NICK_RULES).apply(TemplateUtils.getParameters("command", "/" + Reference.CommandKeys.ACCEPT_RULES[0])).build());
+    nicknameData.setReadRules(true);
 
-    public static CommandSpec getCommandSpec(MessageController messageController, ISpongeNicknameController playerController)
-    {
-        return CommandSpec.builder()
-                          .executor(new RulesCmd(messageController, playerController))
-                          .permission(Reference.Permissions.GENERIC_PLAYER_COMMANDS)
-                          .build();
-    }
+    return CommandResult.success();
+  }
+
+  public static CommandSpec getCommandSpec(MessageController messageController, ISpongeNicknameController playerController) {
+    return CommandSpec.builder()
+                      .executor(new RulesCmd(messageController, playerController))
+                      .permission(Reference.Permissions.GENERIC_PLAYER_COMMANDS)
+                      .build();
+  }
+
 }

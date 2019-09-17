@@ -25,45 +25,42 @@ import java.util.Optional;
 /**
  * Created by Spyproof.
  */
-public class GiveNickChangesCmd extends AbstractCmd implements IArgumentChecker
-{
-    private static final String[] ARGS = new String[]{"player", "amount"};
+public class GiveNickChangesCmd extends AbstractCmd implements IArgumentChecker {
 
-    private GiveNickChangesCmd(MessageController messageController, ISpongeNicknameController playerController)
-    {
-        super(messageController, playerController);
-    }
+  private static final String[] ARGS = new String[]{"player", "amount"};
 
-    @Override
-    public CommandResult execute(CommandSource src, CommandContext args) throws CommandException
-    {
-        NicknameData nicknameData = getArgument(args, ARGS[0]);
-        Integer amount = getArgument(args, ARGS[1]);
+  private GiveNickChangesCmd(MessageController messageController, ISpongeNicknameController playerController) {
+    super(messageController, playerController);
+  }
 
-        nicknameData.setTokensRemaining(amount + nicknameData.getTokensRemaining());
-        this.getPlayerController().savePlayer(nicknameData);
+  @Override
+  public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+    NicknameData nicknameData = getArgument(args, ARGS[0]);
+    Integer amount = getArgument(args, ARGS[1]);
 
-        Optional<Player> player = Sponge.getServer().getPlayer(nicknameData.getUuid());
-        if (player.isPresent())
-            player.get().sendMessage(
-                    this.getMessageController().getMessage(Reference.SuccessMessages.ADMIN_NICK_GIVE_RECEIVED)
-                        .apply(TemplateUtils.getParameters("tokens", amount)).build());
+    nicknameData.setTokensRemaining(amount + nicknameData.getTokensRemaining());
+    this.getPlayerController().savePlayer(nicknameData);
 
-        Map<String, Text> params = TemplateUtils.getParameters(nicknameData);
-        params.putAll(TemplateUtils.getParameters("tokens", Text.of(amount)));
+    Optional<Player> player = Sponge.getServer().getPlayer(nicknameData.getUuid());
+    player.ifPresent(value -> value.sendMessage(this.getMessageController()
+                                                    .getMessage(Reference.SuccessMessages.ADMIN_NICK_GIVE_RECEIVED)
+                                                    .apply(TemplateUtils.getParameters("tokens", amount))
+                                                    .build()));
 
-        src.sendMessage(this.getMessageController().getMessage(Reference.SuccessMessages.ADMIN_NICK_GIVE).apply(params).build());
+    Map<String, Text> params = TemplateUtils.getParameters(nicknameData);
+    params.putAll(TemplateUtils.getParameters("tokens", Text.of(amount)));
 
-        return CommandResult.success();
-    }
+    src.sendMessage(this.getMessageController().getMessage(Reference.SuccessMessages.ADMIN_NICK_GIVE).apply(params).build());
 
-    public static CommandSpec getCommandSpec(MessageController messageController, ISpongeNicknameController playerController)
-    {
-        return CommandSpec.builder()
-                          .arguments(new PlayerDataArg(ARGS[0], playerController),
-                                     GenericArguments.integer(Text.of(ARGS[1])))
-                          .executor(new GiveNickChangesCmd(messageController, playerController))
-                          .permission(Reference.Permissions.ADMIN_GIVE)
-                          .build();
-    }
+    return CommandResult.success();
+  }
+
+  public static CommandSpec getCommandSpec(MessageController messageController, ISpongeNicknameController playerController) {
+    return CommandSpec.builder()
+                      .arguments(new PlayerDataArg(ARGS[0], playerController), GenericArguments.integer(Text.of(ARGS[1])))
+                      .executor(new GiveNickChangesCmd(messageController, playerController))
+                      .permission(Reference.Permissions.ADMIN_GIVE)
+                      .build();
+  }
+
 }

@@ -6,15 +6,17 @@ import org.bukkit.entity.Player;
 /**
  * Created by Spyproof on 09/11/2016.
  */
-public interface IBukkitNicknameController extends INicknameController
-{
-    /**
-     * Wrapping a player will attempt to get a player from the storage.
-     * If one is found and the name is different, the name will automatically update
-     * If none is found, it will create a new NicknameData instance and save it to the storage.
-     *
-     * @param player The player of who you wish to retreive the data from
-     * @return The player data of that player
-     */
-    NicknameData wrapPlayer(Player player);
+public interface IBukkitNicknameController extends INicknameController {
+
+  /**
+   * Wrapping a player will attempt to get a player from the storage.
+   * If one is found and the name is different, the name will automatically update
+   * If none is found, it will create a new NicknameData instance and save it to the storage.
+   *
+   * @param player The player of who you wish to retreive the data from
+   *
+   * @return The player data of that player
+   */
+  NicknameData wrapPlayer(Player player);
+
 }

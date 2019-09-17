@@ -20,35 +20,33 @@ import org.spongepowered.api.text.serializer.TextSerializers;
 /**
  * Created by Spyproof on 28/10/2016.
  */
-public class TestNickCmd extends AbstractCmd implements IPlayerCmd, IBlacklistChecker, IFormatChecker, ILengthChecker, IArgumentChecker
-{
-    private static final String ARG = "nickname";
+public class TestNickCmd extends AbstractCmd implements IPlayerCmd, IBlacklistChecker, IFormatChecker, ILengthChecker, IArgumentChecker {
 
-    private TestNickCmd(MessageController messageController, ISpongeNicknameController playerController)
-    {
-        super(messageController, playerController);
-    }
+  private static final String ARG = "nickname";
 
-    @Override
-    public CommandResult execute(Player src, CommandContext args) throws CommandException
-    {
-        String nick = getArgument(args, ARG);
+  private TestNickCmd(MessageController messageController, ISpongeNicknameController playerController) {
+    super(messageController, playerController);
+  }
 
-        checkBlacklist(src, nick);
-        checkFormat(src, nick);
-        checkLength(nick);
+  @Override
+  public CommandResult execute(Player src, CommandContext args) throws CommandException {
+    String nick = getArgument(args, ARG);
 
-        src.sendMessage(this.getMessageController().getMessage(Reference.SuccessMessages.NICK_PREVIEW).apply(TemplateUtils.getParameters("nickname", TextSerializers.FORMATTING_CODE.deserialize(nick))).build());
+    checkBlacklist(src, nick);
+    checkFormat(src, nick);
+    checkLength(nick);
 
-        return CommandResult.success();
-    }
+    src.sendMessage(this.getMessageController().getMessage(Reference.SuccessMessages.NICK_PREVIEW).apply(TemplateUtils.getParameters("nickname", TextSerializers.FORMATTING_CODE.deserialize(nick))).build());
 
-    public static CommandSpec getCommandSpec(MessageController messageController, ISpongeNicknameController playerController)
-    {
-        return CommandSpec.builder()
-                          .arguments(new OldNicknameArg(ARG, playerController))
-                          .executor(new TestNickCmd(messageController, playerController))
-                          .permission(Reference.Permissions.GENERIC_PLAYER_COMMANDS)
-                          .build();
-    }
+    return CommandResult.success();
+  }
+
+  public static CommandSpec getCommandSpec(MessageController messageController, ISpongeNicknameController playerController) {
+    return CommandSpec.builder()
+                      .arguments(new OldNicknameArg(ARG, playerController))
+                      .executor(new TestNickCmd(messageController, playerController))
+                      .permission(Reference.Permissions.GENERIC_PLAYER_COMMANDS)
+                      .build();
+  }
+
 }

@@ -18,4 +18,5 @@ interface AsyncMysqlExecution extends Runnable {
   }
 
   void execute() throws SQLException;
+
 }

@@ -11,17 +11,18 @@ import java.util.Optional;
 /**
  * Created by Spyproof on 17/11/2016.
  */
-public interface IArgumentChecker extends IMessageControllerHolder
-{
-    default <T> T getArgument(CommandContext args, String key) throws CommandException
-    {
-        Optional<T> arg = args.getOne(key);
-        if (arg.isPresent())
-            return arg.get();
-        else
-            throw new CommandException(this.getMessageController()
-                                           .getMessage(Reference.ErrorMessages.MISSING_ARGUMENT)
-                                           .apply(TemplateUtils.getParameters("argument", key))
-                                           .build());
+public interface IArgumentChecker extends IMessageControllerHolder {
+
+  default <T> T getArgument(CommandContext args, String key) throws CommandException {
+    Optional<T> arg = args.getOne(key);
+    if (arg.isPresent()) {
+      return arg.get();
+    } else {
+      throw new CommandException(this.getMessageController()
+                                     .getMessage(Reference.ErrorMessages.MISSING_ARGUMENT)
+                                     .apply(TemplateUtils.getParameters("argument", key))
+                                     .build());
     }
+  }
+
 }

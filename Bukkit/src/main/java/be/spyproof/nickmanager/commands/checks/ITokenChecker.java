@@ -10,16 +10,15 @@ import org.bukkit.entity.Player;
 /**
  * Created by Spyproof on 17/11/2016.
  */
-public interface ITokenChecker extends IMessageControllerHolder
-{
-    default void checkTokens(NicknameData nicknameData, Player src) throws CommandException
-    {
-        if (!BukkitUtils.INSTANCE.canChangeNickname(nicknameData, src))
-        {
-            throw new CommandException(this.getMessageController().getFormattedMessage(Reference.ErrorMessages.MISSING_TOKENS)
-                                           + "\n"
-                                           + (this.getMessageController().getFormattedMessage(Reference.ErrorMessages.UNLOCK_TOKENS))
-                                                  .replace("{command}", "/nick " + Reference.CommandKeys.PLAYER_UNLOCK[0]));
-        }
+public interface ITokenChecker extends IMessageControllerHolder {
+
+  default void checkTokens(NicknameData nicknameData, Player src) throws CommandException {
+    if (!BukkitUtils.INSTANCE.canChangeNickname(nicknameData, src)) {
+      throw new CommandException(this.getMessageController().getFormattedMessage(Reference.ErrorMessages.MISSING_TOKENS)
+        + "\n"
+        + (this.getMessageController().getFormattedMessage(Reference.ErrorMessages.UNLOCK_TOKENS))
+        .replace("{command}", "/nick " + Reference.CommandKeys.PLAYER_UNLOCK[0]));
     }
+  }
+
 }

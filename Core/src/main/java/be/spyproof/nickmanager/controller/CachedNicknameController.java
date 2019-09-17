@@ -11,6 +11,7 @@ import java.util.*;
  * Created by Spyproof on 28/10/2016.
  */
 public class CachedNicknameController extends NicknameController {
+
   private Set<NicknameData> cachedPlayers;
 
   public CachedNicknameController(IPlayerStorage storage) {

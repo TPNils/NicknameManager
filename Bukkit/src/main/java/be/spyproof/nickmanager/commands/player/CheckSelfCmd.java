@@ -12,25 +12,23 @@ import org.bukkit.entity.Player;
 /**
  * Created by Spyproof on 14/11/2016.
  */
-public class CheckSelfCmd extends AbstractPlayerCmd implements IPermissionCheck
-{
-    public CheckSelfCmd(MessageController messageController, IBukkitNicknameController playerController, String... keys)
-    {
-        super(messageController, playerController, keys);
-    }
+public class CheckSelfCmd extends AbstractPlayerCmd implements IPermissionCheck {
 
-    @Override
-    public void sendHelpMsg(CommandSender src)
-    {
-        src.sendMessage(this.messageController.getFormattedMessage(Reference.HelpMessages.NICK_CHECK));
-    }
+  public CheckSelfCmd(MessageController messageController, IBukkitNicknameController playerController, String... keys) {
+    super(messageController, playerController, keys);
+  }
 
-    @Override
-    public void execute(Player src, String cmd, String[] args)
-    {
-        checkPermission(src, Reference.Permissions.GENERIC_PLAYER_COMMANDS);
+  @Override
+  public void sendHelpMsg(CommandSender src) {
+    src.sendMessage(this.messageController.getFormattedMessage(Reference.HelpMessages.NICK_CHECK));
+  }
 
-        NicknameData player = super.playerController.wrapPlayer(src);
-        src.sendMessage(TemplateUtils.apply(this.messageController.getFormattedMessage(Reference.SuccessMessages.NICK_CHECK), player).split("\\n"));
-    }
+  @Override
+  public void execute(Player src, String cmd, String[] args) {
+    checkPermission(src, Reference.Permissions.GENERIC_PLAYER_COMMANDS);
+
+    NicknameData player = super.playerController.wrapPlayer(src);
+    src.sendMessage(TemplateUtils.apply(this.messageController.getFormattedMessage(Reference.SuccessMessages.NICK_CHECK), player).split("\\n"));
+  }
+
 }

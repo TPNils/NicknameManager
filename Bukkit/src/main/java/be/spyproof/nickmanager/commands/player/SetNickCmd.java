@@ -20,55 +20,55 @@ import java.util.List;
 /**
  * Created by Spyproof on 14/11/2016.
  */
-public class SetNickCmd extends AbstractPlayerCmd implements TabCompleter, IBlacklistChecker, ICooldownChecker, IFormatChecker, ILengthChecker, ITokenChecker, IPermissionCheck
-{
-    private static final String ARG = "nickname";
+public class SetNickCmd extends AbstractPlayerCmd implements TabCompleter, IBlacklistChecker, ICooldownChecker, IFormatChecker, ILengthChecker, ITokenChecker, IPermissionCheck {
 
-    public SetNickCmd(MessageController messageController, IBukkitNicknameController playerController, String... keys)
-    {
-        super(messageController, playerController, keys);
+  private static final String ARG = "nickname";
+
+  public SetNickCmd(MessageController messageController, IBukkitNicknameController playerController, String... keys) {
+    super(messageController, playerController, keys);
+  }
+
+  @Override
+  public void sendHelpMsg(CommandSender src) {
+    src.sendMessage(this.messageController.getFormattedMessage(Reference.HelpMessages.NICK_SET));
+  }
+
+  @Override
+  public void execute(Player src, String cmd, String[] args) {
+    checkPermission(src, Reference.Permissions.GENERIC_PLAYER_COMMANDS);
+
+    if (args.length == 0 || args[0] == null) {
+      throw new CommandException(this.messageController.getFormattedMessage(Reference.ErrorMessages.MISSING_ARGUMENT).replace("{argument}", ARG));
     }
 
-    @Override
-    public void sendHelpMsg(CommandSender src)
-    {
-        src.sendMessage(this.messageController.getFormattedMessage(Reference.HelpMessages.NICK_SET));
+    String nick = args[0];
+    NicknameData nicknameData = this.playerController.wrapPlayer(src);
+
+    checkTokens(nicknameData, src);
+    checkCooldown(nicknameData, src);
+    checkBlacklist(src, nick);
+    checkFormat(src, nick);
+    checkLength(nick);
+
+    // Apply
+    nicknameData.setNickname(nick);
+    nicknameData.setLastChanged();
+    if (!src.hasPermission(Reference.Permissions.BYPASS_CHANGE_LIMIT)) {
+      nicknameData.setTokensRemaining(nicknameData.getTokensRemaining() - 1);
     }
+    this.playerController.savePlayer(nicknameData);
 
-    @Override
-    public void execute(Player src, String cmd, String[] args)
-    {
-        checkPermission(src, Reference.Permissions.GENERIC_PLAYER_COMMANDS);
+    BukkitUtils.INSTANCE.applyNickname(nicknameData, src);
+    src.sendMessage(TemplateUtils.apply(this.messageController.getFormattedMessage(Reference.SuccessMessages.NICK_SET), nicknameData).split("\\n"));
+  }
 
-        if (args.length == 0 || args[0] == null)
-            throw new CommandException(this.messageController.getFormattedMessage(Reference.ErrorMessages.MISSING_ARGUMENT).replace("{argument}", ARG));
-
-        String nick = args[0];
-        NicknameData nicknameData = this.playerController.wrapPlayer(src);
-
-        checkTokens(nicknameData, src);
-        checkCooldown(nicknameData, src);
-        checkBlacklist(src, nick);
-        checkFormat(src, nick);
-        checkLength(nick);
-
-        // Apply
-        nicknameData.setNickname(nick);
-        nicknameData.setLastChanged();
-        if (!src.hasPermission(Reference.Permissions.BYPASS_CHANGE_LIMIT))
-            nicknameData.setTokensRemaining(nicknameData.getTokensRemaining()-1);
-        this.playerController.savePlayer(nicknameData);
-
-        BukkitUtils.INSTANCE.applyNickname(nicknameData, src);
-        src.sendMessage(TemplateUtils.apply(this.messageController.getFormattedMessage(Reference.SuccessMessages.NICK_SET), nicknameData).split("\\n"));
+  @Override
+  public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
+    if (strings.length == 1 && strings[0] != null && commandSender instanceof Player) {
+      return TabCompleteUtil.getOldNicknames(this.playerController.wrapPlayer((Player) commandSender), strings[0]);
+    } else {
+      return new ArrayList<>();
     }
+  }
 
-    @Override
-    public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings)
-    {
-        if (strings.length == 1 && strings[0] != null && commandSender instanceof Player)
-            return TabCompleteUtil.getOldNicknames(this.playerController.wrapPlayer((Player) commandSender), strings[0]);
-        else
-            return new ArrayList<>();
-    }
 }

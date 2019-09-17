@@ -14,25 +14,22 @@ import java.util.UUID;
 /**
  * Created by Spyproof on 28/10/2016.
  */
-public class TestReference
-{
-    public static MySqlPlayerStorage getLocalSqlPlayerStorage() throws IOException, SQLException
-    {
-        return new MySqlPlayerStorage("localhost", 3306, "nickname_test", "root", "N88p&SPIkazV!q");
-    }
+public class TestReference {
 
-    public static Connection getSqlConnection() throws SQLException
-    {
-        return DriverManager.getConnection("jdbc:mysql://localhost:3306/nickname_test", "root", "N88p&SPIkazV!q");
-    }
+  public static MySqlPlayerStorage getLocalSqlPlayerStorage() throws IOException, SQLException {
+    return new MySqlPlayerStorage("localhost", 3306, "nickname_test", "root", "N88p&SPIkazV!q");
+  }
 
-    public static GsonPlayerStorage getGsonPlayerStorage() throws IOException, SQLException
-    {
-        return new GsonPlayerStorage(new File(System.getProperty("java.io.tmpdir"), "nickname-test"));
-    }
+  public static Connection getSqlConnection() throws SQLException {
+    return DriverManager.getConnection("jdbc:mysql://localhost:3306/nickname_test", "root", "N88p&SPIkazV!q");
+  }
 
-    public static NicknameData getPlayerData()
-    {
-        return new NicknameData("NotTP", UUID.fromString("75002d64-cc35-3541-b6a4-c70e6aab5883"));
-    }
+  public static GsonPlayerStorage getGsonPlayerStorage() throws IOException, SQLException {
+    return new GsonPlayerStorage(new File(System.getProperty("java.io.tmpdir"), "nickname-test"));
+  }
+
+  public static NicknameData getPlayerData() {
+    return new NicknameData("NotTP", UUID.fromString("75002d64-cc35-3541-b6a4-c70e6aab5883"));
+  }
+
 }

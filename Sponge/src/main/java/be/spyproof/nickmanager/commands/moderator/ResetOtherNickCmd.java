@@ -22,39 +22,37 @@ import java.util.Optional;
 /**
  * Created by Spyproof on 01/11/2016.
  */
-public class ResetOtherNickCmd extends AbstractCmd implements IArgumentChecker
-{
-    private static final String ARG = "player";
+public class ResetOtherNickCmd extends AbstractCmd implements IArgumentChecker {
 
-    private ResetOtherNickCmd(MessageController messageController, ISpongeNicknameController playerController)
-    {
-        super(messageController, playerController);
+  private static final String ARG = "player";
+
+  private ResetOtherNickCmd(MessageController messageController, ISpongeNicknameController playerController) {
+    super(messageController, playerController);
+  }
+
+  @Override
+  public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+    NicknameData nicknameData = getArgument(args, ARG);
+
+    nicknameData.setNickname(null);
+    this.getPlayerController().savePlayer(nicknameData);
+
+    Optional<Player> player = Sponge.getServer().getPlayer(nicknameData.getUuid());
+    if (player.isPresent()) {
+      SpongeUtils.INSTANCE.applyNicknameToTabList(nicknameData, player.get());
+      player.get().sendMessage(this.getMessageController().getMessage(Reference.SuccessMessages.NICK_RESET).toText());
     }
 
-    @Override
-    public CommandResult execute(CommandSource src, CommandContext args) throws CommandException
-    {
-        NicknameData nicknameData = getArgument(args, ARG);
+    src.sendMessage(this.getMessageController().getMessage(Reference.SuccessMessages.ADMIN_NICK_RESET_NICKNAME).apply(TemplateUtils.getParameters(nicknameData)).build());
+    return CommandResult.success();
+  }
 
-        nicknameData.setNickname(null);
-        this.getPlayerController().savePlayer(nicknameData);
+  public static CommandSpec getCommandSpec(MessageController messageController, ISpongeNicknameController playerController) {
+    return CommandSpec.builder()
+                      .arguments(new PlayerDataArg(ARG, playerController))
+                      .executor(new ResetOtherNickCmd(messageController, playerController))
+                      .permission(Reference.Permissions.ADMIN_RESET)
+                      .build();
+  }
 
-        Optional<Player> player = Sponge.getServer().getPlayer(nicknameData.getUuid());
-        if (player.isPresent()){
-            SpongeUtils.INSTANCE.applyNicknameToTabList(nicknameData, player.get());
-            player.get().sendMessage(this.getMessageController().getMessage(Reference.SuccessMessages.NICK_RESET).toText());
-        }
-
-        src.sendMessage(this.getMessageController().getMessage(Reference.SuccessMessages.ADMIN_NICK_RESET_NICKNAME).apply(TemplateUtils.getParameters(nicknameData)).build());
-        return CommandResult.success();
-    }
-
-    public static CommandSpec getCommandSpec(MessageController messageController, ISpongeNicknameController playerController)
-    {
-        return CommandSpec.builder()
-                          .arguments(new PlayerDataArg(ARG, playerController))
-                          .executor(new ResetOtherNickCmd(messageController, playerController))
-                          .permission(Reference.Permissions.ADMIN_RESET)
-                          .build();
-    }
 }

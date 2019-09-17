@@ -12,16 +12,19 @@ import org.spongepowered.api.text.Text;
 /**
  * Created by Spyproof on 17/11/2016.
  */
-public interface ITokenChecker extends IMessageControllerHolder
-{
-    default void checkTokens(NicknameData nicknameData, Player src) throws CommandException
-    {
-        if (!SpongeUtils.INSTANCE.canChangeNickname(nicknameData, src))
-        {
-            throw new CommandException(this.getMessageController().getMessage(Reference.ErrorMessages.MISSING_TOKENS)
-                                           .toText()
-                                           .concat(Text.NEW_LINE)
-                                           .concat(this.getMessageController().getMessage(Reference.ErrorMessages.UNLOCK_TOKENS).apply(TemplateUtils.getParameters("command", "/nick " + Reference.CommandKeys.PLAYER_UNLOCK[0])).toText()));
-        }
+public interface ITokenChecker extends IMessageControllerHolder {
+
+  default void checkTokens(NicknameData nicknameData, Player src) throws CommandException {
+    if (!SpongeUtils.INSTANCE.canChangeNickname(nicknameData, src)) {
+      throw new CommandException(this.getMessageController()
+                                     .getMessage(Reference.ErrorMessages.MISSING_TOKENS)
+                                     .toText()
+                                     .concat(Text.NEW_LINE)
+                                     .concat(this.getMessageController()
+                                                 .getMessage(Reference.ErrorMessages.UNLOCK_TOKENS)
+                                                 .apply(TemplateUtils.getParameters("command", "/nick " + Reference.CommandKeys.PLAYER_UNLOCK[0]))
+                                                 .toText()));
     }
+  }
+
 }

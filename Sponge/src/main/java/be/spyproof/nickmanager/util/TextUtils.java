@@ -13,11 +13,14 @@ import java.util.Collections;
 import java.util.List;
 
 public class TextUtils {
+
   private static final String NEW_LINE = "\n";
 
   /**
    * Split a message with every new line
+   *
    * @param text to be split
+   *
    * @return a list of texts
    */
   public static List<Text> splitLines(Text text) {
@@ -56,9 +59,9 @@ public class TextUtils {
       splitBuilders.add(builder);
     }
 
-    Text.Builder lastBuilder = splitBuilders.get(splitBuilders.size()-1);
+    Text.Builder lastBuilder = splitBuilders.get(splitBuilders.size() - 1);
     for (Text child : text.getChildren()) {
-      List<Text.Builder> childSplit = splitLines(child, depth+1, style, hoverAction, clickAction, shiftClickAction);
+      List<Text.Builder> childSplit = splitLines(child, depth + 1, style, hoverAction, clickAction, shiftClickAction);
       for (int i = 0; i < childSplit.size(); i++) {
         if (i == 0) {
           lastBuilder.append(childSplit.get(i).build());
@@ -104,8 +107,8 @@ public class TextUtils {
       nextNewLine = text.indexOf('\n');
       parts.add(text.substring(0, nextNewLine));
       parts.add("");
-      if (text.length() > nextNewLine+1) {
-        text = text.substring(nextNewLine+1);
+      if (text.length() > nextNewLine + 1) {
+        text = text.substring(nextNewLine + 1);
       } else {
         text = null;
       }
@@ -117,4 +120,5 @@ public class TextUtils {
 
     return parts;
   }
+
 }

@@ -13,35 +13,31 @@ import java.util.Map;
 /**
  * Created by Spyproof on 17/11/2016.
  */
-public interface ICooldownChecker extends IMessageControllerHolder
-{
-    default void checkCooldown(NicknameData nicknameData, CommandSender src) throws CommandException
-    {
-        if (!BukkitUtils.INSTANCE.canChangeNickname(nicknameData, src))
-        {
-            long cooldown;
-            if (src.hasPermission(Reference.Permissions.BYPASS_COOLDOWN))
-            {
-                cooldown = 0;
-            } else
-            {
-                cooldown = BukkitUtils.INSTANCE.getDefaultCooldown();
-                for (Map.Entry<String, Long> entry : BukkitUtils.INSTANCE.getExtraCooldowns().entrySet())
-                {
-                    if (src.hasPermission(Reference.Permissions.COOLDOWN_PREFIX + entry.getKey()) && entry
-                            .getValue() < cooldown)
-                        cooldown = entry.getValue();
-                }
-            }
+public interface ICooldownChecker extends IMessageControllerHolder {
 
-            long timeDiff = nicknameData.getLastChanged() + cooldown - System.currentTimeMillis();
-            if (timeDiff > 0)
-            {
-                throw new CommandException(
-                        this.getMessageController()
-                            .getFormattedMessage(Reference.ErrorMessages.ON_COOLDOWN)
-                            .replace("{time}", DateUtil.timeformat(timeDiff)));
-            }
+  default void checkCooldown(NicknameData nicknameData, CommandSender src) throws CommandException {
+    if (!BukkitUtils.INSTANCE.canChangeNickname(nicknameData, src)) {
+      long cooldown;
+      if (src.hasPermission(Reference.Permissions.BYPASS_COOLDOWN)) {
+        cooldown = 0;
+      } else {
+        cooldown = BukkitUtils.INSTANCE.getDefaultCooldown();
+        for (Map.Entry<String, Long> entry : BukkitUtils.INSTANCE.getExtraCooldowns().entrySet()) {
+          if (src.hasPermission(Reference.Permissions.COOLDOWN_PREFIX + entry.getKey()) && entry
+            .getValue() < cooldown) {
+            cooldown = entry.getValue();
+          }
         }
+      }
+
+      long timeDiff = nicknameData.getLastChanged() + cooldown - System.currentTimeMillis();
+      if (timeDiff > 0) {
+        throw new CommandException(
+          this.getMessageController()
+              .getFormattedMessage(Reference.ErrorMessages.ON_COOLDOWN)
+              .replace("{time}", DateUtil.timeformat(timeDiff)));
+      }
     }
+  }
+
 }
