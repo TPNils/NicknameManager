@@ -8,7 +8,7 @@
         <version>1.1.2</version>
     </parent>
     <artifactId>nickname-manager-sponge</artifactId>
-    <version>1.1.2a-api7.1</version>
+    <version>1.1.2b-api7.1</version>
 
     <dependencies>
         <dependency>

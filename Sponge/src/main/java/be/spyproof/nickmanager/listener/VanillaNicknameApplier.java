@@ -8,12 +8,10 @@ import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.message.MessageChannelEvent;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.action.ClickAction;
-import org.spongepowered.api.text.action.HoverAction;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.serializer.TextSerializers;
-
-import java.util.Optional;
+import org.spongepowered.api.text.transform.SimpleTextFormatter;
+import org.spongepowered.api.text.transform.TextTemplateApplier;
 
 /**
  * Created by Spyproof on 30/10/2016.
@@ -31,36 +29,26 @@ public class VanillaNicknameApplier {
     this.playerController = playerController;
   }
 
-  @Listener(order = Order.LATE)
+  @Listener(order = Order.EARLY)
   public void onMessageEvent(MessageChannelEvent.Chat event, @First Player player) {
     NicknameData nicknameData = this.playerController.wrapPlayer(player);
 
     if (!event.getFormatter().getHeader().isEmpty() && nicknameData.getNickname().isPresent()) {
-      Text.Builder builder = Text.builder();
+      Text.Builder builder = Text.of(TextSerializers.FORMATTING_CODE.deserialize(nicknameData.getNickname().get() + "&r")).toBuilder();
+      builder.onClick(TextActions.suggestCommand("/msg " + player.getName() + " "));
+      builder.onHover(TextActions.showEntity(player.getUniqueId(), player.getName()));
 
-      Text header = event.getFormatter().getHeader().format();
-      String rawHeader = TextSerializers.FORMATTING_CODE.serialize(header);
-      if (rawHeader.contains(player.getName())) {
-        rawHeader = rawHeader.replace(player.getName(), nicknameData.getNickname().get() + "&r");
+      boolean isVanillaHeader = TextSerializers.FORMATTING_CODE.serialize(event.getFormatter().getHeader().toText()).equals("<" + player.getName() + "> ");
+
+      final Text nickName = builder.build();
+      for (SimpleTextFormatter formatter : event.getFormatter()) {
+        for (TextTemplateApplier applier : formatter) {
+          if (isVanillaHeader) {
+            applier.setParameter("header", nickName);
+          }
+          applier.setParameter("nickname_manager:nickname", nickName);
+        }
       }
-
-      builder.append(Text.of(TextSerializers.FORMATTING_CODE.deserialize(rawHeader)));
-
-      Optional<ClickAction<?>> clickAction = header.getClickAction();
-      if (clickAction.isPresent()) {
-        builder.onClick(clickAction.get());
-      } else {
-        builder.onClick(TextActions.suggestCommand("/msg " + player.getName() + " "));
-      }
-
-      Optional<HoverAction<?>> hoverAction = header.getHoverAction();
-      if (clickAction.isPresent()) {
-        builder.onHover(hoverAction.get());
-      } else {
-        builder.onHover(TextActions.showEntity(player.getUniqueId(), player.getName()));
-      }
-
-      event.getFormatter().setHeader(builder.build());
     }
   }
 
